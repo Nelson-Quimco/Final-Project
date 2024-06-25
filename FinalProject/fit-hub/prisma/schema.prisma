@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userId           Int               @id @default(autoincrement())
+  firstName        String
+  lastName         String
+  username         String
+  password         String
+  email            String
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  profile          UserProfile?
+  passwordResets   PasswordReset[]
+  fitnessExercises FitnessExercise[]
+  posts            Post[]
+  comments         Comment[]
+  progresses       Progress[]
+}
+
+model UserProfile {
+  userProfileId  Int      @id @default(autoincrement())
+  userId         Int      @unique
+  firstName      String
+  lastName       String
+  bio            String
+  profilePicture String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [userId])
+}
+
+model PasswordReset {
+  resetId     Int      @id @default(autoincrement())
+  userId      Int      @unique
+  username    String
+  oldPassword String
+  newPassword String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [userId])
+}
+
+model FitnessExercise {
+  exerciseId  Int        @id @default(autoincrement())
+  userId      Int        @unique
+  Level       String
+  Type        String
+  Name        String
+  Description String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  user        User       @relation(fields: [userId], references: [userId])
+  progresses  Progress[]
+}
+
+model Comment {
+  commentId Int      @id @default(autoincrement())
+  postId    Int      @unique
+  userId    Int      @unique
+  likes     Int
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  post      Post     @relation(fields: [postId], references: [postId])
+  user      User     @relation(fields: [userId], references: [userId])
+}
+
+model Post {
+  postId    Int       @id @default(autoincrement())
+  userId    Int       @unique
+  likes     Int
+  title     String
+  content   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [userId])
+  comments  Comment[]
+}
+
+model Progress {
+  progressId      Int             @id @default(autoincrement())
+  userId          Int             @unique
+  exerciseId      Int             @unique
+  date            DateTime
+  name            String
+  currentStatus   String
+  goal            String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  user            User            @relation(fields: [userId], references: [userId])
+  fitnessExercise FitnessExercise @relation(fields: [exerciseId], references: [exerciseId])
+}
