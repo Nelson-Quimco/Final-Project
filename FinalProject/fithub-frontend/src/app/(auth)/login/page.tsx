@@ -2,39 +2,21 @@
 import React, { useState } from "react";
 import Button from "@/components/buttons/Button";
 import Input from "@/components/input/Input";
+import useLoginRequest from "@/hooks/user-authentication/useLoginRequest";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [usernameValid, setUsernameValid] = useState(true);
-  const [passwordValid, setPasswordValid] = useState(true);
-  const [usernameMessage, setUsernameMessage] = useState("");
-  const [passwordMesage, setPasswordMessage] = useState("");
+  const {
+    data,
+    loginAccount,
+    setUsername,
+    setPassword,
+    usernameValid,
+    passwordValid,
+    usernameMessage,
+    passwordMesage,
+  } = useLoginRequest();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (username === "") {
-      setUsernameValid(false);
-      setUsernameMessage("Please enter a username.");
-    } else {
-      setUsernameValid(true);
-    }
-
-    if (password === "") {
-      setPasswordValid(false);
-      setPasswordMessage(" Please enter a password.");
-    } else {
-      setPasswordValid(true);
-    }
-
-    // if (username === "" || password === "") {
-    //   setUsernameMessage("Please enter a username.");
-    //   setPasswordMessage(" Please enter a password.");
-    //   return;
-    // }
-  };
-
+  console.log(data);
   return (
     <>
       <h1 className="text-[30px] font-bold">
@@ -42,7 +24,8 @@ const Login = () => {
       </h1>
       <h1 className="font-bold text-[25px]">Sign In</h1>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={loginAccount}
+        action={"post"}
         className="flex flex-col items-center gap-10 w-full *:w-full"
       >
         <div>

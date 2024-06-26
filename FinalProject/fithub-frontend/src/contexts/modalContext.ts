@@ -1,22 +1,22 @@
-"use client";
+// "use client";
 
-import { createContext, useContext, useState } from "react";
-import React from "react";
+// import { createContext, useContext, useState } from "react";
+// import React from "react";
 
-type SearchProviderProps = {
-  children: React.ReactNode;
-};
+// type ModalProviderProps = {
+//   children: React.ReactNode;
+// };
 
-const SearchContext = createContext<any | undefined>(undefined);
+// const ModalContext = createContext<any | undefined>(undefined);
 
-const useMovieContext = () => useContext(SearchContext);
+// const useModalContext = () => useContext(ModalContext);
 
-const SearchProvider = (props: SearchProviderProps) => {
-  const { children } = props;
+// const SearchProvider = (props: ModalProviderProps) => {
+//   const { children } = props;
 
-  return <SearchContext.Provider value={}>{children}</SearchContext.Provider>;
-};
+//   return <ModalContext.Provider value={}>{children}</ModalContext.Provider>;
+// };
 
-export default SearchProvider;
+// export default SearchProvider;
 
-export { useMovieContext };
+// export { useModalContext };

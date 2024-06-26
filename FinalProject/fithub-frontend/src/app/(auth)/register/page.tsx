@@ -4,8 +4,13 @@ import React, { useState } from "react";
 import Button from "@/components/buttons/Button";
 import Input from "@/components/input/Input";
 import { useRouter } from "next/navigation";
+import useRegisterRequest from "@/hooks/user-authentication/useRegisterRequest";
+import axios from "axios";
+import User from "@/constants/userTypes";
 
+const axiosReq = axios.create({ baseURL: `${process.env.NEXT_PUBLIC_URL}` });
 const Register = () => {
+  const [data, setData] = useState<User[]>([]);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [username, setUsername] = useState("");
@@ -29,7 +34,7 @@ const Register = () => {
 
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const registerAccount = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     let isValid = true;
@@ -87,8 +92,26 @@ const Register = () => {
       isValid = false;
     }
 
-    if (isValid) {
-      router.push("/login");
+    // if (isValid) {
+    //   router.push("/login");
+    // }
+
+    try {
+      const body = {
+        firstName: firstname,
+        lastName: lastname,
+        username: username,
+        email: email,
+        password: password,
+      };
+
+      const res = await axiosReq.post("/user-authentication/signUp", body, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -99,7 +122,7 @@ const Register = () => {
       </h1>
       <h1 className="font-bold text-[25px]">Sign Up</h1>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={registerAccount}
         className="flex flex-col items-center gap-4 w-full *:w-full font-bold"
       >
         <div className="flex gap-6">
