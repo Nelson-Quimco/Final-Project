@@ -21,64 +21,135 @@ export class UserAuthenticationController {
   ) {}
 
   @Post('signUp')
-  create(@Body() createUserAuthenticationDto: CreateUserAuthenticationDto) {
+  create(
+    @Body() createUserAuthenticationDto: CreateUserAuthenticationDto,
+  ): Promise<{ statusCode: number; message: string; data?: any }> {
     const { firstName, lastName, username, password, email } =
       createUserAuthenticationDto;
-    return this.userAuthenticationService.create(
-      firstName,
-      lastName,
-      username,
-      password,
-      email,
-    );
+    return this.userAuthenticationService
+      .create(firstName, lastName, username, password, email)
+      .then((result) => {
+        return {
+          statusCode: 201, // Created
+          message: 'User created successfully',
+          data: result,
+        };
+      })
+      .catch((error) => {
+        return {
+          statusCode: 400, // Bad Request
+          message: 'Error creating user',
+          data: error,
+        };
+      });
   }
 
   @Get()
-  findAll() {
-    return this.userAuthenticationService.findAll();
+  findAll(): Promise<{ statusCode: number; message: string; data?: any }> {
+    return this.userAuthenticationService
+      .findAll()
+      .then((users) => {
+        return {
+          statusCode: 200, // OK
+          message: 'Users retrieved successfully',
+          data: users,
+        };
+      })
+      .catch((error) => {
+        return {
+          statusCode: 500, // Internal Server Error
+          message: 'Error retrieving users',
+          data: error,
+        };
+      });
   }
 
   @Post('login')
   async login(
     @Body('username') username: string,
     @Body('password') password: string,
-  ): Promise<{ message: string; user?: User }> {
-    return this.userAuthenticationService.loginUser(username, password);
+  ): Promise<{ statusCode: number; message: string; user?: User }> {
+    try {
+      const { message, user } = await this.userAuthenticationService.loginUser(
+        username,
+        password,
+      );
+      return {
+        statusCode: 200, // OK
+        message,
+        user,
+      };
+    } catch (error) {
+      return {
+        statusCode: 401, // Unauthorized
+        message: 'Invalid username or password',
+      };
+    }
   }
 
   @Post('logout/:userId')
   async logoutUser(
     @Param('userId') userId: string,
-  ): Promise<{ message: string }> {
+  ): Promise<{ statusCode: number; message: string }> {
     try {
       await this.userAuthenticationService.logoutUser(userId);
-      return { message: 'Logout successful' };
+      return {
+        statusCode: 200, // OK
+        message: 'Logout successful',
+      };
     } catch (error) {
-      throw new HttpException(
-        `Failed to logout: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      return {
+        statusCode: 500, // Internal Server Error
+        message: `Failed to logout: ${error.message}`,
+      };
     }
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userAuthenticationService.findOne(+id);
   }
 
   @Patch(':id/reset-password')
   async updatePassword(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserAuthenticationDto: UpdateUserAuthenticationDto,
-  ): Promise<{ message: string; user?: User }> {
-    return this.userAuthenticationService.updateUser(
-      id,
-      updateUserAuthenticationDto.password,
-    );
+  ): Promise<{ statusCode: number; message: string; user?: User }> {
+    try {
+      const { message, user } = await this.userAuthenticationService.updateUser(
+        id,
+        updateUserAuthenticationDto.password,
+      );
+      return {
+        statusCode: 200, // OK
+        message,
+        user,
+      };
+    } catch (error) {
+      if (error.status === HttpStatus.NOT_FOUND) {
+        return {
+          statusCode: 404, // Not Found
+          message: 'User not found',
+        };
+      } else {
+        return {
+          statusCode: 500, // Internal Server Error
+          message: 'Error updating password',
+        };
+      }
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userAuthenticationService.remove(+id);
+  async remove(
+    @Param('id') id: string,
+  ): Promise<{ message: string; status?: number }> {
+    try {
+      await this.userAuthenticationService.remove(+id);
+      return {
+        message: 'User deleted successfully',
+        status: 200,
+      };
+    } catch (error) {
+      return {
+        message: 'Failed to delete user: ' + error.message,
+        status: 500,
+      };
+    }
   }
 }

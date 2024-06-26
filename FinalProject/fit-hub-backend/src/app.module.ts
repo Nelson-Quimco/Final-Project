@@ -8,9 +8,13 @@ import { CommentModule } from './comment/comment.module';
 import { PostModule } from './post/post.module';
 import { FitnessTrackingModule } from './fitness-tracking/fitness-tracking.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     UserAuthenticationModule,
     DashboardModule,
     FitnessTrackingModule,
@@ -20,6 +24,6 @@ import { DashboardModule } from './dashboard/dashboard.module';
     PrismaModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ConfigService],
 })
 export class AppModule {}
