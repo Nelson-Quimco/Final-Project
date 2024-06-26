@@ -52,7 +52,7 @@ export class UserAuthenticationController {
   ): Promise<{ message: string }> {
     try {
       await this.userAuthenticationService.logoutUser(userId);
-      return { message: 'Logout successful' };
+      return { message: 'Logout successfully' };
     } catch (error) {
       throw new HttpException(
         `Failed to logout: ${error.message}`,
