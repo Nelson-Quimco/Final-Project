@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { setCookie, removeCookie } from "@/lib/utils/cookies";
 import User from "@/constants/userTypes";
 import { useRouter } from "next/navigation";
 
@@ -27,30 +28,32 @@ const useLoginRequest = () => {
   const loginAccount = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (username === "") {
-      setUsernameValid(false);
-      setUsernameMessage("Please enter a username.");
-    } else {
-      setUsernameValid(true);
-    }
-
-    if (password === "") {
-      setPasswordValid(false);
-      setPasswordMessage(" Please enter a password.");
-    } else {
-      setPasswordValid(true);
-    }
-
     try {
       const body = {
         username: username,
         password: password,
       };
+      if (username === "") {
+        setUsernameValid(false);
+        setUsernameMessage("Please enter a username.");
+      } else {
+        setUsernameValid(true);
+      }
+
+      if (password === "") {
+        setPasswordValid(false);
+        setPasswordMessage(" Please enter a password.");
+      } else {
+        setPasswordValid(true);
+      }
 
       const res = await axiosReq.post("/user-authentication/login", body, {
         headers: { "Content-Type": "application/json" },
       });
+
       if (res.data.message === "Login successfully") {
+        setCookie("token", res.data.token);
+        setCookie("user", JSON.stringify(res.data.user));
         router.push("/dashboard");
       } else if (res.data.message === "Invalid username or password") {
         setPasswordValid(false);
@@ -59,6 +62,7 @@ const useLoginRequest = () => {
         setUsernameMessage("Invalid Username or Password");
       }
 
+      console.log(res.data.user);
       console.log(body);
       console.log(res.data);
     } catch (error) {
