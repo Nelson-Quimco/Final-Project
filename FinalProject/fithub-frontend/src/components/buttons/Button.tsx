@@ -6,6 +6,7 @@ interface Props {
   width?: string;
   height?: string;
   type?: "button" | "submit";
+  className?: string;
 }
 
 const Button = (props: Props) => {
