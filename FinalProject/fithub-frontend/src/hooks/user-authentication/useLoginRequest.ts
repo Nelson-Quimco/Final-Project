@@ -51,11 +51,11 @@ const useLoginRequest = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      if (res.data.message === "Login successfully") {
+      if (res.data.statusCode === 200) {
         setCookie("token", res.data.token);
         setCookie("user", JSON.stringify(res.data.user));
         router.push("/dashboard");
-      } else if (res.data.message === "Invalid username or password") {
+      } else {
         setPasswordValid(false);
         setUsernameValid(false);
         setPasswordMessage("Invalid Username or Password");
