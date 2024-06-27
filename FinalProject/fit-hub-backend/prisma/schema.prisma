@@ -54,16 +54,44 @@ model PasswordReset {
 }
 
 model FitnessExercise {
-  exerciseId  Int        @id @default(autoincrement())
-  userId      Int        @unique
-  Level       String
-  Type        String
+  id          Int        @id @default(autoincrement())
+  Level       Level      @default(BEGINNER)
+  Type        Types      @default(CARDIO)
   Name        String
   Description String
   createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  updatedAt   DateTime   @default(now())
   user        User       @relation(fields: [userId], references: [userId])
+  userId      Int
   progresses  Progress[]
+}
+
+model Progress {
+  progressId      Int             @id @default(autoincrement())
+  userId          Int
+  exerciseId      Int
+  date            DateTime
+  name            String
+  currentStatus   String
+  goal            String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  user            User            @relation(fields: [userId], references: [userId])
+  fitnessExercise FitnessExercise @relation(fields: [exerciseId], references: [id])
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  EXPERT
+}
+
+enum Types {
+  ABDOMINAL
+  BACK
+  BICEPS
+  CARDIO
+  REST
 }
 
 model Comment {
@@ -90,16 +118,16 @@ model Post {
   comments  Comment[]
 }
 
-model Progress {
-  progressId      Int             @id @default(autoincrement())
-  userId          Int             @unique
-  exerciseId      Int             @unique
-  date            DateTime
-  name            String
-  currentStatus   String
-  goal            String
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  user            User            @relation(fields: [userId], references: [userId])
-  fitnessExercise FitnessExercise @relation(fields: [exerciseId], references: [exerciseId])
-}
+// model Progress {
+//   progressId      Int             @id @default(autoincrement())
+//   userId          Int             @unique
+//   exerciseId      Int             @unique
+//   date            DateTime
+//   name            String
+//   currentStatus   String
+//   goal            String
+//   createdAt       DateTime        @default(now())
+//   updatedAt       DateTime        @updatedAt
+//   user            User            @relation(fields: [userId], references: [userId])
+//   fitnessExercise FitnessExercise @relation(fields: [exerciseId], references: [exerciseId])
+// }

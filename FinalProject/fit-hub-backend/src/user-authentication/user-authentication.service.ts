@@ -14,17 +14,44 @@ export class UserAuthenticationService {
     username: string,
     password: string,
     email: string,
-  ): Promise<{ message: string; user?: User }> {
+  ): Promise<{
+    statusCode: number;
+    message: string;
+    data?: { message?: string; status?: number; user?: User };
+  }> {
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
       return {
-        message:
-          'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+        statusCode: 500,
+        message: 'Failed to create user: Error message',
+        data: {
+          message:
+            'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+          status: 500,
+        },
       };
     }
 
     try {
+      // Check if the user already exists based on the username
+      const existingUser = await this.prismaService.user.findFirst({
+        where: {
+          username,
+        },
+      });
+
+      if (existingUser) {
+        return {
+          statusCode: 409,
+          message: 'Error: The user already exists',
+          data: {
+            message: 'A user with the same username already exists',
+            status: 409,
+          },
+        };
+      }
+
       const user = await this.prismaService.user.create({
         data: {
           firstName,
@@ -34,16 +61,30 @@ export class UserAuthenticationService {
           email,
         },
       });
-      return { message: 'User created successfully', user };
+      return {
+        statusCode: 201,
+        message: 'User created successfully',
+        data: {
+          user,
+        },
+      };
     } catch (error) {
-      return { message: 'Failed to create user: ' + error.message };
+      return {
+        statusCode: 500,
+        message: 'Failed to create user: ' + error.message,
+        data: {
+          message:
+            'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+          status: 500,
+        },
+      };
     }
   }
 
   async loginUser(
     username: string,
     password: string,
-  ): Promise<{ message: string; user?: User }> {
+  ): Promise<{ message: string; status?: number; user?: User }> {
     try {
       const user = await this.prismaService.user.findFirst({
         where: {
@@ -53,16 +94,29 @@ export class UserAuthenticationService {
       });
 
       if (!user) {
-        return { message: 'Invalid username or password' };
+        return {
+          message: 'Invalid username or password',
+          status: 401, // Unauthorized
+        };
       }
 
-      return { message: 'Login successfully', user };
+      return {
+        message: 'Login successful',
+        status: 200, // OK
+        user,
+      };
     } catch (error) {
-      return { message: 'Failed to login: ' + error.message };
+      return {
+        message: 'Failed to login: ' + error.message,
+        status: 500, // Internal Server Error
+      };
     }
   }
 
-  async logoutUser(userId: string): Promise<{ message: string }> {
+  
+  async logoutUser(
+    userId: string,
+  ): Promise<{ message: string; status?: number }> {
     try {
       await this.prismaService.user.update({
         where: {
@@ -73,29 +127,42 @@ export class UserAuthenticationService {
         } as Prisma.UserUpdateInput,
       });
 
-      return { message: 'Logout successful' };
+      return {
+        message: 'Logout successful',
+        status: 200,
+      };
     } catch (error) {
-      return { message: 'Failed to logout: ' + error.message };
+      return {
+        message: 'Failed to logout: ' + error.message,
+        status: 500,
+      };
     }
   }
 
-  async findAll(): Promise<{ message: string; users?: User[] }> {
+  async findAll(): Promise<{
+    message: string;
+    status?: number;
+    users?: User[];
+  }> {
     try {
       const users = await this.prismaService.user.findMany();
-      return { message: 'Users retrieved successfully', users };
+      return {
+        message: 'Users retrieved successfully',
+        status: 200,
+        users,
+      };
     } catch (error) {
-      return { message: 'Failed to retrieve users: ' + error.message };
+      return {
+        message: 'Failed to retrieve users: ' + error.message,
+        status: 500,
+      };
     }
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} userAuthentication`;
   }
 
   async updateUser(
     userId: number,
     newPassword: string,
-  ): Promise<{ message: string; user?: User }> {
+  ): Promise<{ message: string; status?: number; user?: User }> {
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -103,6 +170,7 @@ export class UserAuthenticationService {
       return {
         message:
           'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+        status: 400,
       };
     }
 
@@ -116,6 +184,7 @@ export class UserAuthenticationService {
       if (user.password === newPassword) {
         return {
           message: 'New password cannot be the same as the old password',
+          status: 400,
         };
       }
 
@@ -130,14 +199,20 @@ export class UserAuthenticationService {
 
       return {
         message: 'Users password updated successfully',
+        status: 200,
         user: updatedUser,
       };
     } catch (error) {
-      return { message: 'Failed to update users password: ' + error.message };
+      return {
+        message: 'Failed to update users password: ' + error.message,
+        status: 500,
+      };
     }
   }
 
-  async remove(userId: number): Promise<{ message: string; user?: User }> {
+  async remove(
+    userId: number,
+  ): Promise<{ message: string; status?: number; user?: User }> {
     try {
       const user = await this.prismaService.user.delete({
         where: {
@@ -145,9 +220,16 @@ export class UserAuthenticationService {
         },
       });
 
-      return { message: 'User deleted successfully', user };
+      return {
+        message: 'User deleted successfully',
+        status: 200,
+        user,
+      };
     } catch (error) {
-      return { message: 'Failed to delete user: ' + error.message };
+      return {
+        message: 'Failed to delete user: ' + error.message,
+        status: 400,
+      };
     }
   }
 }
