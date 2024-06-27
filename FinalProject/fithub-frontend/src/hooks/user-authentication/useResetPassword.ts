@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { headers } from "next/headers";
 
 const axiosReq = axios.create({ baseURL: `${process.env.NEXT_PUBLIC_URL}` });
 const useResetPassword = () => {
