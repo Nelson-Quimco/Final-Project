@@ -14,7 +14,7 @@ const Tracker: React.FC = () => {
         name="Add New Workout"
         width="13rem"
         height="3rem"
-        onClick={() => router.push("/tracker/addWorkout")}
+        onClick={() => router.push("/tracker/add-workout")}
       ></Button>
       <div className="flex w-full gap-10 h-[100%] mt-[2rem]">
         <div className="flex flex-col gap-5 w-[70%]">
