@@ -63,14 +63,16 @@ export class FitnessTrackingService {
     }
   }
 
-  async findByType(
+  async findByTypeAndLevel(
     type: Types,
+    level: Level,
   ): Promise<{ data: FitnessExercise[]; status: number }> {
     try {
       const fitnessExercises =
         await this.prismaService.fitnessExercise.findMany({
           where: {
             Type: type,
+            Level: level,
           },
         });
       return { data: fitnessExercises, status: HttpStatus.OK };

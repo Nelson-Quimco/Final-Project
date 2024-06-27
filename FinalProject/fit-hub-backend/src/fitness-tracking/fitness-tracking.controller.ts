@@ -13,7 +13,7 @@ import {
 import { FitnessTrackingService } from './fitness-tracking.service';
 import { CreateFitnessTrackingDto } from './dto/create-fitness-tracking.dto';
 import { UpdateFitnessTrackingDto } from './dto/update-fitness-tracking.dto';
-import { FitnessExercise, Types } from '@prisma/client';
+import { FitnessExercise, Level, Types } from '@prisma/client';
 
 @Controller('fitness-tracking')
 export class FitnessTrackingController {
@@ -88,15 +88,16 @@ export class FitnessTrackingController {
     }
   }
 
-  @Get('/type/:type')
-  async findByType(
+  @Get('/type/:type/level/:level')
+  async findByTypeAndLevel(
     @Param('type') type: Types,
+    @Param('level') level: Level,
   ): Promise<{ data: FitnessExercise[]; status: number }> {
     try {
-      return await this.fitnessTrackingService.findByType(type);
+      return await this.fitnessTrackingService.findByTypeAndLevel(type, level);
     } catch (error) {
       throw new HttpException(
-        `Error finding fitness exercises by type '${type}': ${error.message}`,
+        `Error finding fitness exercises by type '${type}' and level '${level}': ${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

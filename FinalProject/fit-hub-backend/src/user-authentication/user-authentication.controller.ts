@@ -21,27 +21,29 @@ export class UserAuthenticationController {
   ) {}
 
   @Post('signUp')
-  create(
+  async create(
     @Body() createUserAuthenticationDto: CreateUserAuthenticationDto,
-  ): Promise<{ statusCode: number; message: string; data?: any }> {
+  ): Promise<{ message: string; data?: any }> {
     const { firstName, lastName, username, password, email } =
       createUserAuthenticationDto;
-    return this.userAuthenticationService
-      .create(firstName, lastName, username, password, email)
-      .then((result) => {
-        return {
-          statusCode: 201, // Created
-          message: 'User created successfully',
-          data: result,
-        };
-      })
-      .catch((error) => {
-        return {
-          statusCode: 400, // Bad Request
-          message: 'Error creating user',
-          data: error,
-        };
-      });
+
+    try {
+      const response = await this.userAuthenticationService.create(
+        firstName,
+        lastName,
+        username,
+        password,
+        email,
+      );
+      return {
+        message: response.message,
+        data: response.data,
+      };
+    } catch (error) {
+      return {
+        message: error.message,
+      };
+    }
   }
 
   @Get()
@@ -69,22 +71,14 @@ export class UserAuthenticationController {
     @Body('username') username: string,
     @Body('password') password: string,
   ): Promise<{ statusCode: number; message: string; user?: User }> {
-    try {
-      const { message, user } = await this.userAuthenticationService.loginUser(
-        username,
-        password,
-      );
-      return {
-        statusCode: 200, // OK
-        message,
-        user,
-      };
-    } catch (error) {
-      return {
-        statusCode: 401, // Unauthorized
-        message: 'Invalid username or password',
-      };
-    }
+    const { message, status, user } =
+      await this.userAuthenticationService.loginUser(username, password);
+
+    return {
+      statusCode: status,
+      message,
+      user,
+    };
   }
 
   @Post('logout/:userId')
@@ -99,7 +93,7 @@ export class UserAuthenticationController {
       };
     } catch (error) {
       return {
-        statusCode: 500, // Internal Server Error
+        statusCode: 400, // Bad Request
         message: `Failed to logout: ${error.message}`,
       };
     }
@@ -111,27 +105,21 @@ export class UserAuthenticationController {
     @Body() updateUserAuthenticationDto: UpdateUserAuthenticationDto,
   ): Promise<{ statusCode: number; message: string; user?: User }> {
     try {
-      const { message, user } = await this.userAuthenticationService.updateUser(
+      const response = await this.userAuthenticationService.updateUser(
         id,
         updateUserAuthenticationDto.password,
       );
+
       return {
-        statusCode: 200, // OK
-        message,
-        user,
+        statusCode: response.status || 200,
+        message: response.message,
+        user: response.user,
       };
     } catch (error) {
-      if (error.status === HttpStatus.NOT_FOUND) {
-        return {
-          statusCode: 404, // Not Found
-          message: 'User not found',
-        };
-      } else {
-        return {
-          statusCode: 500, // Internal Server Error
-          message: 'Error updating password',
-        };
-      }
+      return {
+        statusCode: error.status || 500,
+        message: error.message || 'Error updating password',
+      };
     }
   }
 
