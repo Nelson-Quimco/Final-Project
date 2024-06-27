@@ -1,7 +1,17 @@
+"use client";
+import useUserdata from "@/hooks/useUserdata";
 import React from "react";
+import withAuth from "@/components/auth/withAuth";
+import ResetPassword from "@/components/modals/ResetPassword";
 
 const Profile = () => {
-  return <div></div>;
+  const user = useUserdata();
+
+  return (
+    <div>
+      <ResetPassword></ResetPassword>
+    </div>
+  );
 };
 
-export default Profile;
+export default withAuth(Profile);

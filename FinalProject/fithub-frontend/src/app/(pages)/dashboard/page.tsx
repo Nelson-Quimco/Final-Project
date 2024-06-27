@@ -1,3 +1,5 @@
+"use client";
+import withAuth from "@/components/auth/withAuth";
 import React from "react";
 import { GiBiceps } from "react-icons/gi";
 
@@ -33,4 +35,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);

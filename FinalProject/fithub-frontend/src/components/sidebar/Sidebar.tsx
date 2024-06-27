@@ -9,6 +9,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GiBiceps } from "react-icons/gi";
 import Button from "../buttons/Button";
+import { useLogoutContext } from "@/providers/modalContext";
 
 interface Props {}
 
@@ -27,6 +28,8 @@ const navLinks = [
 const Sidebar = (props: Props) => {
   const pathname = usePathname();
   console.log(pathname);
+
+  const { setIsOpen } = useLogoutContext();
 
   return (
     <div className="h-[100vh] w-[15rem] bg-blue flex flex-col justify-between items-center gap-8">
@@ -52,7 +55,10 @@ const Sidebar = (props: Props) => {
         })}
       </div>
       <div className="w-full p-2">
-        <button className=" justify-start flex items-center text-white mr-[30px] gap-6 text-[20px]">
+        <button
+          className=" justify-start flex items-center text-white mr-[30px] gap-6 text-[20px]"
+          onClick={() => setIsOpen(true)}
+        >
           <RiLogoutBoxRLine size={40} />
           Logout
         </button>

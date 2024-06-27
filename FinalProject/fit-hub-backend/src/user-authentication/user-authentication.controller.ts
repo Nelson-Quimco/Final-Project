@@ -91,6 +91,7 @@ export class UserAuthenticationController {
         statusCode: 200, // OK
         message: 'Logout successful',
       };
+
     } catch (error) {
       return {
         statusCode: 400, // Bad Request

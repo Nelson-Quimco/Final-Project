@@ -1,26 +1,22 @@
 "use client";
-import Sidebar from "@/components/sidebar/Sidebar";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import { formatDateForSQL } from "@/lib/functions/dateFormatter";
+import User from "@/constants/userTypes";
+import { getCookie } from "@/lib/utils/cookies";
+import { useEffect, useState } from "react";
 
 const Test = () => {
-  const [temp, setTemp] = useState();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [user, setUser] = useState<User | null>(null);
 
-  const handler = (date: React.SetStateAction<Date>) => {
-    const formattedDate = formatDateForSQL(date);
-    console.log("Clicked date:", formattedDate);
-    setSelectedDate(date);
-  };
+  useEffect(() => {
+    const userCookie = getCookie("user");
+    if (userCookie) {
+      setUser(JSON.parse(userCookie));
+    }
+  }, []);
 
   return (
-    <div>
-      <Calendar onClickDay={handler} value={selectedDate} />
-      <div>Selected Date: {selectedDate.toDateString()}</div>
-    </div>
+    <>
+      <div>{user?.firstName}</div>
+    </>
   );
 };
 
