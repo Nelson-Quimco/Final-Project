@@ -21,64 +21,124 @@ export class UserAuthenticationController {
   ) {}
 
   @Post('signUp')
-  create(@Body() createUserAuthenticationDto: CreateUserAuthenticationDto) {
+  async create(
+    @Body() createUserAuthenticationDto: CreateUserAuthenticationDto,
+  ): Promise<{ message: string; data?: any }> {
     const { firstName, lastName, username, password, email } =
       createUserAuthenticationDto;
-    return this.userAuthenticationService.create(
-      firstName,
-      lastName,
-      username,
-      password,
-      email,
-    );
+
+    try {
+      const response = await this.userAuthenticationService.create(
+        firstName,
+        lastName,
+        username,
+        password,
+        email,
+      );
+      return {
+        message: response.message,
+        data: response.data,
+      };
+    } catch (error) {
+      return {
+        message: error.message,
+      };
+    }
   }
 
   @Get()
-  findAll() {
-    return this.userAuthenticationService.findAll();
+  findAll(): Promise<{ statusCode: number; message: string; data?: any }> {
+    return this.userAuthenticationService
+      .findAll()
+      .then((users) => {
+        return {
+          statusCode: 200, // OK
+          message: 'Users retrieved successfully',
+          data: users,
+        };
+      })
+      .catch((error) => {
+        return {
+          statusCode: 500, // Internal Server Error
+          message: 'Error retrieving users',
+          data: error,
+        };
+      });
   }
 
   @Post('login')
   async login(
     @Body('username') username: string,
     @Body('password') password: string,
-  ): Promise<{ message: string; user?: User }> {
-    return this.userAuthenticationService.loginUser(username, password);
+  ): Promise<{ statusCode: number; message: string; user?: User }> {
+    const { message, status, user } =
+      await this.userAuthenticationService.loginUser(username, password);
+
+    return {
+      statusCode: status,
+      message,
+      user,
+    };
   }
 
   @Post('logout/:userId')
   async logoutUser(
     @Param('userId') userId: string,
-  ): Promise<{ message: string }> {
+  ): Promise<{ statusCode: number; message: string }> {
     try {
       await this.userAuthenticationService.logoutUser(userId);
-      return { message: 'Logout successfully' };
-    } catch (error) {
-      throw new HttpException(
-        `Failed to logout: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
+      return {
+        statusCode: 200, // OK
+        message: 'Logout successful',
+      };
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userAuthenticationService.findOne(+id);
+    } catch (error) {
+      return {
+        statusCode: 400, // Bad Request
+        message: `Failed to logout: ${error.message}`,
+      };
+    }
   }
 
   @Patch(':id/reset-password')
   async updatePassword(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserAuthenticationDto: UpdateUserAuthenticationDto,
-  ): Promise<{ message: string; user?: User }> {
-    return this.userAuthenticationService.updateUser(
-      id,
-      updateUserAuthenticationDto.password,
-    );
+  ): Promise<{ statusCode: number; message: string; user?: User }> {
+    try {
+      const response = await this.userAuthenticationService.updateUser(
+        id,
+        updateUserAuthenticationDto.password,
+      );
+
+      return {
+        statusCode: response.status || 200,
+        message: response.message,
+        user: response.user,
+      };
+    } catch (error) {
+      return {
+        statusCode: error.status || 500,
+        message: error.message || 'Error updating password',
+      };
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userAuthenticationService.remove(+id);
+  async remove(
+    @Param('id') id: string,
+  ): Promise<{ message: string; status?: number }> {
+    try {
+      await this.userAuthenticationService.remove(+id);
+      return {
+        message: 'User deleted successfully',
+        status: 200,
+      };
+    } catch (error) {
+      return {
+        message: 'Failed to delete user: ' + error.message,
+        status: 500,
+      };
+    }
   }
 }
