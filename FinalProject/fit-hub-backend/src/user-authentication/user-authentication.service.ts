@@ -14,14 +14,22 @@ export class UserAuthenticationService {
     username: string,
     password: string,
     email: string,
-  ): Promise<{ message: string; status?: number; user?: User }> {
+  ): Promise<{
+    statusCode: number;
+    message: string;
+    data?: { message?: string; status?: number; user?: User };
+  }> {
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
       return {
-        message:
-          'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character',
-        status: 400, // HTTP status code for a bad request
+        statusCode: 500,
+        message: 'Failed to create user: Error message',
+        data: {
+          message:
+            'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+          status: 500,
+        },
       };
     }
 
@@ -35,8 +43,12 @@ export class UserAuthenticationService {
 
       if (existingUser) {
         return {
-          message: 'A user with the same username already exists',
-          status: 409, // HTTP status code for a conflict
+          statusCode: 409,
+          message: 'Error: The user already exists',
+          data: {
+            message: 'A user with the same username already exists',
+            status: 409,
+          },
         };
       }
 
@@ -50,14 +62,21 @@ export class UserAuthenticationService {
         },
       });
       return {
+        statusCode: 201,
         message: 'User created successfully',
-        status: 201,
-        user,
+        data: {
+          user,
+        },
       };
     } catch (error) {
       return {
+        statusCode: 500,
         message: 'Failed to create user: ' + error.message,
-        status: 500,
+        data: {
+          message:
+            'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+          status: 500,
+        },
       };
     }
   }
@@ -77,23 +96,24 @@ export class UserAuthenticationService {
       if (!user) {
         return {
           message: 'Invalid username or password',
-          status: 401,
+          status: 401, // Unauthorized
         };
       }
 
       return {
         message: 'Login successful',
-        status: 200,
+        status: 200, // OK
         user,
       };
     } catch (error) {
       return {
         message: 'Failed to login: ' + error.message,
-        status: 500,
+        status: 500, // Internal Server Error
       };
     }
   }
 
+  
   async logoutUser(
     userId: string,
   ): Promise<{ message: string; status?: number }> {
