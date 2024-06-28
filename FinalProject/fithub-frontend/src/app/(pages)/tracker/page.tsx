@@ -20,16 +20,16 @@ const Tracker: React.FC = () => {
         <div className="flex flex-col gap-5 w-[70%]">
           <div className=" h-[20%] mb-10">
             Today's Workout:
-            <div className="border h-full"></div>
+            <div className=" h-full bg-white shadow-md border-none rounded-md"></div>
           </div>
           <div className=" h-[80%]">
             Tomorrow's Workout:
-            <div className="border h-full"></div>
+            <div className=" h-full bg-white shadow-md border-none rounded-md"></div>
           </div>
         </div>
         <div className=" w-[30%]">
           Achievements:
-          <div className="border h-full"></div>
+          <div className=" h-full bg-white shadow-md border-none rounded-md"></div>
         </div>
       </div>
     </div>
