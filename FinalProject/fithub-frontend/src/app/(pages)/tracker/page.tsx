@@ -14,22 +14,22 @@ const Tracker: React.FC = () => {
         name="Add New Workout"
         width="13rem"
         height="3rem"
-        onClick={() => router.push("/tracker/addWorkout")}
+        onClick={() => router.push("/tracker/add-workout")}
       ></Button>
       <div className="flex w-full gap-10 h-[100%] mt-[2rem]">
         <div className="flex flex-col gap-5 w-[70%]">
           <div className=" h-[20%] mb-10">
             Today's Workout:
-            <div className="border h-full"></div>
+            <div className=" h-full bg-white shadow-md border-none rounded-md"></div>
           </div>
           <div className=" h-[80%]">
             Tomorrow's Workout:
-            <div className="border h-full"></div>
+            <div className=" h-full bg-white shadow-md border-none rounded-md"></div>
           </div>
         </div>
         <div className=" w-[30%]">
           Achievements:
-          <div className="border h-full"></div>
+          <div className=" h-full bg-white shadow-md border-none rounded-md"></div>
         </div>
       </div>
     </div>
