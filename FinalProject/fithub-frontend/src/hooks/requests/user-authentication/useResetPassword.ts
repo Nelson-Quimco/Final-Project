@@ -1,36 +1,35 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 const axiosReq = axios.create({ baseURL: `${process.env.NEXT_PUBLIC_URL}` });
 const useResetPassword = () => {
-  const [newPassword, setNewPassword] = useState("");
   const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [statusCode, setStatusCode] = useState(null);
 
   const resetPassword = async (id: number) => {
     try {
-      const body = {
-        password: newPassword,
-      };
-
-      const res = await axiosReq.patch(
-        `user-authentication/${id}/reset-password`,
-        body,
+      const response = await axiosReq.patch(
+        `/user-authentication/${id}/reset-password`,
         {
-          headers: { "Content-Type": "application/json" },
+          password: newPassword,
         }
       );
-      console.log(res.data);
+      setStatusCode(response.data.statusCode);
     } catch (error) {
-      console.log(error);
+      if (error) {
+        console.log(error);
+      }
     }
   };
 
   return {
     resetPassword,
-    setNewPassword,
     setOldPassword,
+    setNewPassword,
     oldPassword,
     newPassword,
+    statusCode,
   };
 };
 
