@@ -66,6 +66,15 @@ model FitnessExercise {
   progresses  Progress[]
 }
 
+model AddedExercise {
+  addedExerciseId Int      @id @default(autoincrement())
+  id              Int
+  title           String
+  Name            String
+  reps            Int
+  setDate         DateTime
+}
+
 model Progress {
   progressId      Int             @id @default(autoincrement())
   userId          Int
@@ -117,4 +126,3 @@ model Post {
   user      User      @relation(fields: [userId], references: [userId])
   comments  Comment[]
 }
-

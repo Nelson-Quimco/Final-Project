@@ -19,3 +19,13 @@ export class CreateFitnessTrackingDto {
   @IsString()
   Description: string;
 }
+
+export class AddedExerciseDto {
+  @IsEnum(Types)
+  Type: Types;
+  @IsEnum(Level)
+  Level: Level;
+  title: string;
+  name: string;
+  reps: number;
+}
