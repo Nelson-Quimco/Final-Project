@@ -11,11 +11,15 @@ import {
   HttpStatus,
   InternalServerErrorException,
   ParseIntPipe,
+  Res,
 } from '@nestjs/common';
 import { FitnessTrackingService } from './fitness-tracking.service';
-import { CreateFitnessTrackingDto } from './dto/create-fitness-tracking.dto';
+import {
+  AddedExerciseDto,
+  CreateFitnessTrackingDto,
+} from './dto/create-fitness-tracking.dto';
 import { UpdateFitnessTrackingDto } from './dto/update-fitness-tracking.dto';
-import { FitnessExercise, Level, Types } from '@prisma/client';
+import { AddedExercise, FitnessExercise, Level, Types } from '@prisma/client';
 
 @Controller('fitness-tracking')
 export class FitnessTrackingController {
@@ -100,6 +104,38 @@ export class FitnessTrackingController {
         `Error finding fitness exercises by type '${type}' and level '${level}': ${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+    }
+  }
+
+  @Post('add-workout')
+  async addWorkout(
+    @Body('type') type: Types,
+    @Body('level') level: Level,
+    @Body('reps') reps: number,
+    @Body('setDate') setDate: string,
+  ): Promise<{ data: AddedExercise; status: number }> {
+    try {
+      const { data, status } = await this.fitnessTrackingService.addWorkout(
+        type,
+        level,
+        reps,
+        setDate,
+      );
+      if (status === HttpStatus.CREATED) {
+        return { data, status };
+      } else {
+        throw new HttpException('Error creating workout', status);
+      }
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        console.error('Error in addWorkout:', error);
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 }
