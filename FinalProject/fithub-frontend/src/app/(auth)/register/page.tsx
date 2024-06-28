@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Button from "@/components/buttons/Button";
 import Input from "@/components/input/Input";
 import { useRouter } from "next/navigation";
-import useRegisterRequest from "@/hooks/user-authentication/useRegisterRequest";
+import useRegisterRequest from "@/hooks/requests/user-authentication/useRegisterRequest";
 import axios from "axios";
 import User from "@/constants/userTypes";
 

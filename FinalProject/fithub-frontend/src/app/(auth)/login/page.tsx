@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Button from "@/components/buttons/Button";
 import Input from "@/components/input/Input";
-import useLoginRequest from "@/hooks/user-authentication/useLoginRequest";
+import useLoginRequest from "@/hooks/requests/user-authentication/useLoginRequest";
 
 const Login = () => {
   const {
