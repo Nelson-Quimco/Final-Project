@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import Button from "@/components/buttons/Button";
 import Input from "@/components/input/Input";
 import { useRouter } from "next/navigation";
-import useRegisterRequest from "@/hooks/requests/user-authentication/useRegisterRequest";
 import axios from "axios";
 import User from "@/constants/userTypes";
+import { toast } from "react-toastify";
 
 const axiosReq = axios.create({ baseURL: `${process.env.NEXT_PUBLIC_URL}` });
 const Register = () => {
@@ -33,6 +33,8 @@ const Register = () => {
   const [confirmPassError, setConfirmPassError] = useState("");
 
   const router = useRouter();
+
+  const notif = () => toast("Account Registered Successfully");
 
   const registerAccount = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -82,20 +84,6 @@ const Register = () => {
       isValid = false;
     }
 
-    if (confirmPass === "") {
-      setConfirmPassValid(false);
-      setConfirmPassError("Please confirm your password.");
-      isValid = false;
-    } else if (password !== confirmPass) {
-      setConfirmPassValid(false);
-      setConfirmPassError("Passwords do not match.");
-      isValid = false;
-    }
-
-    // if (isValid) {
-    //   router.push("/login");
-    // }
-
     try {
       const body = {
         firstName: firstname,
@@ -109,9 +97,39 @@ const Register = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      console.log(res.data);
+      console.log(res.data.data.status);
+      if (confirmPass === "") {
+        setConfirmPassValid(false);
+        setConfirmPassError("Please confirm your password.");
+        isValid = false;
+      }
+      if (password !== confirmPass) {
+        setConfirmPassValid(false);
+        setConfirmPassError("Passwords do not match.");
+        isValid = false;
+      }
+      if (res.data.data.status === 500) {
+        setConfirmPassValid(false);
+        setConfirmPassError(
+          "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+        );
+        setPasswordValid(false);
+        setPasswordError(
+          "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+        );
+        isValid = false;
+      }
+      if (res.data.data.status === 409) {
+        setUsernameValid(false);
+        setUsernameError("Username Already Exist.");
+        isValid = false;
+      }
     } catch (error) {
       console.log(error);
+    }
+    if (isValid) {
+      router.push("/login");
+      notif();
     }
   };
 
