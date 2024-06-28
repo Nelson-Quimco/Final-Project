@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateFitnessTrackingDto } from './dto/create-fitness-tracking.dto';
 import { UpdateFitnessTrackingDto } from './dto/update-fitness-tracking.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -6,6 +6,7 @@ import { Level, Types, FitnessExercise } from '@prisma/client';
 
 @Injectable()
 export class FitnessTrackingService {
+  logger: any;
   constructor(private readonly prismaService: PrismaService) {}
 
   async createFitnessExercise(
@@ -81,35 +82,18 @@ export class FitnessTrackingService {
     }
   }
 
-  async update(
-    id: number,
-    updateFitnessTrackingDto: UpdateFitnessTrackingDto,
-  ): Promise<{ data: FitnessExercise; status: number }> {
+  //view type and name
+ 
+  async update(id: number, updateFitnessExerciseDto: UpdateFitnessTrackingDto): Promise<FitnessExercise> {
     try {
-      const updatedFitnessExercise =
-        await this.prismaService.fitnessExercise.update({
-          where: {
-            id: id,
-          },
-          data: {
-            ...updateFitnessTrackingDto,
-            updatedAt: new Date(),
-          },
-          include: {
-            user: true,
-            progresses: true,
-          },
-        });
-
-      return {
-        data: updatedFitnessExercise,
-        status: HttpStatus.OK,
-      };
+      const updatedFitnessExercise = await this.prismaService.fitnessExercise.update({
+        where: { id: id },
+        data: updateFitnessExerciseDto,
+      });
+      return updatedFitnessExercise;
     } catch (error) {
-      return {
-        data: null,
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-      };
+      this.logger.error('Error updating fitness exercise:', error);
+      throw new InternalServerErrorException('Failed to update fitness exercise');
     }
   }
 

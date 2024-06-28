@@ -9,6 +9,8 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  InternalServerErrorException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { FitnessTrackingService } from './fitness-tracking.service';
 import { CreateFitnessTrackingDto } from './dto/create-fitness-tracking.dto';
@@ -17,6 +19,7 @@ import { FitnessExercise, Level, Types } from '@prisma/client';
 
 @Controller('fitness-tracking')
 export class FitnessTrackingController {
+  logger: any;
   constructor(
     private readonly fitnessTrackingService: FitnessTrackingService,
   ) {}
@@ -48,23 +51,20 @@ export class FitnessTrackingController {
   }
 
   @Patch(':id')
-  @HttpCode(200)
   async update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateFitnessExerciseDto: UpdateFitnessTrackingDto,
-  ): Promise<{ data: FitnessExercise; status: number }> {
+  ): Promise<FitnessExercise> {
     try {
-      const { data: updatedFitnessExercise, status } =
-        await this.fitnessTrackingService.update(id, updateFitnessExerciseDto);
-      return {
-        data: updatedFitnessExercise,
-        status,
-      };
+      return await this.fitnessTrackingService.update(
+        id,
+        updateFitnessExerciseDto,
+      );
     } catch (error) {
-      return {
-        data: null,
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-      };
+      this.logger.error('Error updating fitness exercise:', error);
+      throw new InternalServerErrorException(
+        'Failed to update fitness exercise',
+      );
     }
   }
 
