@@ -12,6 +12,7 @@ import {
   InternalServerErrorException,
   ParseIntPipe,
   Res,
+  NotFoundException,
 } from '@nestjs/common';
 import { FitnessTrackingService } from './fitness-tracking.service';
 import {
@@ -19,7 +20,21 @@ import {
   CreateFitnessTrackingDto,
 } from './dto/create-fitness-tracking.dto';
 import { UpdateFitnessTrackingDto } from './dto/update-fitness-tracking.dto';
-import { AddedExercise, FitnessExercise, Level, Types } from '@prisma/client';
+import {
+  AddedExercise,
+  FitnessExercise,
+  Level,
+  Types,
+  User,
+} from '@prisma/client';
+
+interface AddWorkoutDto {
+  type: Types;
+  level: Level;
+  reps: number;
+  setDate: string;
+  title: string;
+}
 
 @Controller('fitness-tracking')
 export class FitnessTrackingController {
@@ -108,34 +123,25 @@ export class FitnessTrackingController {
   }
 
   @Post('add-workout')
-  async addWorkout(
-    @Body('type') type: Types,
-    @Body('level') level: Level,
+  async addExercise(
+    @Body('userId') userId: number,
+    @Body('fitnessExerciseId') fitnessExerciseId: number,
     @Body('reps') reps: number,
     @Body('setDate') setDate: string,
-  ): Promise<{ data: AddedExercise; status: number }> {
-    try {
-      const { data, status } = await this.fitnessTrackingService.addWorkout(
-        type,
-        level,
-        reps,
-        setDate,
-      );
-      if (status === HttpStatus.CREATED) {
-        return { data, status };
-      } else {
-        throw new HttpException('Error creating workout', status);
-      }
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      } else {
-        console.error('Error in addWorkout:', error);
-        throw new HttpException(
-          'Internal server error',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
+  ): Promise<{ data: AddedExercise; statusCode: number }> {
+    const { data, statusCode } = await this.fitnessTrackingService.addExercise(
+      userId,
+      fitnessExerciseId,
+      reps,
+      setDate,
+    );
+
+    if (statusCode === 201) {
+      return { data, statusCode };
+    } else if (statusCode === 404) {
+      throw new NotFoundException('FitnessExercise not found');
+    } else {
+      throw new InternalServerErrorException('Failed to add exercise');
     }
   }
 }

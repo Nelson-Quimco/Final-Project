@@ -129,50 +129,46 @@ export class FitnessTrackingService {
     }
   }
 
-  async addWorkout(
-    type: Types,
-    level: Level,
+  async addExercise(
+    userId: number,
+    fitnessExerciseId: number,
     reps: number,
     setDate: string,
-  ): Promise<{ data: AddedExercise; status: number }> {
+  ): Promise<{ data: AddedExercise; statusCode: number }> {
     try {
-      const { data: fitnessExercises, status } = await this.findByTypeAndLevel(
-        type,
-        level,
-      );
-      if (status === HttpStatus.OK && fitnessExercises.length > 0) {
-        const randomIndex = Math.floor(Math.random() * fitnessExercises.length);
-        const selectedExercise = fitnessExercises[randomIndex];
-        const addedExercise = await this.prismaService.addedExercise.create({
-          data: {
-            id: selectedExercise.id,
-            title: selectedExercise.Name,
-            Name: selectedExercise.Name,
-            reps: reps,
-            setDate: new Date(setDate),
-          },
-        });
+      const fitnessExercise = await this.prismaService.fitnessExercise.findUnique({
+        where: {
+          id: fitnessExerciseId,
+        },
+      });
+
+      if (!fitnessExercise) {
         return {
-          data: {
-            addedExerciseId: addedExercise.id,
-            id: addedExercise.id,
-            title: addedExercise.title,
-            Name: addedExercise.Name,
-            reps: addedExercise.reps,
-            setDate: addedExercise.setDate,
-          },
-          status: HttpStatus.CREATED,
+          data: null,
+          statusCode: 404, 
         };
-      } else {
-        return { data: null, status: status };
       }
+
+      const newAddedExercise = await this.prismaService.addedExercise.create({
+        data: {
+          id: fitnessExercise.id,
+          title: fitnessExercise.Name,
+          Name: fitnessExercise.Name,
+          reps: reps,
+          setDate: new Date(setDate).toISOString(),
+        },
+      });
+
+      return {
+        data: newAddedExercise,
+        statusCode: 201, 
+      };
     } catch (error) {
-      console.error('Error in addWorkout:', error);
-      if (error.code === 'P2002') {
-        return { data: null, status: HttpStatus.CONFLICT };
-      } else {
-        return { data: null, status: HttpStatus.INTERNAL_SERVER_ERROR };
-      }
+      console.error(error);
+      return {
+        data: null,
+        statusCode: 500, 
+      };
     }
   }
 }
