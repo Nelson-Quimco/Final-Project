@@ -144,4 +144,18 @@ export class FitnessTrackingController {
       throw new InternalServerErrorException('Failed to add exercise');
     }
   }
+
+  @Get('get-exercise/:userId')
+  async getExercises(
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<{ data: AddedExercise[]; statusCode: number }> {
+    try {
+      const { data, statusCode } =
+        await this.fitnessTrackingService.getExercises(userId);
+      return { data, statusCode };
+    } catch (error) {
+      console.error(error);
+      return { data: [], statusCode: 500 };
+    }
+  }
 }

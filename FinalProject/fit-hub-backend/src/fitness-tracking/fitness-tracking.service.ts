@@ -4,13 +4,16 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import {
-  AddedExerciseDto,
-  CreateFitnessTrackingDto,
-} from './dto/create-fitness-tracking.dto';
+import { CreateFitnessTrackingDto } from './dto/create-fitness-tracking.dto';
 import { UpdateFitnessTrackingDto } from './dto/update-fitness-tracking.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Level, Types, FitnessExercise, AddedExercise } from '@prisma/client';
+import {
+  Level,
+  Types,
+  FitnessExercise,
+  AddedExercise,
+  Prisma,
+} from '@prisma/client';
 
 @Injectable()
 export class FitnessTrackingService {
@@ -136,16 +139,17 @@ export class FitnessTrackingService {
     setDate: string,
   ): Promise<{ data: AddedExercise; statusCode: number }> {
     try {
-      const fitnessExercise = await this.prismaService.fitnessExercise.findUnique({
-        where: {
-          id: fitnessExerciseId,
-        },
-      });
+      const fitnessExercise =
+        await this.prismaService.fitnessExercise.findUnique({
+          where: {
+            id: fitnessExerciseId,
+          },
+        });
 
       if (!fitnessExercise) {
         return {
           data: null,
-          statusCode: 404, 
+          statusCode: 404,
         };
       }
 
@@ -161,13 +165,49 @@ export class FitnessTrackingService {
 
       return {
         data: newAddedExercise,
-        statusCode: 201, 
+        statusCode: 201,
       };
     } catch (error) {
       console.error(error);
       return {
         data: null,
-        statusCode: 500, 
+        statusCode: 500,
+      };
+    }
+  }
+
+  async getExercises(
+    userId: number,
+  ): Promise<{ data: AddedExercise[]; statusCode: number }> {
+    try {
+      const fitnessExerciseIds = await this.prismaService.fitnessExercise
+        .findMany({
+          where: {
+            userId: userId,
+          },
+          select: {
+            id: true,
+          },
+        })
+        .then((exercises) => exercises.map((exercise) => exercise.id));
+
+      const addedExercises = await this.prismaService.addedExercise.findMany({
+        where: {
+          id: {
+            in: fitnessExerciseIds,
+          },
+        },
+      });
+
+      return {
+        data: addedExercises,
+        statusCode: 200,
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        data: [],
+        statusCode: 500,
       };
     }
   }
