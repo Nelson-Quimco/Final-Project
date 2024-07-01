@@ -34,12 +34,17 @@ const Register = () => {
 
   const router = useRouter();
 
-  const notif = () => toast("Account Registered Successfully");
+  const notif = () =>
+    toast.success("Account Registered Successfully", {
+      position: "top-center",
+    });
 
   const registerAccount = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     let isValid = true;
+
+    // Reset validation states and error messages
     setFirstnameValid(true);
     setLastnameValid(true);
     setUsernameValid(true);
@@ -54,6 +59,7 @@ const Register = () => {
     setPasswordError("");
     setConfirmPassError("");
 
+    // Validate form inputs
     if (firstname === "") {
       setFirstnameValid(false);
       setFirstnameError("Please enter your first name.");
@@ -84,6 +90,22 @@ const Register = () => {
       isValid = false;
     }
 
+    if (confirmPass === "") {
+      setConfirmPassValid(false);
+      setConfirmPassError("Please confirm your password.");
+      isValid = false;
+    }
+
+    if (password !== confirmPass) {
+      setConfirmPassValid(false);
+      setConfirmPassError("Passwords do not match.");
+      isValid = false;
+    }
+
+    if (!isValid) {
+      return;
+    }
+
     try {
       const body = {
         firstName: firstname,
@@ -97,17 +119,7 @@ const Register = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      console.log(res.data.data.status);
-      if (confirmPass === "") {
-        setConfirmPassValid(false);
-        setConfirmPassError("Please confirm your password.");
-        isValid = false;
-      }
-      if (password !== confirmPass) {
-        setConfirmPassValid(false);
-        setConfirmPassError("Passwords do not match.");
-        isValid = false;
-      }
+      // Handle specific API response statuses
       if (res.data.data.status === 500) {
         setConfirmPassValid(false);
         setConfirmPassError(
@@ -119,6 +131,7 @@ const Register = () => {
         );
         isValid = false;
       }
+
       if (res.data.data.status === 409) {
         setUsernameValid(false);
         setUsernameError("Username Already Exist.");
@@ -126,7 +139,10 @@ const Register = () => {
       }
     } catch (error) {
       console.log(error);
+      isValid = false;
     }
+
+    // Navigate to the login page and show notification if the registration is successful
     if (isValid) {
       router.push("/login");
       notif();
