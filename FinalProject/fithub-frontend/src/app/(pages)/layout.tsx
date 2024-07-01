@@ -15,7 +15,7 @@ export default function MainLayout({
         <div className="flex">
           <LogoutModal></LogoutModal>
           <Sidebar></Sidebar>
-          <div className="bg-offWhite p-6 w-full flex flex-col gap-10 h-[100vh]">
+          <div className="bg-offWhite p-10 px-20 w-full flex flex-col gap-10 h-[100vh]">
             <div className="flex justify-end">
               <SearchBar></SearchBar>
             </div>

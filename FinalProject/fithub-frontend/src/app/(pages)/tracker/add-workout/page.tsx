@@ -15,6 +15,7 @@ const AddWorkout = () => {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [type, setType] = useState("");
   const [level, setLevel] = useState("");
+  const [title, setTitle] = useState("");
 
   const router = useRouter();
 
@@ -49,13 +50,14 @@ const AddWorkout = () => {
         >
           <Button
             name="Add"
-            width="70px"
-            className="bg-blue rounded-tl-sm rounded-bl-sm h-[5rem] text-white"
+            width="80px"
+            className="bg-blue rounded-tl-sm rounded-bl-sm h-[6rem] text-white text-[1.5rem]"
           ></Button>
 
           <div className="p-2">
             <p className="font-bold text-[18px]">{x.Name}</p>
             <p className="text-[13px]">Type: {x.Type}</p>
+            <p className="text-[13px]">Level: {x.Level}</p>
           </div>
           <IoEye
             onClick={() => viewExercises(x.id)}
@@ -64,7 +66,9 @@ const AddWorkout = () => {
         </div>
       ))
     ) : (
-      <div>No Data</div>
+      <div className="text-center">
+        Please Select Your Type and Workout Level
+      </div>
     );
   };
 
@@ -72,11 +76,16 @@ const AddWorkout = () => {
     <div className="w-full h-full bg-white shadow-md border-none rounded-md p-5 flex flex-col">
       <div className="font-bold text-[20px] mb-4">ADD NEW WORKOUT</div>
       <div className="w-full flex-grow flex gap-6">
-        <div className="w-[70%] h-full border rounded-md p-6 px-10">
+        <div className="w-[70%] h-full border rounded-md p-4 px-10">
           <form action="POST" className="flex flex-col gap-10">
             <div>
               <p className="font-bold text-[20px]">Title:</p>
-              <Input type="text" width="20rem" />
+              <Input
+                type="text"
+                width="20rem"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
             </div>
             <div className="flex gap-10">
               <div>
@@ -101,10 +110,10 @@ const AddWorkout = () => {
                   className="border p-1 font-bold rounded-md"
                   onChange={(e) => setType(e.target.value)}
                 >
-                  <option value="">All</option>
+                  <option value="">None</option>
                   <option value="ABDOMINAL">Abdominal</option>
                   <option value="BACK">Back</option>
-                  <option value="BICEP">Bicep</option>
+                  <option value="BICEPS">Bicep</option>
                   <option value="CARDIO">Cardio</option>
                   <option value="RES">Rest</option>
                 </select>
