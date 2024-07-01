@@ -29,3 +29,4 @@ export class AddedExerciseDto {
   name: string;
   reps: number;
 }
+
