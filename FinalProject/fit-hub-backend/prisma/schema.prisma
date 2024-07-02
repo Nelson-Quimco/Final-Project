@@ -75,6 +75,14 @@ model AddedExercise {
   setDate         DateTime
 }
 
+model IsCompleted {
+  iscompletedId   Int     @id @default(autoincrement())
+  addedExerciseId Int
+  Name            String
+  reps            Int
+  isComplete      Boolean @default(false)
+}
+
 model Progress {
   progressId      Int             @id @default(autoincrement())
   userId          Int

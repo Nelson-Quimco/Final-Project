@@ -15,14 +15,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { FitnessTrackingService } from './fitness-tracking.service';
-import {
-  AddedExerciseDto,
-  CreateFitnessTrackingDto,
-} from './dto/create-fitness-tracking.dto';
+import { CreateFitnessTrackingDto } from './dto/create-fitness-tracking.dto';
 import { UpdateFitnessTrackingDto } from './dto/update-fitness-tracking.dto';
 import {
   AddedExercise,
   FitnessExercise,
+  IsCompleted,
   Level,
   Types,
   User,
@@ -124,13 +122,13 @@ export class FitnessTrackingController {
 
   @Post('add-workout')
   async addExercise(
-    @Body('userId') userId: number,
+    // @Body('userId') userId: number,
     @Body('fitnessExerciseId') fitnessExerciseId: number,
     @Body('reps') reps: number,
     @Body('setDate') setDate: string,
   ): Promise<{ data: AddedExercise; statusCode: number }> {
     const { data, statusCode } = await this.fitnessTrackingService.addExercise(
-      userId,
+      // userId,
       fitnessExerciseId,
       reps,
       setDate,
@@ -145,7 +143,7 @@ export class FitnessTrackingController {
     }
   }
 
-  @Get('get-exercise/:userId')
+  @Get(':userId')
   async getExercises(
     @Param('userId', ParseIntPipe) userId: number,
   ): Promise<{ data: AddedExercise[]; statusCode: number }> {
@@ -155,7 +153,27 @@ export class FitnessTrackingController {
       return { data, statusCode };
     } catch (error) {
       console.error(error);
-      return { data: [], statusCode: 500 };
+      return {
+        data: [],
+        statusCode: 500,
+      };
+    }
+  }
+
+  @Get('/completed/:userId')
+  async getCompletedExercises(
+    @Param('userId') userId: number,
+  ): Promise<{ data: IsCompleted[]; statusCode: number }> {
+    try {
+      const completedExercises =
+        await this.fitnessTrackingService.getCompletedExercises(userId);
+      return completedExercises;
+    } catch (error) {
+      console.error(error);
+      return {
+        data: [],
+        statusCode: 500,
+      };
     }
   }
 }
