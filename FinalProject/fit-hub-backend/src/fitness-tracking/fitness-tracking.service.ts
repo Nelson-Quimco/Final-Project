@@ -13,6 +13,8 @@ import {
   FitnessExercise,
   AddedExercise,
   Prisma,
+  IsCompleted,
+  User,
 } from '@prisma/client';
 
 @Injectable()
@@ -133,7 +135,7 @@ export class FitnessTrackingService {
   }
 
   async addExercise(
-    userId: number,
+    // userId: number,
     fitnessExerciseId: number,
     reps: number,
     setDate: string,
@@ -176,6 +178,41 @@ export class FitnessTrackingService {
     }
   }
 
+  // async getExercises(
+  //   userId: number,
+  // ): Promise<{ data: AddedExercise[]; statusCode: number }> {
+  //   try {
+  //     const fitnessExerciseIds = await this.prismaService.fitnessExercise
+  //       .findMany({
+  //         where: {
+  //           userId: userId,
+  //         },
+  //         select: {
+  //           id: true,
+  //         },
+  //       })
+  //       .then((exercises) => exercises.map((exercise) => exercise.id));
+
+  //     const addedExercises = await this.prismaService.addedExercise.findMany({
+  //       where: {
+  //         id: {
+  //           in: fitnessExerciseIds,
+  //         },
+  //       },
+  //     });
+
+  //     return {
+  //       data: addedExercises,
+  //       statusCode: 200,
+  //     };
+  //   } catch (error) {
+  //     console.error(error);
+  //     return {
+  //       data: [],
+  //       statusCode: 500,
+  //     };
+  //   }
+  // }
   async getExercises(
     userId: number,
   ): Promise<{ data: AddedExercise[]; statusCode: number }> {
@@ -201,6 +238,41 @@ export class FitnessTrackingService {
 
       return {
         data: addedExercises,
+        statusCode: 200,
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        data: [],
+        statusCode: 500,
+      };
+    }
+  }
+
+  async getCompletedExercises(
+    userId: number,
+  ): Promise<{ data: IsCompleted[]; statusCode: number }> {
+    try {
+      const fitnessExerciseIds =
+        await this.prismaService.fitnessExercise.findMany({
+          where: {
+            userId: userId,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+      const completedExercises = await this.prismaService.isCompleted.findMany({
+        where: {
+          addedExerciseId: {
+            in: fitnessExerciseIds.map((exercise) => exercise.id),
+          },
+        },
+      });
+
+      return {
+        data: completedExercises,
         statusCode: 200,
       };
     } catch (error) {
