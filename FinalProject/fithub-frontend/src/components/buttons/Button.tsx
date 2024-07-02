@@ -7,6 +7,7 @@ interface Props {
   height?: string;
   type?: "button" | "submit";
   className?: string;
+  disabled?: boolean;
 }
 
 const Button = (props: Props) => {
