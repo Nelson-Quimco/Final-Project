@@ -25,6 +25,7 @@ interface FitnessExercise {
   updatedAt: Date;
   user: User;
   userId: number;
+  reps: number;
   //   progresses: Progress[];
 }
 
