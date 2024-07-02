@@ -125,7 +125,7 @@ model Comment {
 
 model Post {
   postId    Int       @id @default(autoincrement())
-  userId    Int       @unique
+  userId    Int
   likes     Int
   title     String
   content   String
