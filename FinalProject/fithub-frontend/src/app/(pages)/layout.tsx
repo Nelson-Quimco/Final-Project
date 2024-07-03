@@ -2,7 +2,6 @@ import LogoutModal from "@/components/modals/LogoutModal";
 import SearchBar from "@/components/search-bar/search-bar";
 import Sidebar from "@/components/sidebar/Sidebar";
 import { LogoutModalProvider } from "@/providers/modalContext";
-import { ToastContainer } from "react-toastify";
 
 export default function MainLayout({
   children,
@@ -12,14 +11,14 @@ export default function MainLayout({
   return (
     <>
       <LogoutModalProvider>
-        <div className="flex">
+        <div className="flex h-full bg-offWhite">
           <LogoutModal></LogoutModal>
           <Sidebar></Sidebar>
-          <div className="bg-offWhite p-10 px-20 w-full flex flex-col gap-10 h-[100vh]">
+          <div className="bg-offWhite p-8 px-20 w-full flex flex-col gap-10">
             <div className="flex justify-end">
               <SearchBar></SearchBar>
             </div>
-            <div className="h-[100vh]">{children}</div>
+            <div className="h-full ml-[15rem]">{children}</div>
           </div>
         </div>
       </LogoutModalProvider>

@@ -32,7 +32,7 @@ const Sidebar = (props: Props) => {
   const { setIsOpen } = useLogoutContext();
 
   return (
-    <div className="h-[100vh] w-[15rem] bg-blue flex flex-col justify-between items-center gap-8">
+    <div className="h-[100vh] fixed w-[15rem] bg-blue flex flex-col justify-between items-center gap-8">
       <div className="h-[5rem] border-none">
         <Link href={"/dashboard"}>
           <Logo />
@@ -40,7 +40,7 @@ const Sidebar = (props: Props) => {
       </div>
       <div className="flex-1 h-full text-white text-[20px] flex flex-col gap-10 *:flex *:gap-6 *:items-center *:mr-[30px]">
         {navLinks.map((links, index) => {
-          const isActive = pathname === links.href;
+          const isActive = pathname.startsWith(links.href);
 
           return (
             <Link

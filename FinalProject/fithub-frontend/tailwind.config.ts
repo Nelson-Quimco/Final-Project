@@ -14,6 +14,7 @@ const config: Config = {
       offWhite: "#F4F3F2",
       brightRed: "#F05454",
       black: "#000000",
+      blueGrey: "#82909E",
     },
     extend: {},
   },
