@@ -1,13 +1,25 @@
 "use client";
 import useUserdata from "@/hooks/useUserdata";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import withAuth from "@/components/auth/withAuth";
 import ResetPassword from "@/components/modals/ResetPassword";
 import Button from "@/components/buttons/Button";
+import useForumRequest from "@/hooks/requests/forum/useForumRequest";
 
 const Profile = () => {
-  const user = useUserdata();
   const [isModalOpen, setIsmodalOpen] = useState(false);
+
+  const user = useUserdata();
+  const { userPost, getPostbyUser } = useForumRequest();
+
+  const userID = user?.userId;
+
+  useEffect(() => {
+    if (userID) {
+      getPostbyUser(userID);
+    }
+  }, []);
+  console.log(userPost);
 
   return (
     <div>
@@ -33,23 +45,32 @@ const Profile = () => {
         </div>
         <div className="flex flex-col w-[80%] gap-10 p-10 text-[20px]">
           <div className="flex justify-between">
-            <div className="flex flex-col justify-start gap-6 w-full">
+            <div className="flex flex-col justify-start gap-6 w-full font-bold">
               <p>
-                <span className="font-bold mr-2">Firstname:</span>{" "}
-                {user?.firstName}
+                Firstname:
+                <span className=" font-normal text-[18px] ml-[10px]">
+                  {user?.firstName}
+                </span>
               </p>
               <p>
-                <span className="font-bold mr-2">Username: </span>
-                {user?.username}
+                Username:
+                <span className=" font-normal text-[18px] ml-[10px]">
+                  {user?.username}
+                </span>
               </p>
             </div>
-            <div className="flex flex-col justify-start gap-6 w-full">
+            <div className="flex flex-col justify-start gap-6 w-full font-bold">
               <p>
-                <span className="font-bold mr-2"> Lastname:</span>{" "}
-                {user?.lastName}
+                Lastname:
+                <span className=" font-normal text-[18px] ml-[10px]">
+                  {user?.lastName}
+                </span>
               </p>
               <p>
-                <span className="font-bold mr-2"> Email:</span> {user?.email}
+                Email:
+                <span className=" font-normal text-[18px] ml-[10px]">
+                  {user?.email}
+                </span>
               </p>
             </div>
           </div>
