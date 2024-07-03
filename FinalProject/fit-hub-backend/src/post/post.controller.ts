@@ -22,26 +22,81 @@ export class PostController {
   async createPost(
     @Param('userId', ParseIntPipe) userId: number,
     @Body() createPostDto: CreatePostDto,
-  ): Promise<PostEntity> {
-    return await this.postService.createPost(userId, createPostDto);
+  ): Promise<{ status: number; post: PostEntity | null }> {
+    try {
+      const { status, post } = await this.postService.createPost(
+        userId,
+        createPostDto,
+      );
+      return { status, post };
+    } catch (error) {
+      console.error('Error creating post:', error);
+      return { status: 500, post: null };
+    }
   }
 
-  @Get('get-posts')
-  async findAll(): Promise<PostEntity[]> {
-    return this.postService.findAllPosts();
+  @Get('get-post')
+  async findAll(): Promise<{ status: number; posts: PostEntity[] }> {
+    try {
+      const { status, posts } = await this.postService.findAllPosts();
+      return { status, posts };
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      return { status: 500, posts: [] };
+    }
   }
 
   @Delete(':id')
-  async deletePost(@Param('id', ParseIntPipe) postId: number): Promise<void> {
-    await this.postService.deletePost(postId);
+  async deletePost(
+    @Param('id', ParseIntPipe) postId: number,
+  ): Promise<{ status: number }> {
+    try {
+      const { status } = await this.postService.deletePost(postId);
+      return { status };
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      return { status: 500 };
+    }
+  }
+
+  @Get(':userId')
+  async findAllPostsByUserId(@Param('userId') userId: string) {
+    try {
+      const filteredPosts = await this.postService.findAllPostsByUserId(
+        Number(userId),
+      );
+      return { status: 200, data: filteredPosts.posts };
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      return { status: 500, data: [] };
+    }
   }
 
   @Patch(':postId')
   async updatePost(
     @Param('postId', ParseIntPipe) postId: number,
     @Body() updatePostDto: UpdatePostDto,
-  ): Promise<PostEntity> {
-    return this.postService.updatePost(postId, updatePostDto);
+  ): Promise<{ status: number; post: PostEntity | null }> {
+    try {
+      const { status, post } = await this.postService.updatePost(
+        postId,
+        updatePostDto,
+      );
+      return { status, post };
+    } catch (error) {
+      console.error('Error updating post:', error);
+      return { status: 500, post: null };
+    }
   }
 
+  @Post(':postId/like')
+  async likePost(@Param('postId') postId: string) {
+    try {
+      const likedPost = await this.postService.likePost(Number(postId));
+      return { status: 200, data: likedPost };
+    } catch (error) {
+      console.error('Error liking post:', error);
+      return { status: 500, data: null };
+    }
+  }
 }
