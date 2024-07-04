@@ -1,31 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { IoIosCloseCircle } from "react-icons/io";
 import Input from "../input/Input";
 import Button from "../buttons/Button";
 import useForumRequest from "@/hooks/requests/forum/useForumRequest";
-import useUserdata from "@/hooks/useUserdata";
-import { IoIosCloseCircle } from "react-icons/io";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  postId: number;
+  title: string;
+  content: string;
 }
 
-const CreatePostModal = (props: Props) => {
-  const { isOpen, onClose } = props;
+const EditPostModal = (props: Props) => {
+  const { isOpen, onClose, title, content, postId } = props;
+  const [newTitle, setNewTitle] = useState(title);
+  const [newContent, setNewContent] = useState(content);
 
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const { editPost } = useForumRequest();
 
-  const user = useUserdata();
-
-  const userId = user?.userId;
-
-  const { createPost } = useForumRequest();
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    createPost(userId, title, content);
-    console.log("yeeahhh");
+  const handleSubmitEdit = () => {
+    editPost(postId, newTitle, newContent);
     onClose();
   };
 
@@ -41,20 +36,23 @@ const CreatePostModal = (props: Props) => {
           onClick={onClose}
         />
         <div>
-          <p className="font-bold">Create New Posts</p>
+          <p className="font-bold">Edit Post </p>
         </div>
-        <form className="h-full flex flex-col gap-3" onSubmit={handleSubmit}>
+        <form
+          className="h-full flex flex-col gap-3"
+          onSubmit={handleSubmitEdit}
+        >
           <Input
             placeholder="Title......"
-            onChange={(e) => setTitle(e.target.value)}
-            required={true}
+            onChange={(e) => setNewTitle(e.target.value)}
+            value={newTitle}
           />
           <textarea
             placeholder="What's On Your Mind"
             className="h-full p-3 border rounded-md"
             style={{ resize: "none" }}
-            onChange={(e) => setContent(e.target.value)}
-            required={true}
+            onChange={(e) => setNewContent(e.target.value)}
+            value={newContent}
           ></textarea>
           <div className="self-end">
             <Button height="3rem" type="submit" name="Post"></Button>
@@ -65,4 +63,4 @@ const CreatePostModal = (props: Props) => {
   );
 };
 
-export default CreatePostModal;
+export default EditPostModal;

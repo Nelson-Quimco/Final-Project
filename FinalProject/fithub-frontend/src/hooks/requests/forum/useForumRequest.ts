@@ -67,7 +67,37 @@ const useForumRequest = () => {
     }
   };
 
-  return { post, allPost, userPost, createPost, getPostbyUser, getPostById };
+  const deletePost = async (postId: number) => {
+    try {
+      const res = await axiosReq.delete(`post/${postId}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editPost = async (postId: number, title: string, content: string) => {
+    try {
+      const body = {
+        title: title,
+        content: content,
+      };
+      const res = await axiosReq.patch(`/post/${postId}`, body);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return {
+    post,
+    allPost,
+    userPost,
+    createPost,
+    getPostbyUser,
+    getPostById,
+    editPost,
+    deletePost,
+    likePost,
+  };
 };
 
 export default useForumRequest;

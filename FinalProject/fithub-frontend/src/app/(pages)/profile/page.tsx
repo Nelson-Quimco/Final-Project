@@ -77,15 +77,16 @@ const Profile = () => {
 
       <div className="mt-5">
         <p className=" my-5">Posts({userPost?.length})</p>
-        <div className="flex flex-col items-center gap-3">
+        <div className="flex flex-col items-center gap-6">
           {userPost?.map((posts) => (
             <PostPreview
               title={posts.title}
               description={posts.content}
               date={new Date(posts.createdAt)}
               username="username"
-              href={"/"}
+              href={`/profile/${posts.postId}`}
               key={posts.postId}
+              likes={posts.likes}
             />
           ))}
         </div>

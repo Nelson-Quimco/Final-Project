@@ -14,7 +14,7 @@ const PostId = ({ params }: { params: { postId: number } }) => {
   console.log(post);
 
   return (
-    <div>
+    <div className="">
       {post?.data.map((post) => (
         <PostCard
           title={post.title}

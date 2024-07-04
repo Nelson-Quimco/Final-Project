@@ -19,7 +19,7 @@ const useLoginRequest = () => {
   const getAccounts = async () => {
     try {
       const res = await axiosReq.get("/user-authentication");
-      setData(res.data);
+      setData(res.data.data.users);
     } catch (error) {
       console.log(error);
     }
@@ -79,6 +79,7 @@ const useLoginRequest = () => {
     loginAccount,
     setUsername,
     setPassword,
+    getAccounts,
     usernameValid,
     passwordValid,
     usernameMessage,
