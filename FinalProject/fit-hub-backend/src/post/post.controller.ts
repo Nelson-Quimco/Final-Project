@@ -109,7 +109,7 @@ export class PostController {
 
       switch (status) {
         case 200:
-          return { status, data: post };
+          return { status, data: [post] };
         case 404:
           throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
         default:
