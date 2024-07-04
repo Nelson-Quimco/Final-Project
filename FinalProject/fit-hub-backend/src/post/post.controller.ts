@@ -8,6 +8,8 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -97,6 +99,30 @@ export class PostController {
     } catch (error) {
       console.error('Error liking post:', error);
       return { status: 500, data: null };
+    }
+  }
+
+  @Get('get-post/:id')
+  async getPostById(@Param('id', ParseIntPipe) postId: number) {
+    try {
+      const { status, post } = await this.postService.getPostById(postId);
+
+      switch (status) {
+        case 200:
+          return { status, data: post };
+        case 404:
+          throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+        default:
+          throw new HttpException(
+            'Internal server error',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+      }
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

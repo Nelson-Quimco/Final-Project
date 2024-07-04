@@ -1,16 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { User } from '@prisma/client';
 
-@Controller('comment')
+@Controller('comments')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.create(createCommentDto);
-  }
+  // @Post(':postId/create')
+  // async createComment(
+  //   @Param('postId') postId: number,
+  //   @Body() createCommentDto: CreateCommentDto,
+  //   @GetUser() user: User,
+  // ): Promise<{ status: number; comment: Comment }> {
+  //   const userId = user.id;
+  //   const { status, comment } = await this.commentService.createComment(userId, postId, createCommentDto);
+  //   return { status, comment };
+  // }
 
   @Get()
   findAll() {
@@ -20,7 +27,7 @@ export class CommentController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.commentService.findOne(+id);
-  }
+  }3
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
