@@ -1,23 +1,13 @@
 "use client";
-import User from "@/constants/userTypes";
-import { getCookie } from "@/lib/utils/cookies";
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import useAddWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
 
-const Test = () => {
-  const [user, setUser] = useState<User | null>(null);
+const page = () => {
+  const { workouts, groupedByDate } = useAddWorkouts();
+  console.log(groupedByDate);
+  console.log(workouts);
 
-  useEffect(() => {
-    const userCookie = getCookie("user");
-    if (userCookie) {
-      setUser(JSON.parse(userCookie));
-    }
-  }, []);
-
-  return (
-    <>
-      <div>{user?.firstName}</div>
-    </>
-  );
+  return <div></div>;
 };
 
-export default Test;
+export default page;

@@ -12,6 +12,7 @@ import { FitnessExercise } from "@/constants/trackerType";
 import { FaTrashAlt } from "react-icons/fa";
 import axios from "axios";
 import useUserdata from "@/hooks/useUserdata";
+import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
 
 const axiosReq = axios.create({ baseURL: `${process.env.NEXT_PUBLIC_URL}` });
 const AddWorkout = () => {
@@ -20,8 +21,9 @@ const AddWorkout = () => {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [type, setType] = useState("");
   const [level, setLevel] = useState("");
-  const [title, setTitle] = useState("");
   const [addedExercises, setAddedExercises] = useState<FitnessExercise[]>([]);
+
+  const { groupedByDate } = useAddedWorkouts();
   const user = useUserdata();
 
   const router = useRouter();
@@ -33,6 +35,7 @@ const AddWorkout = () => {
   useEffect(() => {
     filterExercise(type, level);
   }, [type, level]);
+  console.log(groupedByDate);
 
   const viewExercises = (id: number) => {
     router.push(`add-workout/${id}`);
@@ -77,6 +80,10 @@ const AddWorkout = () => {
       alert("Failed to add workout");
     }
   };
+
+  const excludedDates = Object.keys(groupedByDate).map(
+    (date) => new Date(date)
+  );
 
   const testRender = () => {
     let dataToMap;
@@ -130,15 +137,6 @@ const AddWorkout = () => {
       <div className="w-full flex-grow flex gap-6">
         <div className="w-[70%] h-full border rounded-md p-4 px-10">
           <form className="flex flex-col gap-10" onSubmit={handleAddWorkout}>
-            <div>
-              <p className="font-bold text-[20px]">Title:</p>
-              <Input
-                type="text"
-                width="20rem"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
             <div className="flex gap-10">
               <div>
                 <p className="font-bold text-[20px]">Level:</p>
@@ -210,6 +208,7 @@ const AddWorkout = () => {
                 onChange={(date) => setStartDate(date)}
                 showIcon
                 className="border"
+                excludeDates={excludedDates}
               />
             </div>
             <Button
