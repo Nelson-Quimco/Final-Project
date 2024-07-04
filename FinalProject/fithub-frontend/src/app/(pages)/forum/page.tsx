@@ -29,7 +29,7 @@ const Forums = () => {
             <PostPreview
               title={posts.title}
               description={posts.content}
-              date={posts.createdAt}
+              date={new Date(posts.createdAt)}
               username="username"
               href={`/forum/${posts.postId}`}
               key={index}

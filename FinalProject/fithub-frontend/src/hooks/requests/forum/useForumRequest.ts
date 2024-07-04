@@ -1,4 +1,4 @@
-import { postType } from "@/constants/postType";
+import { postResponse, postType } from "@/constants/postType";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -6,6 +6,7 @@ const axiosReq = axios.create({ baseURL: process.env.NEXT_PUBLIC_URL });
 const useForumRequest = () => {
   const [allPost, setAllPost] = useState<postType[] | null>(null);
   const [userPost, setUserPost] = useState<postType[] | null>(null);
+  const [post, setPost] = useState<postResponse | null>(null);
 
   const getAllPost = async () => {
     try {
@@ -49,11 +50,24 @@ const useForumRequest = () => {
     }
   };
 
-  useEffect(() => {
-    getPostbyUser(7);
-  }, []);
+  const likePost = async (postId: number) => {
+    try {
+      const res = await axiosReq.post(`/post/${postId}/like`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  return { allPost, createPost, getPostbyUser, userPost };
+  const getPostById = async (postId: number) => {
+    try {
+      const res = await axiosReq.get(`/post/get-post/${postId}`);
+      setPost(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return { post, allPost, userPost, createPost, getPostbyUser, getPostById };
 };
 
 export default useForumRequest;

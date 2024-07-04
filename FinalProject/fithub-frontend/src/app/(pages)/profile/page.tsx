@@ -5,12 +5,14 @@ import withAuth from "@/components/auth/withAuth";
 import ResetPassword from "@/components/modals/ResetPassword";
 import Button from "@/components/buttons/Button";
 import useForumRequest from "@/hooks/requests/forum/useForumRequest";
+import PostPreview from "@/components/cards/postPreview";
+import { formatDateNormal } from "@/lib/functions/dateFormatter";
 
 const Profile = () => {
   const [isModalOpen, setIsmodalOpen] = useState(false);
 
   const user = useUserdata();
-  const { userPost, getPostbyUser } = useForumRequest();
+  const { allPost, userPost, getPostbyUser } = useForumRequest();
 
   const userID = user?.userId;
 
@@ -18,7 +20,7 @@ const Profile = () => {
     if (userID) {
       getPostbyUser(userID);
     }
-  }, []);
+  }, [allPost]);
   console.log(userPost);
 
   return (
@@ -27,11 +29,6 @@ const Profile = () => {
         isOpen={isModalOpen}
         onClose={() => setIsmodalOpen(false)}
       ></ResetPassword>
-
-      {/* <Button
-        name="Reset Password"
-        onClick={() => setIsmodalOpen(true)}
-      ></Button> */}
 
       <div className="flex w-full border">
         <div className=" h-full w-[20%] flex flex-col items-center gap-3 p-2">
@@ -78,7 +75,21 @@ const Profile = () => {
         </div>
       </div>
 
-      <div></div>
+      <div className="mt-5">
+        <p className=" my-5">Posts({userPost?.length})</p>
+        <div className="flex flex-col items-center gap-3">
+          {userPost?.map((posts) => (
+            <PostPreview
+              title={posts.title}
+              description={posts.content}
+              date={new Date(posts.createdAt)}
+              username="username"
+              href={"/"}
+              key={posts.postId}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
