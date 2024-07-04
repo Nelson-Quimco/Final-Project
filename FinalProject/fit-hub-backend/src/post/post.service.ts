@@ -45,7 +45,9 @@ export class PostService {
     }
   }
 
-  async likePost(postId: number): Promise<{ status: number; post: PostEntity | null }> {
+  async likePost(
+    postId: number,
+  ): Promise<{ status: number; post: PostEntity | null }> {
     try {
       const post = await this.prismaService.post.update({
         where: {
@@ -60,11 +62,11 @@ export class PostService {
           user: true,
         },
       });
-  
+
       if (!post) {
         throw new Error('Post not found');
       }
-  
+
       const transformedPost = {
         postId: post.postId,
         userId: post.userId,
@@ -74,7 +76,7 @@ export class PostService {
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
       };
-  
+
       return { status: 200, post: transformedPost };
     } catch (error) {
       console.error('Error liking post:', error);
@@ -190,6 +192,38 @@ export class PostService {
     } catch (error) {
       console.error('Error fetching posts:', error);
       return { status: 500, posts: [] };
+    }
+  }
+
+  async getPostById(postId: number): Promise<{ status: number; post: PostEntity | null }> {
+    try {
+      const post = await this.prismaService.post.findUnique({
+        where: {
+          postId: postId,
+        },
+        include: {
+          user: true,
+        },
+      });
+  
+      if (!post) {
+        return { status: 404, post: null };
+      }
+  
+      const transformedPost = {
+        postId: post.postId,
+        userId: post.userId,
+        likes: post.likes,
+        title: post.title,
+        content: post.content,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+      };
+  
+      return { status: 200, post: transformedPost };
+    } catch (error) {
+      console.error('Error getting post:', error);
+      return { status: 500, post: null };
     }
   }
 }
