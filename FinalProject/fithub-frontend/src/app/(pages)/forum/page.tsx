@@ -23,7 +23,7 @@ const Forums = () => {
         className="mb-5 border-brightRed text-brightRed font-semibold border-2 p-1 w-[10rem] rounded-full"
         onClick={() => setIsmodalOpen(true)}
       />
-      <div className="flex flex-col items-center gap-3">
+      <div className="flex flex-col items-center gap-6">
         {allPost ? (
           allPost?.map((posts, index) => (
             <PostPreview
@@ -32,6 +32,7 @@ const Forums = () => {
               date={new Date(posts.createdAt)}
               username="username"
               href={`/forum/${posts.postId}`}
+              likes={posts.likes}
               key={index}
             />
           ))

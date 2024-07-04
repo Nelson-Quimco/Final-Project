@@ -14,7 +14,11 @@ import { useLogoutContext } from "@/providers/modalContext";
 interface Props {}
 
 const navLinks = [
-  { name: "Dashboard", href: "/dashboard", icons: <FaHome size={40} /> },
+  {
+    name: "Dashboard",
+    href: "/dashboard",
+    icons: <FaHome size={40} />,
+  },
   { name: "Profile", href: "/profile", icons: <FaRegUserCircle size={40} /> },
   {
     name: "Tracker",
