@@ -4,6 +4,7 @@ import Button from "../buttons/Button";
 import useForumRequest from "@/hooks/requests/forum/useForumRequest";
 import useUserdata from "@/hooks/useUserdata";
 import { IoIosCloseCircle } from "react-icons/io";
+import { useRouter } from "next/navigation";
 
 interface Props {
   isOpen: boolean;
@@ -12,22 +13,27 @@ interface Props {
 
 const CreatePostModal = (props: Props) => {
   const { isOpen, onClose } = props;
+  const router = useRouter();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
   const user = useUserdata();
-
   const userId = user?.userId;
 
-  const { createPost } = useForumRequest();
+  const { createPost, yourPostId } = useForumRequest();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     createPost(userId, title, content);
-    console.log("yeeahhh");
-    onClose();
   };
+
+  useEffect(() => {
+    if (yourPostId) {
+      router.push(`/forum/${yourPostId}`);
+      onClose();
+    }
+  }, [yourPostId]);
 
   if (!isOpen) return null;
 

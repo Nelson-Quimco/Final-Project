@@ -7,6 +7,7 @@ const useForumRequest = () => {
   const [allPost, setAllPost] = useState<postType[] | null>(null);
   const [userPost, setUserPost] = useState<postType[] | null>(null);
   const [post, setPost] = useState<postResponse | null>(null);
+  const [yourPostId, setYourPostId] = useState<postResponse | null>(null);
 
   const getAllPost = async () => {
     try {
@@ -30,7 +31,7 @@ const useForumRequest = () => {
       };
 
       const res = await axiosReq.post(`post/${userId}`, body);
-      console.log(res.data);
+      setYourPostId(res.data.post.postId);
     } catch (error) {
       console.log(error);
     }
@@ -52,7 +53,7 @@ const useForumRequest = () => {
 
   const likePost = async (postId: number) => {
     try {
-      const res = await axiosReq.post(`/post/${postId}/like`);
+      await axiosReq.post(`/post/${postId}/like`);
     } catch (error) {
       console.log(error);
     }
@@ -69,7 +70,7 @@ const useForumRequest = () => {
 
   const deletePost = async (postId: number) => {
     try {
-      const res = await axiosReq.delete(`post/${postId}`);
+      await axiosReq.delete(`post/${postId}`);
     } catch (error) {
       console.log(error);
     }
@@ -81,7 +82,7 @@ const useForumRequest = () => {
         title: title,
         content: content,
       };
-      const res = await axiosReq.patch(`/post/${postId}`, body);
+      await axiosReq.patch(`/post/${postId}`, body);
     } catch (error) {
       console.log(error);
     }
@@ -97,6 +98,7 @@ const useForumRequest = () => {
     editPost,
     deletePost,
     likePost,
+    yourPostId,
   };
 };
 

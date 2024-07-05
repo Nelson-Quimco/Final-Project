@@ -46,8 +46,11 @@ const SearchBar = (props: Props) => {
         {filteredAccounts.length > 0 ? (
           <ul className="bg-white border rounded-md shadow-md">
             {filteredAccounts.map((account: User) => (
-              <Link href={""}>
-                <li key={account.userId} className="p-2 hover:bg-blueGrey">
+              <Link href={`/forum/userId`} key={account.userId}>
+                <li
+                  key={account.userId}
+                  className="p-2 hover:bg-blueGrey hover:text-white"
+                >
                   {account.username}
                 </li>
               </Link>

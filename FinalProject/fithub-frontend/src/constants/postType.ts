@@ -8,7 +8,7 @@ type postType = {
   content: string;
   createdAt: string | Date;
   updatedAt: string;
-  user: User; // Assuming User is another type defined similarly
+  username: string; // Assuming User is another type defined similarly
   comments: Comment[]; // Assuming Comment is another type defined similarly
 };
 

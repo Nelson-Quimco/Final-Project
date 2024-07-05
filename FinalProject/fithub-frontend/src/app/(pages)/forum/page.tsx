@@ -5,6 +5,7 @@ import PostPreview from "@/components/cards/postPreview";
 import Button from "@/components/buttons/Button";
 import useForumRequest from "@/hooks/requests/forum/useForumRequest";
 import CreatePostModal from "@/components/modals/createPostModal";
+import SearchBar from "@/components/search-bar/search-bar";
 
 const Forums = () => {
   const { allPost } = useForumRequest();
@@ -14,6 +15,10 @@ const Forums = () => {
 
   return (
     <div className="h-full">
+      <div className="flex justify-end">
+        <SearchBar />
+      </div>
+
       <CreatePostModal
         isOpen={isModalOpen}
         onClose={() => setIsmodalOpen(false)}
@@ -30,7 +35,7 @@ const Forums = () => {
               title={posts.title}
               description={posts.content}
               date={new Date(posts.createdAt)}
-              username="username"
+              username={posts.username}
               href={`/forum/${posts.postId}`}
               likes={posts.likes}
               key={index}

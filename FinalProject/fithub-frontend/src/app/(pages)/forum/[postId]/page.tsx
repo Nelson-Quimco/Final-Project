@@ -20,10 +20,11 @@ const PostId = ({ params }: { params: { postId: number } }) => {
           title={post.title}
           content={post.content}
           date={new Date(post.createdAt)}
-          username="Username"
+          username={post.username}
           likes={post.likes}
           postId={post.postId}
           userId={post.userId}
+          key={post.postId}
         />
       ))}
     </div>
