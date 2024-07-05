@@ -83,7 +83,7 @@ const Profile = () => {
               title={posts.title}
               description={posts.content}
               date={new Date(posts.createdAt)}
-              username="username"
+              username={posts.username}
               href={`/profile/${posts.postId}`}
               key={posts.postId}
               likes={posts.likes}
