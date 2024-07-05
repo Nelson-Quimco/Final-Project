@@ -151,6 +151,7 @@ export class PostService {
       const transformedPosts = posts.map((post) => ({
         postId: post.postId,
         userId: post.userId,
+        username: post.user.username,
         likes: post.likes,
         title: post.title,
         content: post.content,
@@ -195,7 +196,9 @@ export class PostService {
     }
   }
 
-  async getPostById(postId: number): Promise<{ status: number; post: PostEntity | null }> {
+  async getPostById(
+    postId: number,
+  ): Promise<{ status: number; post: PostEntity | null }> {
     try {
       const post = await this.prismaService.post.findUnique({
         where: {
@@ -205,11 +208,11 @@ export class PostService {
           user: true,
         },
       });
-  
+
       if (!post) {
         return { status: 404, post: null };
       }
-  
+
       const transformedPost = {
         postId: post.postId,
         userId: post.userId,
@@ -219,7 +222,7 @@ export class PostService {
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
       };
-  
+
       return { status: 200, post: transformedPost };
     } catch (error) {
       console.error('Error getting post:', error);
