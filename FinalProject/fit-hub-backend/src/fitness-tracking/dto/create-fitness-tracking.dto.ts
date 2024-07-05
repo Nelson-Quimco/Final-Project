@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { Level, Types } from '@prisma/client';
 
 export class CreateFitnessTrackingDto {
@@ -28,4 +28,18 @@ export class AddedExerciseDto {
   title: string;
   name: string;
   reps: number;
+}
+
+export class IsCompletedDto {
+  @IsNumber()
+  addedExerciseId: number;
+
+  @IsString()
+  name: string;
+
+  @IsNumber()
+  reps: number;
+
+  @IsBoolean()
+  isComplete: boolean;
 }

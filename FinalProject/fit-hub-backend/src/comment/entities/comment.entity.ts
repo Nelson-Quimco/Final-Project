@@ -1,6 +1,4 @@
-import { Post, User } from '@prisma/client';
-
-export class Comment {
+export interface CommentEntity {
   commentId: number;
   postId: number;
   userId: number;
@@ -8,6 +6,12 @@ export class Comment {
   content: string;
   createdAt: Date;
   updatedAt: Date;
-  post: Post;
-  user: User;
+  user: {
+    userId: number;
+    username: string;
+  };
+  post: {
+    postId: number;
+    title: string;
+  };
 }

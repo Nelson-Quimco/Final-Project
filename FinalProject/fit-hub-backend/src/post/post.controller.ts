@@ -10,13 +10,17 @@ import {
   Query,
   HttpException,
   HttpStatus,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Post as PostEntity } from '././entities/post.entity';
+import { JwtAuthGuard } from 'src/jwt/jwt-auth.guard';
 
 @Controller('post')
+// @UseGuards(JwtAuthGuard)
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
