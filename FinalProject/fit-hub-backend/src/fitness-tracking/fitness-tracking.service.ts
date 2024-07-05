@@ -249,36 +249,59 @@ export class FitnessTrackingService {
     }
   }
 
-  async getCompletedExercises(
-    userId: number,
-  ): Promise<{ data: IsCompleted[]; statusCode: number }> {
-    try {
-      const fitnessExerciseIds =
-        await this.prismaService.fitnessExercise.findMany({
-          where: {
-            userId: userId,
-          },
-          select: {
-            id: true,
-          },
-        });
+  // async isCompleted(
+  //   addedExerciseId: number,
+  //   Name: string,
+  //   reps: number,
+  //   isComplete: boolean
+  // ): Promise<{ data: IsCompleted; statusCode: number }> {
+  //   try {
+  //     const createdIsCompleted = await this.prismaService.isCompleted.create({
+  //       data: {
+  //         addedExerciseId,
+  //         Name,
+  //         reps,
+  //         isComplete,
+  //       },
+  //     });
 
-      const completedExercises = await this.prismaService.isCompleted.findMany({
-        where: {
-          addedExerciseId: {
-            in: fitnessExerciseIds.map((exercise) => exercise.id),
-          },
+  //     return {
+  //       data: createdIsCompleted,
+  //       statusCode: 200,
+  //     };
+  //   } catch (error) {
+  //     console.error(error);
+  //     return {
+  //       data: null,
+  //       statusCode: 500,
+  //     };
+  //   }
+  // }
+
+  async isCompleted(
+    addedExerciseId: number,
+    Name: string,
+    reps: number,
+    isComplete: boolean,
+  ): Promise<{ data: IsCompleted; statusCode: number }> {
+    try {
+      const createdIsCompleted = await this.prismaService.isCompleted.create({
+        data: {
+          addedExerciseId,
+          Name,
+          reps,
+          isComplete,
         },
       });
 
       return {
-        data: completedExercises,
+        data: createdIsCompleted,
         statusCode: 200,
       };
     } catch (error) {
       console.error(error);
       return {
-        data: [],
+        data: null,
         statusCode: 500,
       };
     }

@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCommentDto } from './dto/create-comment.dto';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Comment } from './entities/comment.entity';
+import { CreateCommentDto } from './dto/create-comment.dto';
+import { CommentEntity } from './entities/comment.entity';
 
 @Injectable()
 export class CommentService {
@@ -10,12 +10,11 @@ export class CommentService {
 
   async createComment(
     userId: number,
-    postId: number,
-    createCommentDto: CreateCommentDto,
-  ): Promise<{ status: number; comment: Comment | null }> {
+    createCommentDto: CreateCommentDto
+  ): Promise<{ status: number; comment: CommentEntity | null }> {
     try {
-      const { content } = createCommentDto;
-
+      const { postId, content } = createCommentDto;
+  
       const createdComment = await this.prismaService.comment.create({
         data: {
           userId,
@@ -28,26 +27,32 @@ export class CommentService {
           post: true,
         },
       });
-
-      const comment: Comment = {
-        commentId: 1,
-        postId: postId,
-        userId: userId,
-        likes: 0,
-        content: createCommentDto.content,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        post: null,
-        user: null,
+  
+      const transformedComment = {
+        commentId: createdComment.commentId,
+        userId: createdComment.userId,
+        postId: createdComment.postId,
+        likes: createdComment.likes,
+        content: createdComment.content,
+        createdAt: createdComment.createdAt,
+        updatedAt: createdComment.updatedAt,
+        user: {
+          userId: createdComment.user.userId,
+          username: createdComment.user.username,
+        },
+        post: {
+          postId: createdComment.post.postId,
+          title: createdComment.post.title,
+        },
       };
-
-      return { status: 200, comment: comment };
+  
+      return { status: 201, comment: transformedComment };
     } catch (error) {
       console.error('Error creating comment:', error);
       return { status: 500, comment: null };
     }
   }
-
+  
   findAll() {
     return `This action returns all comment`;
   }

@@ -7,12 +7,12 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UserAuthenticationService } from './user-authentication.service';
 import { CreateUserAuthenticationDto } from './dto/create-user-authentication.dto';
 import { UpdateUserAuthenticationDto } from './dto/update-user-authentication.dto';
 import { User } from '@prisma/client';
-import { HttpStatus, HttpException } from '@nestjs/common';
 
 @Controller('user-authentication')
 export class UserAuthenticationController {

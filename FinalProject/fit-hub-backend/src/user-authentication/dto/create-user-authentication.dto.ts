@@ -5,7 +5,3 @@ export class CreateUserAuthenticationDto {
   password: string;
   email: string;
 }
-
-// export type UserWhereUniqueInput = {
-//   username: string;
-// };
