@@ -133,12 +133,10 @@ export class FitnessTrackingService {
       );
     }
   }
-
   async addExercise(
-    // userId: number,
     fitnessExerciseId: number,
     reps: number,
-    setDate: string,
+    setDate: string
   ): Promise<{ data: AddedExercise; statusCode: number }> {
     try {
       const fitnessExercise =
@@ -162,6 +160,7 @@ export class FitnessTrackingService {
           Name: fitnessExercise.Name,
           reps: reps,
           setDate: new Date(setDate).toISOString(),
+          isComplete: false,
         },
       });
 
@@ -178,41 +177,49 @@ export class FitnessTrackingService {
     }
   }
 
-  // async getExercises(
-  //   userId: number,
-  // ): Promise<{ data: AddedExercise[]; statusCode: number }> {
+  // async addExercise(
+  //   fitnessExerciseId: number,
+  //   reps: number,
+  //   setDate: string,
+  // ): Promise<{ data: AddedExercise; statusCode: number }> {
   //   try {
-  //     const fitnessExerciseIds = await this.prismaService.fitnessExercise
-  //       .findMany({
+  //     const fitnessExercise =
+  //       await this.prismaService.fitnessExercise.findUnique({
   //         where: {
-  //           userId: userId,
+  //           id: fitnessExerciseId,
   //         },
-  //         select: {
-  //           id: true,
-  //         },
-  //       })
-  //       .then((exercises) => exercises.map((exercise) => exercise.id));
+  //       });
 
-  //     const addedExercises = await this.prismaService.addedExercise.findMany({
-  //       where: {
-  //         id: {
-  //           in: fitnessExerciseIds,
-  //         },
+  //     if (!fitnessExercise) {
+  //       return {
+  //         data: null,
+  //         statusCode: 404,
+  //       };
+  //     }
+
+  //     const newAddedExercise = await this.prismaService.addedExercise.create({
+  //       data: {
+  //         id: fitnessExercise.id,
+  //         title: fitnessExercise.Name,
+  //         Name: fitnessExercise.Name,
+  //         reps: reps,
+  //         setDate: new Date(setDate).toISOString(),
   //       },
   //     });
 
   //     return {
-  //       data: addedExercises,
-  //       statusCode: 200,
+  //       data: newAddedExercise,
+  //       statusCode: 201,
   //     };
   //   } catch (error) {
   //     console.error(error);
   //     return {
-  //       data: [],
+  //       data: null,
   //       statusCode: 500,
   //     };
   //   }
   // }
+
   async getExercises(
     userId: number,
   ): Promise<{ data: AddedExercise[]; statusCode: number }> {

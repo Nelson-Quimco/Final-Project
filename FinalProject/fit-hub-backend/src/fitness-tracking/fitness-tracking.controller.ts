@@ -120,15 +120,14 @@ export class FitnessTrackingController {
     }
   }
 
+
   @Post('add-workout')
   async addExercise(
-    // @Body('userId') userId: number,
     @Body('fitnessExerciseId') fitnessExerciseId: number,
     @Body('reps') reps: number,
     @Body('setDate') setDate: string,
   ): Promise<{ data: AddedExercise; statusCode: number }> {
     const { data, statusCode } = await this.fitnessTrackingService.addExercise(
-      // userId,
       fitnessExerciseId,
       reps,
       setDate,
@@ -160,17 +159,6 @@ export class FitnessTrackingController {
     }
   }
 
-  // @Post('isCompleted')
-  // async createIsCompleted(@Body() isCompletedDto: IsCompletedDto) {
-  //   const { addedExerciseId, name, reps, isComplete } = isCompletedDto;
-  //   const { data, statusCode } = await this.fitnessTrackingService.isCompleted(
-  //     addedExerciseId,
-  //     name,
-  //     reps,
-  //     isComplete
-  //   );
-  //   return { data, statusCode };
-  // }
   @Post('isCompleted')
   async createIsCompleted(@Body() isCompletedDto: IsCompletedDto) {
     const { addedExerciseId, name, reps, isComplete } = isCompletedDto;
