@@ -133,10 +133,11 @@ export class FitnessTrackingService {
       );
     }
   }
+
   async addExercise(
     fitnessExerciseId: number,
     reps: number,
-    setDate: string
+    setDate: string,
   ): Promise<{ data: AddedExercise; statusCode: number }> {
     try {
       const fitnessExercise =
@@ -177,49 +178,6 @@ export class FitnessTrackingService {
     }
   }
 
-  // async addExercise(
-  //   fitnessExerciseId: number,
-  //   reps: number,
-  //   setDate: string,
-  // ): Promise<{ data: AddedExercise; statusCode: number }> {
-  //   try {
-  //     const fitnessExercise =
-  //       await this.prismaService.fitnessExercise.findUnique({
-  //         where: {
-  //           id: fitnessExerciseId,
-  //         },
-  //       });
-
-  //     if (!fitnessExercise) {
-  //       return {
-  //         data: null,
-  //         statusCode: 404,
-  //       };
-  //     }
-
-  //     const newAddedExercise = await this.prismaService.addedExercise.create({
-  //       data: {
-  //         id: fitnessExercise.id,
-  //         title: fitnessExercise.Name,
-  //         Name: fitnessExercise.Name,
-  //         reps: reps,
-  //         setDate: new Date(setDate).toISOString(),
-  //       },
-  //     });
-
-  //     return {
-  //       data: newAddedExercise,
-  //       statusCode: 201,
-  //     };
-  //   } catch (error) {
-  //     console.error(error);
-  //     return {
-  //       data: null,
-  //       statusCode: 500,
-  //     };
-  //   }
-  // }
-
   async getExercises(
     userId: number,
   ): Promise<{ data: AddedExercise[]; statusCode: number }> {
@@ -243,8 +201,30 @@ export class FitnessTrackingService {
         },
       });
 
+      const isCompletedMap = await this.prismaService.isCompleted.findMany({
+        where: {
+          addedExerciseId: {
+            in: fitnessExerciseIds,
+          },
+        },
+        select: {
+          addedExerciseId: true,
+          isComplete: true,
+        },
+      });
+
+      const updatedAddedExercises = addedExercises.map((exercise) => {
+        const isCompletedEntry = isCompletedMap.find(
+          (entry) => entry.addedExerciseId === exercise.id,
+        );
+        return {
+          ...exercise,
+          isComplete: isCompletedEntry?.isComplete ?? false,
+        };
+      });
+
       return {
-        data: addedExercises,
+        data: updatedAddedExercises,
         statusCode: 200,
       };
     } catch (error) {
@@ -255,35 +235,6 @@ export class FitnessTrackingService {
       };
     }
   }
-
-  // async isCompleted(
-  //   addedExerciseId: number,
-  //   Name: string,
-  //   reps: number,
-  //   isComplete: boolean
-  // ): Promise<{ data: IsCompleted; statusCode: number }> {
-  //   try {
-  //     const createdIsCompleted = await this.prismaService.isCompleted.create({
-  //       data: {
-  //         addedExerciseId,
-  //         Name,
-  //         reps,
-  //         isComplete,
-  //       },
-  //     });
-
-  //     return {
-  //       data: createdIsCompleted,
-  //       statusCode: 200,
-  //     };
-  //   } catch (error) {
-  //     console.error(error);
-  //     return {
-  //       data: null,
-  //       statusCode: 500,
-  //     };
-  //   }
-  // }
 
   async isCompleted(
     addedExerciseId: number,
