@@ -5,6 +5,7 @@ interface addedExerciseType {
   Name: string;
   reps: number;
   setDate: string;
+  isComplete: boolean;
 }
 
 interface addedExerciseRes {

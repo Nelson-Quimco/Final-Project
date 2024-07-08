@@ -3,11 +3,12 @@ import React, { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
 import Button from "@/components/buttons/Button";
-import { IoMdCheckmark } from "react-icons/io";
+import useSetWorkout from "@/hooks/requests/tracker/useSetWorkout";
 
 const Exercise = () => {
   const search = useSearchParams();
   const { workouts, getByDate, filteredResponse } = useAddedWorkouts();
+  const completeWorkout = useSetWorkout();
   const date = search.get("date");
 
   let ExerciseCount = 0;
@@ -22,6 +23,19 @@ const Exercise = () => {
     }
   }, [workouts, date]);
 
+  const handleComplete = (
+    addedId: number,
+    name: string,
+    reps: number,
+    isComplete: boolean
+  ) => {
+    console.log(addedId);
+    console.log(name);
+    console.log(reps);
+    console.log(isComplete);
+    completeWorkout(addedId, name, reps, isComplete);
+  };
+
   return (
     <>
       <div className="h-full">
@@ -35,7 +49,21 @@ const Exercise = () => {
                   <p>{x.Name}</p>
                   <p className="">{x.reps} reps</p>
                 </div>
-                <Button name="Done" width="5rem" height="5rem"></Button>
+                <button
+                  className={`border-none rounded-md bg-blue p-4 font-bold text-[20px] ${
+                    x.isComplete ? "bg-successGreen" : "bg-red"
+                  }`}
+                  onClick={() =>
+                    handleComplete(
+                      x.addedExerciseId,
+                      x.Name,
+                      x.reps,
+                      x.isComplete
+                    )
+                  }
+                >
+                  {x.isComplete ? "Done" : "Wala pa hahaha"}
+                </button>
               </div>
             ))}
           </div>

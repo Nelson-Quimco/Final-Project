@@ -11,10 +11,13 @@ const useAddedWorkouts = () => {
   const [filteredResponse, setFilteredResponse] = useState<
     addedExerciseType[] | null
   >(null);
+  const [loading, setLoading] = useState<boolean>();
 
   const getAllUserWorkouts = async (id: number) => {
+    setLoading(true);
     try {
       const res = await axiosReq.get(`fitness-tracking/${id}`);
+      setLoading(false);
       setWorkouts(res.data);
     } catch (error) {
       console.log(error);
@@ -61,7 +64,14 @@ const useAddedWorkouts = () => {
     }
   }, [workouts]);
 
-  return { workouts, getByDate, filteredResponse, groupedByDate };
+  return {
+    workouts,
+    getByDate,
+    filteredResponse,
+    groupedByDate,
+    loading,
+    setLoading,
+  };
 };
 
 export default useAddedWorkouts;

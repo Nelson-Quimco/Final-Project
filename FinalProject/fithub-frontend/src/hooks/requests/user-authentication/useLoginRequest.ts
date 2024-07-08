@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { setCookie, removeCookie } from "@/lib/utils/cookies";
-import User from "@/constants/userTypes";
+import { User, UserRes } from "@/constants/userTypes";
 import { useRouter } from "next/navigation";
 
 const axiosReq = axios.create({ baseURL: `${process.env.NEXT_PUBLIC_URL}` });
@@ -15,15 +15,16 @@ const useLoginRequest = () => {
   const [passwordValid, setPasswordValid] = useState(true);
   const [usernameMessage, setUsernameMessage] = useState("");
   const [passwordMesage, setPasswordMessage] = useState("");
+  const [user, setUser] = useState<UserRes | null>(null);
 
-  const getAccounts = async () => {
+  const getAccounts = useCallback(async () => {
     try {
       const res = await axiosReq.get("/user-authentication");
       setData(res.data.data.users);
     } catch (error) {
       console.log(error);
     }
-  };
+  }, []);
 
   const loginAccount = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -70,20 +71,36 @@ const useLoginRequest = () => {
     }
   };
 
+  const getUserById = async (userId: number) => {
+    try {
+      const res = await axiosReq.get(`/user-authentication/${userId}`);
+      setUser(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getAccounts();
   }, []);
 
+  const memoizedValue = useMemo(() => {
+    return user;
+  }, [user]);
+
   return {
+    ...memoizedValue,
     data,
     loginAccount,
     setUsername,
     setPassword,
     getAccounts,
+    getUserById,
     usernameValid,
     passwordValid,
     usernameMessage,
     passwordMesage,
+    user,
   };
 };
 

@@ -7,12 +7,13 @@ import Button from "@/components/buttons/Button";
 import useForumRequest from "@/hooks/requests/forum/useForumRequest";
 import PostPreview from "@/components/cards/postPreview";
 import { formatDateNormal } from "@/lib/functions/dateFormatter";
+import ForumSkeleton from "@/components/skeleton/forumSkeleton";
 
 const Profile = () => {
   const [isModalOpen, setIsmodalOpen] = useState(false);
 
   const user = useUserdata();
-  const { allPost, userPost, getPostbyUser } = useForumRequest();
+  const { allPost, userPost, getPostbyUser, loading } = useForumRequest();
 
   const userID = user?.userId;
 
@@ -24,7 +25,7 @@ const Profile = () => {
   console.log(userPost);
 
   return (
-    <div>
+    <div className="h-full bg-offWhite">
       <ResetPassword
         isOpen={isModalOpen}
         onClose={() => setIsmodalOpen(false)}
@@ -76,19 +77,29 @@ const Profile = () => {
       </div>
 
       <div className="mt-5">
-        <p className=" my-5">Posts({userPost?.length})</p>
+        <p className=" my-5">Posts({userPost?.length ?? 0})</p>
         <div className="flex flex-col items-center gap-6">
-          {userPost?.map((posts) => (
-            <PostPreview
-              title={posts.title}
-              description={posts.content}
-              date={new Date(posts.createdAt)}
-              username={posts.username}
-              href={`/profile/${posts.postId}`}
-              key={posts.postId}
-              likes={posts.likes}
-            />
-          ))}
+          {loading ? (
+            <div className="flex flex-col w-full gap-6">
+              <ForumSkeleton />
+              <ForumSkeleton />
+              <ForumSkeleton />
+              <ForumSkeleton />
+              <ForumSkeleton />
+            </div>
+          ) : (
+            userPost?.map((posts) => (
+              <PostPreview
+                title={posts.title}
+                description={posts.content}
+                date={new Date(posts.createdAt)}
+                username={posts.username}
+                href={`/profile/${posts.postId}`}
+                key={posts.postId}
+                likes={posts.likes}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>

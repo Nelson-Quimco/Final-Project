@@ -1,4 +1,4 @@
-import User from "./userTypes";
+import { User } from "./userTypes";
 
 // Define enums for Level and Types
 enum Level {
@@ -30,7 +30,7 @@ interface FitnessExercise {
 }
 
 interface FitnessExerciseResponse {
-  data: FitnessExercise[];
+  user: FitnessExercise[];
 }
 
 export type { FitnessExercise, FitnessExerciseResponse };

@@ -1,29 +1,33 @@
 import { postResponse, postType } from "@/constants/postType";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 const axiosReq = axios.create({ baseURL: process.env.NEXT_PUBLIC_URL });
 const useForumRequest = () => {
-  const [allPost, setAllPost] = useState<postType[] | null>(null);
+  const [allPost, setAllPost] = useState<postType[] | null>([]);
   const [userPost, setUserPost] = useState<postType[] | null>(null);
   const [post, setPost] = useState<postResponse | null>(null);
   const [yourPostId, setYourPostId] = useState<postResponse | null>(null);
+  const [loading, setLoading] = useState<boolean>();
 
-  const getAllPost = async () => {
+  const getAllPost = useCallback(async () => {
+    setLoading(true);
     try {
       const res = await axiosReq.get("post/get-post");
       setAllPost(res.data.posts);
+      setLoading(false);
       console.log(res.data.posts);
     } catch (error) {
       console.log(error);
     }
-  };
+  }, []);
 
   const createPost = async (
     userId: number | undefined,
     title: string,
     content: string
   ) => {
+    setLoading(true);
     try {
       const body = {
         title: title,
@@ -32,16 +36,14 @@ const useForumRequest = () => {
 
       const res = await axiosReq.post(`post/${userId}`, body);
       setYourPostId(res.data.post.postId);
+      console.log(res.data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
-    getAllPost();
-  }, []);
-
-  const getPostbyUser = async (id: number) => {
+  const getPostbyUser = useCallback(async (id: number) => {
     try {
       const res = await axiosReq.get(`/post/${id}`);
       setUserPost(res.data.data);
@@ -49,7 +51,7 @@ const useForumRequest = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, []);
 
   const likePost = async (postId: number) => {
     try {
@@ -60,8 +62,10 @@ const useForumRequest = () => {
   };
 
   const getPostById = async (postId: number) => {
+    setLoading(true);
     try {
       const res = await axiosReq.get(`/post/get-post/${postId}`);
+      setLoading(false);
       setPost(res.data);
     } catch (error) {
       console.log(error);
@@ -82,13 +86,27 @@ const useForumRequest = () => {
         title: title,
         content: content,
       };
-      await axiosReq.patch(`/post/${postId}`, body);
+      const res = await axiosReq.patch(`/post/${postId}`, body);
+      setPost(res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const memoizedValues = useMemo(() => {
+    console.log("memoized");
+    return {
+      allPost,
+      userPost,
+    };
+  }, [allPost, userPost]);
+
+  useEffect(() => {
+    getAllPost();
+  }, [getAllPost]);
+
   return {
+    ...memoizedValues,
     post,
     allPost,
     userPost,
@@ -99,6 +117,8 @@ const useForumRequest = () => {
     deletePost,
     likePost,
     yourPostId,
+    loading,
+    setLoading,
   };
 };
 

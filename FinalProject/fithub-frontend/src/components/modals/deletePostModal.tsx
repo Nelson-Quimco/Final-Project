@@ -8,10 +8,11 @@ interface Props {
   isOpen: boolean;
   onClose?: () => void;
   postId: number;
+  onDelete: () => void;
 }
 
 const DeletePostModal = (props: Props) => {
-  const { isOpen, postId, onClose } = props;
+  const { isOpen, postId, onClose, onDelete } = props;
   const router = useRouter();
 
   const { deletePost } = useForumRequest();

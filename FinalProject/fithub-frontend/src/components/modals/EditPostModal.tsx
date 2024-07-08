@@ -3,6 +3,7 @@ import { IoIosCloseCircle } from "react-icons/io";
 import Input from "../input/Input";
 import Button from "../buttons/Button";
 import useForumRequest from "@/hooks/requests/forum/useForumRequest";
+import { toast } from "react-toastify";
 
 interface Props {
   isOpen: boolean;
@@ -10,18 +11,27 @@ interface Props {
   postId: number;
   title: string;
   content: string;
+  onEdit: () => void; // Add the onEdit prop
 }
 
 const EditPostModal = (props: Props) => {
-  const { isOpen, onClose, title, content, postId } = props;
+  const { isOpen, onClose, title, content, postId, onEdit } = props;
   const [newTitle, setNewTitle] = useState(title);
   const [newContent, setNewContent] = useState(content);
 
   const { editPost } = useForumRequest();
 
-  const handleSubmitEdit = () => {
-    editPost(postId, newTitle, newContent);
-    onClose();
+  const editToast = () =>
+    toast.success("Post Edited Successfully", {
+      position: "top-center",
+      hideProgressBar: true,
+    });
+
+  const handleSubmitEdit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Prevent the default form submission
+    await editPost(postId, newTitle, newContent);
+    editToast();
+    onEdit(); // Call the onEdit function after editing
   };
 
   if (!isOpen) return null;
