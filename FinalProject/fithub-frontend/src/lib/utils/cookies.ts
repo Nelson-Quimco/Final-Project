@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 
 export const setCookie = (key: string, value: string, options = {}) => {
-  Cookies.set(key, value, { expires: 7, ...options });
+  Cookies.set(key, value, { expires: 0.5, ...options });
 };
 
 export const getCookie = (key: string) => {

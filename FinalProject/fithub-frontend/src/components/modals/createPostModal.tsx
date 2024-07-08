@@ -5,6 +5,7 @@ import useForumRequest from "@/hooks/requests/forum/useForumRequest";
 import useUserdata from "@/hooks/useUserdata";
 import { IoIosCloseCircle } from "react-icons/io";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 interface Props {
   isOpen: boolean;
@@ -21,11 +22,14 @@ const CreatePostModal = (props: Props) => {
   const user = useUserdata();
   const userId = user?.userId;
 
-  const { createPost, yourPostId } = useForumRequest();
+  const { createPost, yourPostId, loading } = useForumRequest();
+
+  const loadingToast = () => toast("Posting");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     createPost(userId, title, content);
+    // loadingToast();
   };
 
   useEffect(() => {

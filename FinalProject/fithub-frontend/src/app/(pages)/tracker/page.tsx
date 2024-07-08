@@ -8,20 +8,21 @@ import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
 import Link from "next/link";
 import WorkoutCard from "@/components/cards/workout-card";
 import Exercise from "./exercise/page";
+import WorkoutSkeleton from "@/components/skeleton/workoutCardSkeleton";
 
 const Tracker: React.FC = () => {
-  const { workouts, groupedByDate, filteredResponse, getByDate } =
-    useAddedWorkouts();
+  const {
+    workouts,
+    groupedByDate,
+    filteredResponse,
+    getByDate,
+    loading,
+    setLoading,
+  } = useAddedWorkouts();
 
   useEffect(() => {
     console.log(workouts);
     getByDate("2024-07-01T01:07:00.356Z");
-  }, [workouts]);
-
-  useEffect(() => {
-    console.log(filteredResponse);
-    console.log(groupedByDate);
-    console.log(workouts);
   }, [workouts]);
 
   const router = useRouter();
@@ -47,7 +48,9 @@ const Tracker: React.FC = () => {
           <div className=" h-[20%]">
             Today's Workout:
             <div className=" h-[6rem] bg-white shadow-md border-none rounded-md p-4">
-              {todaysWorkout.length > 0 ? (
+              {loading ? (
+                <WorkoutSkeleton />
+              ) : todaysWorkout.length > 0 ? (
                 <WorkoutCard
                   date={todaysDate}
                   exerciseCount={todaysWorkout.length}
@@ -62,20 +65,32 @@ const Tracker: React.FC = () => {
           </div>
           <div className=" h-full">
             Upcoming Workouts:
-            <div className="flex flex-col p-5 gap-6 h-[30rem] bg-white shadow-md border-none rounded-md overflow-y-auto">
-              {tomorrowWorkouts.map((date) => (
-                <WorkoutCard
-                  date={date}
-                  exerciseCount={groupedByDate[date].length}
-                  href={`tracker/exercise?date=${encodeURIComponent(date)}`}
-                />
-              ))}
+            <div className="flex flex-col p-5 gap-6 h-[39rem] bg-white shadow-md border-none rounded-md overflow-y-auto">
+              {loading ? (
+                <>
+                  <WorkoutSkeleton />
+                  <WorkoutSkeleton />
+                  <WorkoutSkeleton />
+                  <WorkoutSkeleton />
+                  <WorkoutSkeleton />
+                  <WorkoutSkeleton />
+                  <WorkoutSkeleton />
+                </>
+              ) : (
+                tomorrowWorkouts.map((date) => (
+                  <WorkoutCard
+                    date={date}
+                    exerciseCount={groupedByDate[date].length}
+                    href={`tracker/exercise?date=${encodeURIComponent(date)}`}
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>
         <div className=" w-[30%]">
           Achievements:
-          <div className=" h-[39rem] bg-white shadow-md border-none rounded-md"></div>
+          <div className=" h-[48rem] bg-white shadow-md border-none rounded-md"></div>
         </div>
       </div>
     </div>

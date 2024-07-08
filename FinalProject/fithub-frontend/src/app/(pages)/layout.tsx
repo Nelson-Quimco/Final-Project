@@ -15,11 +15,11 @@ export default function MainLayout({
         <div className="flex h-full bg-offWhite">
           <LogoutModal></LogoutModal>
           <Sidebar></Sidebar>
-          <div className="bg-offWhite py-10 px-20  w-full flex flex-col gap-10">
+          <div className="w-full flex flex-col gap-10 ">
             {/* <div className="flex justify-end">
               <SearchBar></SearchBar>
             </div> */}
-            <div className="h-full ml-[15rem]">{children}</div>
+            <div className="h-screen ml-[15rem] py-10 px-20">{children}</div>
           </div>
         </div>
       </LogoutModalProvider>

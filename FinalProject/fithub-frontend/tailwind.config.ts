@@ -15,6 +15,7 @@ const config: Config = {
       brightRed: "#F05454",
       black: "#000000",
       blueGrey: "#82909E",
+      successGreen: "#4BB543",
     },
     extend: {},
   },

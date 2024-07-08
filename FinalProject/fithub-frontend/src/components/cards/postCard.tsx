@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from "../buttons/Button";
 import { AiOutlineLike } from "react-icons/ai";
 import { RiEditLine } from "react-icons/ri";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { formatDateNormal } from "@/lib/functions/dateFormatter";
-import EditPostModal from "../modals/EditPostModal";
 import useUserdata from "@/hooks/useUserdata";
-import DeletePostModal from "../modals/deletePostModal";
 import useForumRequest from "@/hooks/requests/forum/useForumRequest";
 
 interface Props {
@@ -17,21 +15,28 @@ interface Props {
   likes: number;
   postId: number;
   userId: number;
+  onEdit: () => void; // Add the onEdit prop
+  onDelete: () => void;
 }
 
 const PostCard = (props: Props) => {
-  const { title, content, date, username, likes, postId, userId } = props;
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const formattedDate = formatDateNormal(date);
+  const {
+    title,
+    content,
+    date,
+    username,
+    likes,
+    onEdit,
+    onDelete,
+    userId,
+    postId,
+  } = props;
+
+  const user = useUserdata();
 
   const { likePost } = useForumRequest();
 
-  const handleLikePost = () => {
-    likePost(postId);
-  };
-
-  const user = useUserdata();
+  const formattedDate = formatDateNormal(date);
   return (
     <>
       <div className="flex flex-col border-none rounded-md shadow-md p-6 gap-6 bg-white ">
@@ -45,13 +50,14 @@ const PostCard = (props: Props) => {
           >
             <RiEditLine
               size={20}
-              onClick={() => setIsEditModalOpen(true)}
-              className="hover:cursor-pointer hover:text-blue"
+              onClick={onEdit}
+              className="hover:cursor-pointer"
             />
+            {/* Call onEdit when clicked */}
             <FaRegTrashAlt
               size={20}
-              className="hover:cursor-pointer hover:text-red"
-              onClick={() => setIsDeleteModalOpen(true)}
+              onClick={onDelete}
+              className="hover:cursor-pointer"
             />
           </div>
         </div>
@@ -63,7 +69,7 @@ const PostCard = (props: Props) => {
             </p>
             <div className="flex items-center gap-2">
               <button>
-                <AiOutlineLike size={30} onClick={handleLikePost} />
+                <AiOutlineLike size={30} onClick={() => likePost(postId)} />
               </button>
               Likes: ({likes})
             </div>
@@ -71,20 +77,6 @@ const PostCard = (props: Props) => {
         </div>
       </div>
       <hr className="w-full mt-6 " />
-
-      <DeletePostModal
-        isOpen={isDeleteModalOpen}
-        postId={postId}
-        onClose={() => setIsDeleteModalOpen(false)}
-      />
-
-      <EditPostModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        postId={postId}
-        title={title}
-        content={content}
-      />
     </>
   );
 };

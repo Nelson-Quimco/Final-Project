@@ -15,4 +15,8 @@ interface User {
   // progresses: Progress[];
 }
 
-export default User;
+interface UserRes {
+  user: User;
+}
+
+export type { User, UserRes };
