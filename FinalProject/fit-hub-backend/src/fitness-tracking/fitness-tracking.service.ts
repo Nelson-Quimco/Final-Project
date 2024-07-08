@@ -135,6 +135,7 @@ export class FitnessTrackingService {
   }
 
   async addExercise(
+    // userId: number,
     fitnessExerciseId: number,
     reps: number,
     setDate: string,
@@ -161,7 +162,6 @@ export class FitnessTrackingService {
           Name: fitnessExercise.Name,
           reps: reps,
           setDate: new Date(setDate).toISOString(),
-          isComplete: false,
         },
       });
 
@@ -201,30 +201,8 @@ export class FitnessTrackingService {
         },
       });
 
-      const isCompletedMap = await this.prismaService.isCompleted.findMany({
-        where: {
-          addedExerciseId: {
-            in: fitnessExerciseIds,
-          },
-        },
-        select: {
-          addedExerciseId: true,
-          isComplete: true,
-        },
-      });
-
-      const updatedAddedExercises = addedExercises.map((exercise) => {
-        const isCompletedEntry = isCompletedMap.find(
-          (entry) => entry.addedExerciseId === exercise.id,
-        );
-        return {
-          ...exercise,
-          isComplete: isCompletedEntry?.isComplete ?? false,
-        };
-      });
-
       return {
-        data: updatedAddedExercises,
+        data: addedExercises,
         statusCode: 200,
       };
     } catch (error) {
@@ -235,7 +213,6 @@ export class FitnessTrackingService {
       };
     }
   }
-
   async isCompleted(
     addedExerciseId: number,
     Name: string,
@@ -251,6 +228,17 @@ export class FitnessTrackingService {
           isComplete,
         },
       });
+
+      if (isComplete) {
+        await this.prismaService.addedExercise.update({
+          where: {
+            addedExerciseId: addedExerciseId,
+          },
+          data: {
+            isComplete: true,
+          },
+        });
+      }
 
       return {
         data: createdIsCompleted,
