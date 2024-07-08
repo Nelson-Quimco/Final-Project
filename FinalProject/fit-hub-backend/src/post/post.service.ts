@@ -47,46 +47,6 @@ export class PostService {
     }
   }
 
-  // async likePost(
-  //   postId: number,
-  // ): Promise<{ status: number; post: PostEntity | null }> {
-  //   try {
-  //     const post = await this.prismaService.post.update({
-  //       where: {
-  //         postId,
-  //       },
-  //       data: {
-  //         likes: {
-  //           increment: 1,
-  //         },
-  //       },
-  //       include: {
-  //         user: true,
-  //       },
-  //     });
-
-  //     if (!post) {
-  //       throw new Error('Post not found');
-  //     }
-
-  //     const transformedPost = {
-  //       postId: post.postId,
-  //       userId: post.userId,
-  //       likes: post.likes,
-  //       dislikes: post.dislikes,
-  //       title: post.title,
-  //       content: post.content,
-  //       createdAt: post.createdAt,
-  //       updatedAt: post.updatedAt,
-  //     };
-
-  //     return { status: 200, post: transformedPost };
-  //   } catch (error) {
-  //     console.error('Error liking post:', error);
-  //     return { status: 500, post: null };
-  //   }
-  // }
-
   async updatePost(
     postId: number,
     updatePostDto: UpdatePostDto,
