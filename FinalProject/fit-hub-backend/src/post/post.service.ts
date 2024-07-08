@@ -22,6 +22,7 @@ export class PostService {
           title,
           content,
           likes: 0,
+          dislikes: 0,
         },
         include: {
           user: true,
@@ -32,6 +33,7 @@ export class PostService {
         postId: createdPost.postId,
         userId: createdPost.userId,
         likes: createdPost.likes,
+        dislikes: createdPost.dislikes,
         title: createdPost.title,
         content: createdPost.content,
         createdAt: createdPost.createdAt,
@@ -45,44 +47,45 @@ export class PostService {
     }
   }
 
-  async likePost(
-    postId: number,
-  ): Promise<{ status: number; post: PostEntity | null }> {
-    try {
-      const post = await this.prismaService.post.update({
-        where: {
-          postId,
-        },
-        data: {
-          likes: {
-            increment: 1,
-          },
-        },
-        include: {
-          user: true,
-        },
-      });
+  // async likePost(
+  //   postId: number,
+  // ): Promise<{ status: number; post: PostEntity | null }> {
+  //   try {
+  //     const post = await this.prismaService.post.update({
+  //       where: {
+  //         postId,
+  //       },
+  //       data: {
+  //         likes: {
+  //           increment: 1,
+  //         },
+  //       },
+  //       include: {
+  //         user: true,
+  //       },
+  //     });
 
-      if (!post) {
-        throw new Error('Post not found');
-      }
+  //     if (!post) {
+  //       throw new Error('Post not found');
+  //     }
 
-      const transformedPost = {
-        postId: post.postId,
-        userId: post.userId,
-        likes: post.likes,
-        title: post.title,
-        content: post.content,
-        createdAt: post.createdAt,
-        updatedAt: post.updatedAt,
-      };
+  //     const transformedPost = {
+  //       postId: post.postId,
+  //       userId: post.userId,
+  //       likes: post.likes,
+  //       dislikes: post.dislikes,
+  //       title: post.title,
+  //       content: post.content,
+  //       createdAt: post.createdAt,
+  //       updatedAt: post.updatedAt,
+  //     };
 
-      return { status: 200, post: transformedPost };
-    } catch (error) {
-      console.error('Error liking post:', error);
-      return { status: 500, post: null };
-    }
-  }
+  //     return { status: 200, post: transformedPost };
+  //   } catch (error) {
+  //     console.error('Error liking post:', error);
+  //     return { status: 500, post: null };
+  //   }
+  // }
 
   async updatePost(
     postId: number,
@@ -109,6 +112,7 @@ export class PostService {
         postId: updatedPost.postId,
         userId: updatedPost.userId,
         likes: updatedPost.likes,
+        dislikes: updatedPost.dislikes,
         title: updatedPost.title,
         content: updatedPost.content,
         createdAt: updatedPost.createdAt,
@@ -153,6 +157,7 @@ export class PostService {
         userId: post.userId,
         username: post.user.username,
         likes: post.likes,
+        dislikes: post.dislikes,
         title: post.title,
         content: post.content,
         createdAt: post.createdAt,
@@ -183,6 +188,7 @@ export class PostService {
         postId: post.postId,
         userId: post.userId,
         likes: post.likes,
+        dislikes: post.dislikes,
         username: post.user.username,
         title: post.title,
         content: post.content,
@@ -218,6 +224,7 @@ export class PostService {
         postId: post.postId,
         userId: post.userId,
         likes: post.likes,
+        dislikes: post.dislikes,
         username: post.user.username,
         title: post.title,
         content: post.content,
@@ -228,6 +235,72 @@ export class PostService {
       return { status: 200, post: transformedPost };
     } catch (error) {
       console.error('Error getting post:', error);
+      return { status: 500, post: null };
+    }
+  }
+
+  async likeOrDislikePost(
+    postId: number,
+    isLike: boolean,
+  ): Promise<{ status: number; post: PostEntity | null }> {
+    try {
+      let post = await this.prismaService.post.findUnique({
+        where: {
+          postId,
+        },
+        include: {
+          user: true,
+        },
+      });
+
+      if (!post) {
+        throw new Error('Post not found');
+      }
+
+      if (isLike) {
+        post = await this.prismaService.post.update({
+          where: {
+            postId,
+          },
+          data: {
+            likes: {
+              increment: 1,
+            },
+          },
+          include: {
+            user: true,
+          },
+        });
+      } else {
+        post = await this.prismaService.post.update({
+          where: {
+            postId,
+          },
+          data: {
+            dislikes: {
+              increment: 1,
+            },
+          },
+          include: {
+            user: true,
+          },
+        });
+      }
+
+      const transformedPost = {
+        postId: post.postId,
+        userId: post.userId,
+        likes: post.likes,
+        dislikes: post.dislikes,
+        title: post.title,
+        content: post.content,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+      };
+
+      return { status: 200, post: transformedPost };
+    } catch (error) {
+      console.error('Error liking/disliking post:', error);
       return { status: 500, post: null };
     }
   }
