@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UpdateUserAuthenticationDto } from './dto/update-user-authentication.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma, User } from '.prisma/client';
@@ -113,7 +113,6 @@ export class UserAuthenticationService {
     }
   }
 
-  
   async logoutUser(
     userId: string,
   ): Promise<{ message: string; status?: number }> {
@@ -230,6 +229,28 @@ export class UserAuthenticationService {
         message: 'Failed to delete user: ' + error.message,
         status: 400,
       };
+    }
+  }
+
+  async getUserById(userId: number): Promise<{ user?: User }> {
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: {
+          userId: userId,
+        },
+        include: {
+          profile: true,
+          passwordResets: true,
+          fitnessExercises: true,
+          posts: true,
+          comments: true,
+          progresses: true,
+        },
+      });
+  
+      return { user };
+    } catch (error) {
+      throw new InternalServerErrorException(`Failed to get user: ${error.message}`);
     }
   }
 }

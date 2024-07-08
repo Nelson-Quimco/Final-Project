@@ -8,6 +8,8 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserAuthenticationService } from './user-authentication.service';
 import { CreateUserAuthenticationDto } from './dto/create-user-authentication.dto';
@@ -91,7 +93,6 @@ export class UserAuthenticationController {
         statusCode: 200, // OK
         message: 'Logout successful',
       };
-
     } catch (error) {
       return {
         statusCode: 400, // Bad Request
@@ -140,5 +141,13 @@ export class UserAuthenticationController {
         status: 500,
       };
     }
+  }
+
+  @Get(':userId')
+  async getUserById(
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<{ user?: User }> {
+    const { user } = await this.userAuthenticationService.getUserById(userId);
+    return { user };
   }
 }
