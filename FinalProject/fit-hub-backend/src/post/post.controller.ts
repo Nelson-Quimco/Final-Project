@@ -93,17 +93,6 @@ export class PostController {
     }
   }
 
-  // @Post(':postId/like')
-  // async likePost(@Param('postId') postId: string) {
-  //   try {
-  //     const likedPost = await this.postService.likePost(Number(postId));
-  //     return { status: 200, data: likedPost };
-  //   } catch (error) {
-  //     console.error('Error liking post:', error);
-  //     return { status: 500, data: null };
-  //   }
-  // }
-
   @Get('get-post/:id')
   async getPostById(@Param('id', ParseIntPipe) postId: number) {
     try {
