@@ -15,7 +15,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { FitnessTrackingService } from './fitness-tracking.service';
-import { CreateFitnessTrackingDto, IsCompletedDto } from './dto/create-fitness-tracking.dto';
+import {
+  CreateFitnessTrackingDto,
+  IsCompletedDto,
+} from './dto/create-fitness-tracking.dto';
 import { UpdateFitnessTrackingDto } from './dto/update-fitness-tracking.dto';
 import {
   AddedExercise,
@@ -120,7 +123,6 @@ export class FitnessTrackingController {
     }
   }
 
-
   @Post('add-workout')
   async addExercise(
     @Body('fitnessExerciseId') fitnessExerciseId: number,
@@ -166,7 +168,7 @@ export class FitnessTrackingController {
       addedExerciseId,
       name,
       reps,
-      isComplete
+      isComplete,
     );
     return { data, statusCode };
   }
