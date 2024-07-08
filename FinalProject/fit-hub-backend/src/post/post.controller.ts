@@ -17,10 +17,8 @@ import { PostService } from './post.service';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Post as PostEntity } from '././entities/post.entity';
-import { JwtAuthGuard } from 'src/jwt/jwt-auth.guard';
 
 @Controller('post')
-// @UseGuards(JwtAuthGuard)
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
@@ -95,16 +93,16 @@ export class PostController {
     }
   }
 
-  @Post(':postId/like')
-  async likePost(@Param('postId') postId: string) {
-    try {
-      const likedPost = await this.postService.likePost(Number(postId));
-      return { status: 200, data: likedPost };
-    } catch (error) {
-      console.error('Error liking post:', error);
-      return { status: 500, data: null };
-    }
-  }
+  // @Post(':postId/like')
+  // async likePost(@Param('postId') postId: string) {
+  //   try {
+  //     const likedPost = await this.postService.likePost(Number(postId));
+  //     return { status: 200, data: likedPost };
+  //   } catch (error) {
+  //     console.error('Error liking post:', error);
+  //     return { status: 500, data: null };
+  //   }
+  // }
 
   @Get('get-post/:id')
   async getPostById(@Param('id', ParseIntPipe) postId: number) {
@@ -128,5 +126,13 @@ export class PostController {
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  @Post(':postId/like')
+  async likePost(
+    @Param('postId', ParseIntPipe) postId: number,
+    @Body('isLike') isLike: boolean,
+  ): Promise<{ status: number; post: any }> {
+    return this.postService.likeOrDislikePost(postId, isLike);
   }
 }
