@@ -1,6 +1,6 @@
 import { addedExerciseRes, addedExerciseType } from "@/constants/addedWorkout";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 const axiosReq = axios.create({ baseURL: process.env.NEXT_PUBLIC_URL });
 const useAddedWorkouts = () => {
@@ -13,18 +13,19 @@ const useAddedWorkouts = () => {
   >(null);
   const [loading, setLoading] = useState<boolean>();
 
-  const getAllUserWorkouts = async (id: number) => {
+  const getAllUserWorkouts = useCallback(async (id: number) => {
     setLoading(true);
     try {
       const res = await axiosReq.get(`fitness-tracking/${id}`);
       setLoading(false);
+      console.log(res.data);
       setWorkouts(res.data);
     } catch (error) {
       console.log(error);
     }
-  };
+  }, []);
 
-  const getByDate = (date: string) => {
+  const getByDate = useCallback((date: string) => {
     if (workouts) {
       const targetDate = new Date(date).toISOString().split("T")[0];
       if (workouts?.data.length > 0) {
@@ -35,11 +36,12 @@ const useAddedWorkouts = () => {
           return exerciseDate === targetDate;
         });
         setFilteredResponse(filteredWorkouts);
+        console.log(filteredWorkouts);
       }
     }
-  };
+  }, []);
 
-  const groupWorkoutsByDate = (data: addedExerciseType[]) => {
+  const groupWorkoutsByDate = useCallback((data: addedExerciseType[]) => {
     const groupedData = data.reduce(
       (acc: Record<string, addedExerciseType[]>, workout) => {
         const date = new Date(workout.setDate).toISOString().split("T")[0];
@@ -52,10 +54,6 @@ const useAddedWorkouts = () => {
       {}
     );
     setGroupedByDate(groupedData);
-  };
-
-  useEffect(() => {
-    getAllUserWorkouts(6);
   }, []);
 
   useEffect(() => {
@@ -71,6 +69,7 @@ const useAddedWorkouts = () => {
     groupedByDate,
     loading,
     setLoading,
+    getAllUserWorkouts,
   };
 };
 

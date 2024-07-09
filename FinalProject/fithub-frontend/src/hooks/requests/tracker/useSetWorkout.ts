@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 
 const axiosReq = axios.create({ baseURL: process.env.NEXT_PUBLIC_URL });
 const useSetWorkout = () => {
@@ -16,8 +16,7 @@ const useSetWorkout = () => {
         reps: reps,
         isComplete: true,
       };
-      const res = await axiosReq.post("fitness-tracking/isCompleted", body);
-      console.log(res);
+      await axiosReq.post("fitness-tracking/isCompleted", body);
     } catch (error) {
       console.log(error);
     }

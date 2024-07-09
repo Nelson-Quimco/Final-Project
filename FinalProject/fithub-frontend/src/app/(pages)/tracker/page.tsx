@@ -5,34 +5,36 @@ import Button from "@/components/buttons/Button";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
-import Link from "next/link";
 import WorkoutCard from "@/components/cards/workout-card";
-import Exercise from "./exercise/page";
 import WorkoutSkeleton from "@/components/skeleton/workoutCardSkeleton";
+import useUserdata from "@/hooks/useUserdata";
 
 const Tracker: React.FC = () => {
   const {
     workouts,
     groupedByDate,
-    filteredResponse,
     getByDate,
+    getAllUserWorkouts,
     loading,
     setLoading,
   } = useAddedWorkouts();
 
-  useEffect(() => {
-    console.log(workouts);
-    getByDate("2024-07-01T01:07:00.356Z");
-  }, [workouts]);
-
+  const user = useUserdata();
   const router = useRouter();
-
   const todaysDate = new Date().toISOString().split("T")[0];
-  console.log(todaysDate);
+
+  useEffect(() => {
+    if (user?.userId) {
+      getAllUserWorkouts(user.userId);
+    }
+  }, [user?.userId]);
 
   const todaysWorkout = groupedByDate[todaysDate] || [];
-  const tomorrowWorkouts = Object.keys(groupedByDate).filter(
-    (date) => date !== todaysDate
+  const upcomingWorkouts = Object.keys(groupedByDate).filter(
+    (date) => new Date(date) > new Date(todaysDate)
+  );
+  const pastWorkouts = Object.keys(groupedByDate).filter(
+    (date) => new Date(date) < new Date(todaysDate)
   );
 
   return (
@@ -42,11 +44,11 @@ const Tracker: React.FC = () => {
         width="13rem"
         height="3rem"
         onClick={() => router.push("/tracker/add-workout")}
-      ></Button>
+      />
       <div className="flex w-full gap-10 h-[100%] mt-[2rem]">
         <div className="flex flex-col gap-6 w-[70%]">
           <div className=" h-[20%]">
-            Today's Workout:
+            Today{`'`}s Workout:
             <div className=" h-[6rem] bg-white shadow-md border-none rounded-md p-4">
               {loading ? (
                 <WorkoutSkeleton />
@@ -76,21 +78,50 @@ const Tracker: React.FC = () => {
                   <WorkoutSkeleton />
                   <WorkoutSkeleton />
                 </>
-              ) : (
-                tomorrowWorkouts.map((date) => (
+              ) : upcomingWorkouts.length > 0 ? (
+                upcomingWorkouts.map((date, index) => (
                   <WorkoutCard
+                    key={index}
                     date={date}
                     exerciseCount={groupedByDate[date].length}
                     href={`tracker/exercise?date=${encodeURIComponent(date)}`}
                   />
                 ))
+              ) : (
+                <p>You have NO Upcoming Workout</p>
               )}
             </div>
           </div>
         </div>
         <div className=" w-[30%]">
           Achievements:
-          <div className=" h-[48rem] bg-white shadow-md border-none rounded-md"></div>
+          <div className="flex flex-col gap-3 h-[48rem] bg-white shadow-md border-none rounded-md p-4 overflow-y-auto">
+            {loading ? (
+              <>
+                <WorkoutSkeleton />
+                <WorkoutSkeleton />
+                <WorkoutSkeleton />
+                <WorkoutSkeleton />
+                <WorkoutSkeleton />
+                <WorkoutSkeleton />
+                <WorkoutSkeleton />
+                <WorkoutSkeleton />
+                <WorkoutSkeleton />
+              </>
+            ) : pastWorkouts.length > 0 ? (
+              pastWorkouts.map((date, index) => (
+                <WorkoutCard
+                  linked={false}
+                  key={index}
+                  date={date}
+                  exerciseCount={groupedByDate[date].length}
+                  href={`tracker/exercise?date=${encodeURIComponent(date)}`}
+                />
+              ))
+            ) : (
+              <p>No past exercises</p>
+            )}
+          </div>
         </div>
       </div>
     </div>

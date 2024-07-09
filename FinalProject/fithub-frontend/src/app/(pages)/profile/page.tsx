@@ -8,9 +8,11 @@ import useForumRequest from "@/hooks/requests/forum/useForumRequest";
 import PostPreview from "@/components/cards/postPreview";
 import { formatDateNormal } from "@/lib/functions/dateFormatter";
 import ForumSkeleton from "@/components/skeleton/forumSkeleton";
+import EditUserModal from "@/components/modals/EditUserModal";
 
 const Profile = () => {
-  const [isModalOpen, setIsmodalOpen] = useState(false);
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const user = useUserdata();
   const { allPost, userPost, getPostbyUser, loading } = useForumRequest();
@@ -27,17 +29,25 @@ const Profile = () => {
   return (
     <div className="h-full bg-offWhite">
       <ResetPassword
-        isOpen={isModalOpen}
-        onClose={() => setIsmodalOpen(false)}
+        isOpen={isResetModalOpen}
+        onClose={() => setIsResetModalOpen(false)}
       ></ResetPassword>
 
-      <div className="flex w-full border">
+      <EditUserModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+      />
+
+      <div className="flex w-full border-none rounded-lg shadow-md bg-white">
         <div className=" h-full w-[20%] flex flex-col items-center gap-3 p-2">
           <div className="border p-10 rounded-full"></div>
-          <Button name="Edit Profile"></Button>
+          <Button
+            name="Edit Profile"
+            onClick={() => setIsEditModalOpen(true)}
+          ></Button>
           <Button
             name="Reset Password"
-            onClick={() => setIsmodalOpen(true)}
+            onClick={() => setIsResetModalOpen(true)}
             className=""
           ></Button>
         </div>
@@ -72,7 +82,7 @@ const Profile = () => {
               </p>
             </div>
           </div>
-          <div className="text-center">"I love Balls "</div>
+          <div className="text-center">I love Balls </div>
         </div>
       </div>
 

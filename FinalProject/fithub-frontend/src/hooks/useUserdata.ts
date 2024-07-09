@@ -1,5 +1,5 @@
 "use client";
-import User from "@/constants/userTypes";
+import { User } from "@/constants/userTypes";
 import { getCookie } from "@/lib/utils/cookies";
 import React, { useEffect, useState } from "react";
 

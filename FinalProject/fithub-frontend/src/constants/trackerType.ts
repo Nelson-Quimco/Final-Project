@@ -30,7 +30,7 @@ interface FitnessExercise {
 }
 
 interface FitnessExerciseResponse {
-  user: FitnessExercise[];
+  data: FitnessExercise[];
 }
 
 export type { FitnessExercise, FitnessExerciseResponse };

@@ -67,7 +67,7 @@ const AddWorkout = () => {
       for (const exercise of addedExercises) {
         console.log("test");
         const res = await axiosReq.post("/fitness-tracking/add-workout", {
-          // userId: userId,
+          userId: userId,
           fitnessExerciseId: exercise.id,
           reps: exercise.reps || 0, // Ensure reps is provided
           setDate: startDate?.toISOString() || new Date().toISOString(),
@@ -136,7 +136,10 @@ const AddWorkout = () => {
       <div className="font-bold text-[20px] mb-4">ADD NEW WORKOUT</div>
       <div className="w-full flex-grow flex gap-6">
         <div className="w-[70%] h-full border rounded-md p-4 px-10">
-          <form className="flex flex-col gap-10" onSubmit={handleAddWorkout}>
+          <form
+            className="flex flex-col justify-center h-full gap-10"
+            onSubmit={handleAddWorkout}
+          >
             <div className="flex gap-10">
               <div>
                 <p className="font-bold text-[20px]">Level:</p>

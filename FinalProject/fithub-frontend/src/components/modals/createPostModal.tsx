@@ -29,7 +29,7 @@ const CreatePostModal = (props: Props) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     createPost(userId, title, content);
-    // loadingToast();
+    loadingToast();
   };
 
   useEffect(() => {

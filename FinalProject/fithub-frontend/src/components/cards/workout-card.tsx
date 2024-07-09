@@ -5,18 +5,25 @@ interface Props {
   date: string;
   exerciseCount: number;
   href: string;
-  key?: "number" | "string";
+  linked?: boolean;
 }
 
 const WorkoutCard = (props: Props) => {
-  const { date, exerciseCount, href, key } = props;
+  const { date, exerciseCount, href, linked = true } = props;
 
   return (
     <div className="p-3 border rounded-md">
-      <Link href={href} key={key}>
-        <p className="font-bold text-[15px]">Exercise for {date}</p>
-        <p>{exerciseCount} Exercise/s</p>
-      </Link>
+      {linked ? (
+        <Link href={href}>
+          <p className="font-bold text-[15px]">Exercise for {date}</p>
+          <p>{exerciseCount} Exercise/s</p>
+        </Link>
+      ) : (
+        <div>
+          <p className="font-bold text-[15px]">Exercise for {date}</p>
+          <p>{exerciseCount} Exercise/s</p>
+        </div>
+      )}
     </div>
   );
 };
