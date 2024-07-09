@@ -4,24 +4,34 @@ import { useSearchParams } from "next/navigation";
 import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
 import Button from "@/components/buttons/Button";
 import useSetWorkout from "@/hooks/requests/tracker/useSetWorkout";
+import useUserdata from "@/hooks/useUserdata";
 
 const Exercise = () => {
   const search = useSearchParams();
-  const { workouts, getByDate, filteredResponse } = useAddedWorkouts();
+  const { workouts, getByDate, filteredResponse, getAllUserWorkouts } =
+    useAddedWorkouts();
   const completeWorkout = useSetWorkout();
   const date = search.get("date");
+  const user = useUserdata();
 
   let ExerciseCount = 0;
   if (filteredResponse) {
     ExerciseCount = filteredResponse.length;
   }
 
+  console.log(workouts);
+
   ExerciseCount + 1;
   useEffect(() => {
     if (date) {
       getByDate(date); // Fetch workouts for the selected date
+      console.log(filteredResponse);
     }
   }, [workouts, date]);
+
+  useEffect(() => {
+    if (user) getAllUserWorkouts(user?.userId);
+  }, [user?.userId]);
 
   const handleComplete = (
     addedId: number,
@@ -62,7 +72,7 @@ const Exercise = () => {
                     )
                   }
                 >
-                  {x.isComplete ? "Done" : "Wala pa hahaha"}
+                  {x.isComplete ? "Done" : "Wala"}
                 </button>
               </div>
             ))}

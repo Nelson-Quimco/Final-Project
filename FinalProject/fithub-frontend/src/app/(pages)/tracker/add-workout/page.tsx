@@ -13,6 +13,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import axios from "axios";
 import useUserdata from "@/hooks/useUserdata";
 import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
+import { toast } from "react-toastify";
 
 const axiosReq = axios.create({ baseURL: `${process.env.NEXT_PUBLIC_URL}` });
 const AddWorkout = () => {
@@ -59,11 +60,15 @@ const AddWorkout = () => {
     );
   };
 
+  const trackerToast = () => toast.success("Workout Added Successfully");
+  const postingToast = () => toast("Posting.....", { autoClose: 3000 });
+
   const handleAddWorkout = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const userId = user?.userId;
       console.log(userId);
+      postingToast();
       for (const exercise of addedExercises) {
         console.log("test");
         const res = await axiosReq.post("/fitness-tracking/add-workout", {
@@ -74,7 +79,8 @@ const AddWorkout = () => {
         });
         console.log(res.data);
       }
-      alert("Workout added successfully!");
+      trackerToast();
+      router.push("/tracker");
     } catch (error) {
       console.error("Error adding workout", error);
       alert("Failed to add workout");

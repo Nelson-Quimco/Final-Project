@@ -6,14 +6,7 @@ import React, { useEffect } from "react";
 import "../../../styles/logs.css";
 
 const Logs = () => {
-  const {
-    workouts,
-    groupedByDate,
-    getByDate,
-    getAllUserWorkouts,
-    loading,
-    setLoading,
-  } = useAddedWorkouts();
+  const { groupedByDate, getByDate, getAllUserWorkouts } = useAddedWorkouts();
 
   const user = useUserdata();
 
@@ -65,8 +58,14 @@ const Logs = () => {
                     </p>
                   </td>
 
-                  <td>
-                    <p>{status}</p>
+                  <td className="">
+                    <p
+                      className={`${
+                        status === "Completed" ? "bg-successGreen" : "bg-red"
+                      } w-[50%] border-none rounded-full`}
+                    >
+                      {status}
+                    </p>
                   </td>
                 </tr>
               );

@@ -10,14 +10,7 @@ import WorkoutSkeleton from "@/components/skeleton/workoutCardSkeleton";
 import useUserdata from "@/hooks/useUserdata";
 
 const Tracker: React.FC = () => {
-  const {
-    workouts,
-    groupedByDate,
-    getByDate,
-    getAllUserWorkouts,
-    loading,
-    setLoading,
-  } = useAddedWorkouts();
+  const { groupedByDate, getAllUserWorkouts, loading } = useAddedWorkouts();
 
   const user = useUserdata();
   const router = useRouter();
