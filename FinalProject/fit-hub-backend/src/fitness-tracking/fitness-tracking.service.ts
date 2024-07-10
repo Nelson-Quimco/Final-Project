@@ -229,16 +229,14 @@ export class FitnessTrackingService {
         },
       });
 
-      if (isComplete) {
-        await this.prismaService.addedExercise.update({
-          where: {
-            addedExerciseId: addedExerciseId,
-          },
-          data: {
-            isComplete: true,
-          },
-        });
-      }
+      await this.prismaService.addedExercise.update({
+        where: {
+          addedExerciseId: addedExerciseId,
+        },
+        data: {
+          isComplete: isComplete,
+        },
+      });
 
       return {
         data: createdIsCompleted,
