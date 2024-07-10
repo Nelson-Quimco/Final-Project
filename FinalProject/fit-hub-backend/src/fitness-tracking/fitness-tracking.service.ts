@@ -3,6 +3,9 @@ import {
   HttpStatus,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CreateFitnessTrackingDto } from './dto/create-fitness-tracking.dto';
 import { UpdateFitnessTrackingDto } from './dto/update-fitness-tracking.dto';
@@ -135,7 +138,6 @@ export class FitnessTrackingService {
   }
 
   async addExercise(
-    // userId: number,
     fitnessExerciseId: number,
     reps: number,
     setDate: string,
@@ -249,6 +251,100 @@ export class FitnessTrackingService {
       return {
         data: null,
         statusCode: 500,
+      };
+    }
+  }
+
+  async getExerciseById(id: number): Promise<FitnessExercise> {
+    try {
+      const fitnessExercise =
+        await this.prismaService.fitnessExercise.findUnique({
+          where: {
+            id: id,
+          },
+          include: {
+            user: true,
+            progresses: true,
+          },
+        });
+
+      if (!fitnessExercise) {
+        throw new NotFoundException(
+          `Fitness exercise with ID ${id} not found.`,
+        );
+      }
+
+      return fitnessExercise;
+    } catch (error) {
+      throw new Error(
+        `Error retrieving fitness exercise by ID: ${error.message}`,
+      );
+    }
+  }
+
+  async updateAddedExercise(
+    addedExerciseId: number,
+    reps: number,
+    setDate: string,
+  ): Promise<{ data: AddedExercise | null; statusCode: number }> {
+    try {
+      const existingAddedExercise =
+        await this.prismaService.addedExercise.findUnique({
+          where: {
+            addedExerciseId: addedExerciseId,
+          },
+        });
+
+      if (!existingAddedExercise) {
+        return {
+          data: null,
+          statusCode: 404,
+        };
+      }
+
+      const updatedAddedExercise =
+        await this.prismaService.addedExercise.update({
+          where: {
+            addedExerciseId: addedExerciseId,
+          },
+          data: {
+            reps: reps,
+            setDate: new Date(setDate).toISOString(),
+          },
+        });
+
+      return {
+        data: updatedAddedExercise,
+        statusCode: 200,
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        data: null,
+        statusCode: 500,
+      };
+    }
+  }
+
+  async deleteExercise(
+    @Param('addedExerciseId', ParseIntPipe) addedExerciseId: number,
+  ): Promise<{ data: boolean; message: string; statusCode: number }> {
+    try {
+      await this.prismaService.addedExercise.delete({
+        where: {
+          addedExerciseId: addedExerciseId,
+        },
+      });
+      return {
+        data: true,
+        message: 'Exercise deleted successfully',
+        statusCode: HttpStatus.OK,
+      };
+    } catch (error) {
+      return {
+        data: false,
+        message: 'Error deleting exercise',
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       };
     }
   }

@@ -12,11 +12,18 @@ import {
   HttpStatus,
   Req,
   UseGuards,
+  BadRequestException,
+  NotFoundException,
+  ForbiddenException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Post as PostEntity } from '././entities/post.entity';
+import { CreateCommentDto } from 'src/comment/dto/create-comment.dto';
+import { CommentEntity } from 'src/comment/entities/comment.entity';
+import { log } from 'console';
 
 @Controller('post')
 export class PostController {
@@ -123,5 +130,34 @@ export class PostController {
     @Body('isLike') isLike: boolean,
   ): Promise<{ status: number; post: any }> {
     return this.postService.likeOrDislikePost(postId, isLike);
+  }
+
+  @Post()
+  async createComment(
+    @Req() req: { user?: { userId?: string } },
+    @Body() createCommentDto: CreateCommentDto
+  ): Promise<CommentEntity> {
+    const userId = req.user?.userId ? Number(req.user.userId) : null;
+    console.log('userId: ', userId);
+  
+    if (userId === null) {
+      throw new UnauthorizedException('You must be logged in to create a comment');
+    }
+  
+    // Get the post ID from the createCommentDto
+    const { postId } = createCommentDto;
+  
+    // Fetch the post
+    const { status, post } = await this.postService.getPostById(postId);
+    if (status !== 200 || !post) {
+      throw new NotFoundException(`Post with ID ${postId} not found`);
+    }
+  
+    // Check if the user is allowed to comment on the post
+    if (post.userId !== userId) {
+      throw new ForbiddenException('You are not authorized to comment on this post');
+    }
+  
+    return this.postService.createComment(userId, createCommentDto);
   }
 }

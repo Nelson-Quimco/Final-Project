@@ -1,4 +1,4 @@
-export interface CommentEntity {
+export class CommentEntity {
   commentId: number;
   postId: number;
   userId: number;

@@ -10,9 +10,6 @@ import { FitnessTrackingModule } from './fitness-tracking/fitness-tracking.modul
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './jwt/jwt.strategy';
-import { JwtAuthGuard } from './jwt/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -27,13 +24,8 @@ import { JwtAuthGuard } from './jwt/jwt-auth.guard';
     UserProfileModule,
     PrismaModule,
     PassportModule,
-    // PassportModule.register({ defaultStrategy: 'jwt' }),
-    // JwtModule.register({
-    //   secret: 'your_jwt_secret',
-    //   signOptions: { expiresIn: '60m' },
-    // }),
   ],
   controllers: [AppController],
-  providers: [AppService, ConfigService], // JwtStrategy, JwtAuthGuard
+  providers: [AppService, ConfigService],
 })
 export class AppModule {}
