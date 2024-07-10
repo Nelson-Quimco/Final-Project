@@ -13,6 +13,7 @@ import {
   ParseIntPipe,
   Res,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { FitnessTrackingService } from './fitness-tracking.service';
 import {
@@ -171,5 +172,69 @@ export class FitnessTrackingController {
       isComplete,
     );
     return { data, statusCode };
+  }
+
+  @Get('get-exercise/:id')
+  @HttpCode(HttpStatus.OK)
+  async getFitnessExercise(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<FitnessExercise> {
+    try {
+      return await this.fitnessTrackingService.getExerciseById(id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      } else {
+        throw new Error(
+          `Error retrieving fitness exercise by ID: ${error.message}`,
+        );
+      }
+    }
+  }
+
+  @Patch('update-addedExercise/:addedExerciseId')
+  async updateAddedExercise(
+    @Param('addedExerciseId', ParseIntPipe) addedExerciseId: number,
+    @Body('reps', ParseIntPipe) reps: number,
+    @Body('setDate') setDate: string,
+  ): Promise<{ data: AddedExercise | null; statusCode: number }> {
+    try {
+      const { data, statusCode } =
+        await this.fitnessTrackingService.updateAddedExercise(
+          addedExerciseId,
+          reps,
+          setDate,
+        );
+
+      if (statusCode === 404) {
+        throw new NotFoundException(
+          `Added exercise with ID ${addedExerciseId} not found.`,
+        );
+      }
+
+      if (statusCode === 500) {
+        throw new InternalServerErrorException(
+          'Error updating added exercise.',
+        );
+      }
+
+      return { data, statusCode };
+    } catch (error) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof InternalServerErrorException
+      ) {
+        throw error;
+      }
+
+      throw new BadRequestException('Invalid input data.');
+    }
+  }
+
+  @Delete('delete-addedExercise/:addedExerciseId')
+  async deleteExercise(
+    @Param('addedExerciseId', ParseIntPipe) addedExerciseId: number,
+  ): Promise<{ data: boolean; statusCode: number }> {
+    return await this.fitnessTrackingService.deleteExercise(addedExerciseId);
   }
 }
