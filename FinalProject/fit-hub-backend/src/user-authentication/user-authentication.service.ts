@@ -253,4 +253,63 @@ export class UserAuthenticationService {
       throw new InternalServerErrorException(`Failed to get user: ${error.message}`);
     }
   }
+
+  async editProfile(
+    userId: number,
+    firstName?: string,
+    lastName?: string,
+    username?: string,
+    email?: string
+  ): Promise<{
+    statusCode: number;
+    message: string;
+    data?: { message?: string; status?: number; user?: User };
+  }> {
+    try {
+      const existingUser = await this.prismaService.user.findUnique({
+        where: {
+          userId: userId,
+        },
+      });
+  
+      if (!existingUser) {
+        return {
+          statusCode: 404,
+          message: 'Error: User not found',
+          data: {
+            message: 'The specified user does not exist',
+            status: 404,
+          },
+        };
+      }
+      const updatedUser = await this.prismaService.user.update({
+        where: {
+          userId,
+        },
+        data: {
+          firstName: firstName || existingUser.firstName,
+          lastName: lastName || existingUser.lastName,
+          username: username || existingUser.username,
+          email: email || existingUser.email,
+        },
+      });
+  
+      return {
+        statusCode: 200,
+        message: 'User updated successfully',
+        data: {
+          user: updatedUser,
+        },
+      };
+    } catch (error) {
+      return {
+        statusCode: 500,
+        message: 'Failed to update user: ' + error.message,
+        data: {
+          message: 'An error occurred while updating the user',
+          status: 500,
+        },
+      };
+    }
+  }
 }
