@@ -54,14 +54,14 @@ export class UserAuthenticationController {
       .findAll()
       .then((users) => {
         return {
-          statusCode: 200, // OK
+          statusCode: 200,
           message: 'Users retrieved successfully',
           data: users,
         };
       })
       .catch((error) => {
         return {
-          statusCode: 500, // Internal Server Error
+          statusCode: 500,
           message: 'Error retrieving users',
           data: error,
         };
@@ -90,12 +90,12 @@ export class UserAuthenticationController {
     try {
       await this.userAuthenticationService.logoutUser(userId);
       return {
-        statusCode: 200, // OK
+        statusCode: 200,
         message: 'Logout successful',
       };
     } catch (error) {
       return {
-        statusCode: 400, // Bad Request
+        statusCode: 400,
         message: `Failed to logout: ${error.message}`,
       };
     }
@@ -149,5 +149,36 @@ export class UserAuthenticationController {
   ): Promise<{ user?: User }> {
     const { user } = await this.userAuthenticationService.getUserById(userId);
     return { user };
+  }
+
+
+  @Patch(':userId/user-profile')
+  async updateUserProfile(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Body('firstName') firstName?: string,
+    @Body('lastName') lastName?: string,
+    @Body('username') username?: string,
+    @Body('email') email?: string
+  ): Promise<{ user: User }> {
+    try {
+      const { statusCode, message, data } = await this.userAuthenticationService.editProfile(
+        userId,
+        firstName,
+        lastName,
+        username,
+        email
+      );
+
+      if (statusCode !== HttpStatus.OK) {
+        throw new HttpException(message, statusCode);
+      }
+
+      return { user: data.user! };
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'An error occurred while updating the user profile',
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 }
