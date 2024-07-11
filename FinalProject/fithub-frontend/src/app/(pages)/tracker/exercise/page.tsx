@@ -64,7 +64,7 @@ const Exercise = () => {
                 </div>
                 <button
                   disabled={disabled}
-                  className={`border-none rounded-md bg-blue p-3 font-bold text-[20px] ${
+                  className={`border-none rounded-md bg-blue p-3 font-bold text-[20px] w-[6rem] ${
                     disabled
                       ? "bg-gray text-[12px] hover:cursor-not-allowed"
                       : x.isComplete
@@ -84,7 +84,7 @@ const Exercise = () => {
                     ? `Locked until ${date}`
                     : x.isComplete
                     ? "Done"
-                    : "Wala"}
+                    : "Not Done"}
                 </button>
               </div>
             ))}
