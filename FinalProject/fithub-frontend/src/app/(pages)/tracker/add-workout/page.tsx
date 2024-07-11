@@ -60,7 +60,11 @@ const AddWorkout = () => {
   };
 
   const trackerToast = () => toast.success("Workout Added Successfully");
-  const postingToast = () => toast("Posting.....", { autoClose: 3000 });
+  const postingToast = () =>
+    toast("Adding Your Workout.....", {
+      autoClose: 3000,
+      hideProgressBar: true,
+    });
 
   const handleAddWorkout = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

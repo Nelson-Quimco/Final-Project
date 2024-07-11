@@ -11,21 +11,21 @@ const Dashboard = () => {
 
   return (
     <div className="grid grid-cols-3 gap-10 h-full grid-rows-[10rem_auto]">
-      <div className="flex rounded-[5px] w-full h-full border"></div>
-      <div className="rounded-[5px] w-full h-full border">
+      <div className="flex rounded-[5px] w-full h-full bg-white shadow-md"></div>
+      <div className="rounded-[5px] w-full h-full bg-white shadow-md">
         <div className="bg-blue text-white h-[50px] text-center text-[25px] p-2">
           Today's Workout
         </div>
         <div></div>
       </div>
-      <div className="rounded-[5px] w-full h-full border">
+      <div className="rounded-[5px] w-full h-full bg-white shadow-md">
         <div className="bg-blue text-white h-[50px] text-center text-[25px] p-2">
           Tomorrow's Workout
         </div>
       </div>
 
-      <div className="rounded-[5px] w-full h-[42rem] border col-span-2"></div>
-      <div className="rounded-[5px] w-full h-[42rem] border flex flex-col items-center p-4 overflow-y-auto">
+      <div className="rounded-[5px] w-full h-[42rem] col-span-2 bg-white shadow-md"></div>
+      <div className="rounded-[5px] w-full h-[42rem] flex flex-col items-center p-4 overflow-y-auto bg-white shadow-md">
         <div>Recent Posts</div>
         <div className="flex flex-col gap-3">
           {allPost?.map((posts, index) => (
