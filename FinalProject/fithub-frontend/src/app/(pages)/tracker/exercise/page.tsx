@@ -92,55 +92,57 @@ const Exercise = () => {
             >
               Edit
             </button>
-            {filteredResponse?.map((x, index) => (
-              <div key={index} className="flex gap-10">
-                <div className="flex justify-between bg-blueGrey w-full border-none rounded-md p-6 font-semibold text-[20px]">
-                  <p>{x.Name}</p>
-                  {isEditing ? (
-                    <div className="flex gap-3">
-                      <input
-                        className="border-none rounded-md p-1 w-[4rem] text-center"
-                        type="number"
-                        value={editedReps[x.addedExerciseId] ?? x.reps}
-                        onChange={(e) =>
-                          handleRepsChange(
-                            x.addedExerciseId,
-                            Number(e.target.value)
-                          )
-                        }
-                      />
-                      <p>reps</p>
-                    </div>
-                  ) : (
-                    <p className="">{x.reps} reps</p>
-                  )}
-                </div>
-                <button
-                  disabled={disabled}
-                  className={`border-none rounded-md bg-blue p-3 font-bold text-[20px] w-[6rem] ${
-                    disabled
-                      ? "bg-gray text-[10px] hover:cursor-not-allowed"
+            {filteredResponse
+              ?.sort((a, b) => a.Name.localeCompare(b.Name))
+              .map((x, index) => (
+                <div key={index} className="flex gap-10">
+                  <div className="flex justify-between bg-blueGrey w-full border-none rounded-md p-6 font-semibold text-[20px]">
+                    <p>{x.Name}</p>
+                    {isEditing ? (
+                      <div className="flex gap-3">
+                        <input
+                          className="border-none rounded-md p-1 w-[4rem] text-center"
+                          type="number"
+                          value={editedReps[x.addedExerciseId] ?? x.reps}
+                          onChange={(e) =>
+                            handleRepsChange(
+                              x.addedExerciseId,
+                              Number(e.target.value)
+                            )
+                          }
+                        />
+                        <p>reps</p>
+                      </div>
+                    ) : (
+                      <p className="">{x.reps} reps</p>
+                    )}
+                  </div>
+                  <button
+                    disabled={disabled}
+                    className={`border-none rounded-md bg-blue p-3 font-bold text-[20px] w-[6rem] ${
+                      disabled
+                        ? "bg-gray text-[10px] hover:cursor-not-allowed"
+                        : x.isComplete
+                        ? "bg-successGreen"
+                        : "bg-red text-gray"
+                    }`}
+                    onClick={() =>
+                      handleComplete(
+                        x.addedExerciseId,
+                        x.Name,
+                        x.reps,
+                        x.isComplete ? false : true
+                      )
+                    }
+                  >
+                    {disabled
+                      ? `Locked until ${formatDateNormal(date)}`
                       : x.isComplete
-                      ? "bg-successGreen"
-                      : "bg-red text-gray"
-                  }`}
-                  onClick={() =>
-                    handleComplete(
-                      x.addedExerciseId,
-                      x.Name,
-                      x.reps,
-                      x.isComplete ? false : true
-                    )
-                  }
-                >
-                  {disabled
-                    ? `Locked until ${formatDateNormal(date)}`
-                    : x.isComplete
-                    ? "Done"
-                    : "Not Done"}
-                </button>
-              </div>
-            ))}
+                      ? "Done"
+                      : "Not Done"}
+                  </button>
+                </div>
+              ))}
           </div>
           <div className={`${isEditing ? "" : "hidden"}`}>
             <Button name="Save Edit" onClick={handleSubmitEdit}></Button>

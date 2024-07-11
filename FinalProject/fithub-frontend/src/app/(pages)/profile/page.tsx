@@ -9,6 +9,8 @@ import PostPreview from "@/components/cards/postPreview";
 import ForumSkeleton from "@/components/skeleton/forumSkeleton";
 import EditUserModal from "@/components/modals/EditUserModal";
 import useUserProfile from "@/hooks/requests/user-profile/useUserProfile";
+import ProfileHeaderCard from "@/components/cards/profileHeaderCard";
+import ProfileCardSkeleton from "@/components/skeleton/profileCardSkeleton";
 
 const Profile = () => {
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
@@ -16,7 +18,11 @@ const Profile = () => {
 
   const user = useUserdata();
   const { userPost, getPostbyUser, loading } = useForumRequest();
-  const { userData, getUserInformation } = useUserProfile();
+  const {
+    userData,
+    getUserInformation,
+    loading: profileLoading,
+  } = useUserProfile();
 
   const userID = user?.userId;
 
@@ -25,7 +31,7 @@ const Profile = () => {
       getPostbyUser(userID);
       getUserInformation(userID);
     }
-  }, [userData]);
+  }, []);
 
   return (
     <div className="h-full bg-offWhite">
@@ -39,53 +45,18 @@ const Profile = () => {
         onClose={() => setIsEditModalOpen(false)}
       />
 
-      <div className="flex w-full border-none rounded-lg shadow-md bg-white">
-        <div className=" h-full w-[20%] flex flex-col items-center gap-3 p-2">
-          <div className="border p-10 rounded-full"></div>
-          <Button
-            name="Edit Profile"
-            onClick={() => setIsEditModalOpen(true)}
-          ></Button>
-          <Button
-            name="Reset Password"
-            onClick={() => setIsResetModalOpen(true)}
-            className=""
-          ></Button>
-        </div>
-        <div className="flex flex-col w-[80%] gap-10 p-10 text-[20px]">
-          <div className="flex justify-between">
-            <div className="flex flex-col justify-start gap-6 w-full font-bold">
-              <p>
-                Firstname:
-                <span className="font-normal text-[18px] ml-[10px]">
-                  {userData?.user.firstName}
-                </span>
-              </p>
-              <p>
-                Username:
-                <span className=" font-normal text-[18px] ml-[10px]">
-                  {userData?.user.username}
-                </span>
-              </p>
-            </div>
-            <div className="flex flex-col justify-start gap-6 w-full font-bold">
-              <p>
-                Lastname:
-                <span className=" font-normal text-[18px] ml-[10px]">
-                  {userData?.user.lastName}
-                </span>
-              </p>
-              <p>
-                Email:
-                <span className=" font-normal text-[18px] ml-[10px]">
-                  {userData?.user.email}
-                </span>
-              </p>
-            </div>
-          </div>
-          <div className="text-center"></div>
-        </div>
-      </div>
+      {profileLoading ? (
+        <ProfileCardSkeleton />
+      ) : (
+        <ProfileHeaderCard
+          firstname={userData?.user.firstName}
+          lastname={userData?.user.lastName}
+          username={userData?.user.username}
+          email={userData?.user.email}
+          openEditModal={() => setIsEditModalOpen(true)}
+          openResetModal={() => setIsEditModalOpen(true)}
+        />
+      )}
 
       <div className="mt-5">
         <p className=" my-5">Posts({userPost?.length ?? 0})</p>

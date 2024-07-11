@@ -9,7 +9,7 @@ import SearchBar from "@/components/search-bar/search-bar";
 import ForumSkeleton from "@/components/skeleton/forumSkeleton";
 
 const Forums = () => {
-  const { allPost, loading, setLoading } = useForumRequest();
+  const { allPost, loading } = useForumRequest();
   const [isModalOpen, setIsmodalOpen] = useState(false);
 
   console.log(allPost);

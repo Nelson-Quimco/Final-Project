@@ -40,7 +40,7 @@ const WorkoutCard = (props: Props) => {
         )}
       </div>
       <div
-        className={`flex items-center justify-end gap-3 ${
+        className={`flex items-end justify-end gap-3 ${
           noAction ? "hidden" : ""
         }`}
       >
