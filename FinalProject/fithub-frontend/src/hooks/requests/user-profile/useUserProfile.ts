@@ -5,6 +5,7 @@ import React, { useCallback, useMemo, useState } from "react";
 
 const useUserProfile = () => {
   const [userData, setUserDate] = useState<UserRes | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const changeUserProfile = useCallback(
     async (
@@ -36,12 +37,13 @@ const useUserProfile = () => {
   );
 
   const getUserInformation = useCallback(async (id: number) => {
+    setLoading(true);
     try {
       const res = await axios.get(
         `http://localhost:3000/user-authentication/${id}`
       );
-
       setUserDate(res.data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -51,7 +53,7 @@ const useUserProfile = () => {
     return { userData };
   }, [userData]);
 
-  return { ...values, changeUserProfile, getUserInformation };
+  return { ...values, changeUserProfile, getUserInformation, loading };
 };
 
 export default useUserProfile;

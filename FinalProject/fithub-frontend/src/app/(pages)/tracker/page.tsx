@@ -24,9 +24,10 @@ const Tracker: React.FC = () => {
   }, [user?.userId]);
 
   const todaysWorkout = groupedByDate[todaysDate] || [];
-  const upcomingWorkouts = Object.keys(groupedByDate).filter(
-    (date) => new Date(date) > new Date(todaysDate)
-  );
+  const upcomingWorkouts = Object.keys(groupedByDate)
+    .filter((date) => new Date(date) > new Date(todaysDate))
+    .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
   const pastWorkouts = Object.keys(groupedByDate).filter(
     (date) => new Date(date) < new Date(todaysDate)
   );
