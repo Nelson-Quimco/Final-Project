@@ -25,7 +25,7 @@ const WorkoutCard = (props: Props) => {
   } = props;
 
   return (
-    <div className="p-3 border rounded-md w-full flex">
+    <div className="p-3 border rounded-md w-full flex justify-between">
       <div className="w-[90%]">
         {linked ? (
           <Link href={href}>
@@ -39,12 +39,11 @@ const WorkoutCard = (props: Props) => {
           </div>
         )}
       </div>
-      <div className={`flex items-center gap-3 ${noAction ? "hidden" : ""}`}>
-        <button onClick={handleEdit}>
-          <div className="border-none rounded-md bg-blue p-1">
-            <BiEditAlt size={25} className="text-white" />
-          </div>
-        </button>
+      <div
+        className={`flex items-center justify-end gap-3 ${
+          noAction ? "hidden" : ""
+        }`}
+      >
         <button onClick={handleDelete}>
           <div className="border-none rounded-md bg-red p-1">
             <FaRegTrashAlt size={25} className="text-white" />

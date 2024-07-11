@@ -1,5 +1,6 @@
 import { addedExerciseRes, addedExerciseType } from "@/constants/addedWorkout";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const axiosReq = axios.create({ baseURL: process.env.NEXT_PUBLIC_URL });
@@ -86,9 +87,20 @@ const useAddedWorkouts = () => {
     }
   };
 
-  const editWorkout = async () => {
+  const updateWorkout = async (
+    addedExerciseId: number,
+    reps: number,
+    setDate: string
+  ) => {
     try {
-      // await axiosReq.patch();
+      const body = {
+        reps,
+        setDate,
+      };
+      await axiosReq.patch(
+        `fitness-tracking/update-addedExercise/${addedExerciseId}`,
+        body
+      );
     } catch (error) {
       console.log(error);
     }
@@ -105,7 +117,7 @@ const useAddedWorkouts = () => {
     filteredResponse,
     groupedByDate,
     loading,
-    editWorkout,
+    updateWorkout,
     getByDate,
     setLoading,
     getAllUserWorkouts,

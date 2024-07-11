@@ -10,13 +10,8 @@ import WorkoutSkeleton from "@/components/skeleton/workoutCardSkeleton";
 import useUserdata from "@/hooks/useUserdata";
 
 const Tracker: React.FC = () => {
-  const {
-    groupedByDate,
-    getAllUserWorkouts,
-    loading,
-    deleteWorkout,
-    setLoading,
-  } = useAddedWorkouts();
+  const { groupedByDate, getAllUserWorkouts, loading, deleteWorkout } =
+    useAddedWorkouts();
 
   const user = useUserdata();
   const router = useRouter();
@@ -36,13 +31,9 @@ const Tracker: React.FC = () => {
     (date) => new Date(date) < new Date(todaysDate)
   );
 
-  // const targetWorkout = groupedByDate["2024-08-01"];
-
-  const handleEdit = () => {};
   const handleDelete = async (date: any) => {
     const targetWorkouts = groupedByDate[date];
     console.log(targetWorkouts);
-
     targetWorkouts.map((x) => deleteWorkout(x.addedExerciseId));
 
     if (user?.userId) {
@@ -98,7 +89,6 @@ const Tracker: React.FC = () => {
                     date={date}
                     exerciseCount={groupedByDate[date].length}
                     href={`tracker/exercise?date=${encodeURIComponent(date)}`}
-                    handleEdit={() => handleEdit()}
                     handleDelete={() => handleDelete(date)}
                   />
                 ))
