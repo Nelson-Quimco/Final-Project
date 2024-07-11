@@ -8,10 +8,21 @@ interface Props {
   exerciseCount: number;
   href: string;
   linked?: boolean;
+  noAction?: boolean;
+  handleDelete?: () => void;
+  handleEdit?: () => void;
 }
 
 const WorkoutCard = (props: Props) => {
-  const { date, exerciseCount, href, linked = true } = props;
+  const {
+    handleEdit,
+    handleDelete,
+    noAction,
+    date,
+    exerciseCount,
+    href,
+    linked = true,
+  } = props;
 
   return (
     <div className="p-3 border rounded-md w-full flex">
@@ -28,13 +39,13 @@ const WorkoutCard = (props: Props) => {
           </div>
         )}
       </div>
-      <div className="flex items-center gap-3">
-        <button>
+      <div className={`flex items-center gap-3 ${noAction ? "hidden" : ""}`}>
+        <button onClick={handleEdit}>
           <div className="border-none rounded-md bg-blue p-1">
             <BiEditAlt size={25} className="text-white" />
           </div>
         </button>
-        <button>
+        <button onClick={handleDelete}>
           <div className="border-none rounded-md bg-red p-1">
             <FaRegTrashAlt size={25} className="text-white" />
           </div>

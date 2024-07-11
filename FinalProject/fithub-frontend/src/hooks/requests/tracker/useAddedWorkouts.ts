@@ -78,6 +78,22 @@ const useAddedWorkouts = () => {
     }
   };
 
+  const deleteWorkout = async (id: number) => {
+    try {
+      await axiosReq.delete(`fitness-tracking/delete-addedExercise/${id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editWorkout = async () => {
+    try {
+      // await axiosReq.patch();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (workouts?.data) {
       groupWorkoutsByDate(workouts.data);
@@ -86,13 +102,15 @@ const useAddedWorkouts = () => {
 
   return {
     workouts,
-    getByDate,
     filteredResponse,
     groupedByDate,
     loading,
+    editWorkout,
+    getByDate,
     setLoading,
     getAllUserWorkouts,
     completeWorkout,
+    deleteWorkout,
   };
 };
 

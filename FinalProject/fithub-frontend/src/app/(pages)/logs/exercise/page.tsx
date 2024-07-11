@@ -53,7 +53,7 @@ const Exercise = () => {
                 </div>
                 <button
                   disabled={true}
-                  className={`border-none rounded-md bg-blue p-3 font-bold text-[20px] ${
+                  className={`border-none rounded-md bg-blue p-3 font-bold text-[20px] w-[6rem] ${
                     x.isComplete ? "bg-successGreen" : "bg-red text-gray"
                   }`}
                 >
