@@ -31,12 +31,11 @@ const navLinks = [
 
 const Sidebar = (props: Props) => {
   const pathname = usePathname();
-  console.log(pathname);
 
   const { setIsOpen } = useLogoutContext();
 
   return (
-    <div className="h-[100vh] fixed w-[15rem] bg-blue flex flex-col justify-between items-center gap-8">
+    <div className="h-[100vh] fixed w-[15rem] bg-blue flex flex-col justify-between items-center gap-8 shadow-lg">
       <div className="h-[5rem] border-none">
         <Link href={"/dashboard"}>
           <Logo />

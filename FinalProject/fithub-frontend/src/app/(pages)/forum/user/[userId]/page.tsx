@@ -9,8 +9,8 @@ const userId = ({ params }: { params: { userId: number } }) => {
   const { user, getUserById } = useLoginRequest();
   const { userPost, getPostbyUser } = useForumRequest();
   useEffect(() => {
-    getUserById(params.userId);
     getPostbyUser(params.userId);
+    getUserById(params.userId);
   }, []);
 
   return (

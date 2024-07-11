@@ -47,7 +47,7 @@ const useForumRequest = () => {
     try {
       const res = await axiosReq.get(`/post/${id}`);
       setUserPost(res.data.data);
-      console.log(res.data.data);
+      // console.log(res.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -94,7 +94,6 @@ const useForumRequest = () => {
   };
 
   const memoizedValues = useMemo(() => {
-    console.log("memoized");
     return {
       allPost,
       userPost,

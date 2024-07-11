@@ -1,22 +1,17 @@
 "use client";
 import withAuth from "@/components/auth/withAuth";
+import useForumRequest from "@/hooks/requests/forum/useForumRequest";
+import Link from "next/link";
 import React from "react";
-import { GiBiceps } from "react-icons/gi";
 
 const Dashboard = () => {
+  const { allPost } = useForumRequest();
+
+  console.log(allPost);
+
   return (
     <div className="grid grid-cols-3 gap-10 h-full grid-rows-[10rem_auto]">
-      <div className="flex rounded-[5px] w-full h-full border">
-        <div className="w-[50%] bg-blue h-full flex flex-col items-center justify-between p-3">
-          <p className="text-white text-[35px]">Fit Level</p>
-          <GiBiceps size={100} className=" text-brightRed" />
-        </div>
-
-        {/* sfsdfsdfsfdmsdlkm */}
-        <div className=" flex justify-center items-center w-[50%] font-bold text-[100px]">
-          S
-        </div>
-      </div>
+      <div className="flex rounded-[5px] w-full h-full border"></div>
       <div className="rounded-[5px] w-full h-full border">
         <div className="bg-blue text-white h-[50px] text-center text-[25px] p-2">
           Today's Workout
@@ -29,8 +24,24 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="rounded-[5px] w-full h-full border col-span-2"></div>
-      <div className="rounded-[5px] w-full h-full border"></div>
+      <div className="rounded-[5px] w-full h-[42rem] border col-span-2"></div>
+      <div className="rounded-[5px] w-full h-[42rem] border flex flex-col items-center p-4 overflow-y-auto">
+        <div>Recent Posts</div>
+        <div className="flex flex-col gap-3">
+          {allPost?.map((posts, index) => (
+            <Link
+              href={"/forum"}
+              className="border-none rounded-md shadow-md p-3 bg-white flex flex-col gap-2 "
+              key={index}
+            >
+              <p className="font-bold text-[15px]">{posts.title}</p>
+              <p className="line-clamp-1 text-wrap whitespace-pre-line">
+                {posts.content}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

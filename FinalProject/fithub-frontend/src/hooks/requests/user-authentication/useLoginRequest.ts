@@ -62,31 +62,27 @@ const useLoginRequest = () => {
         setPasswordMessage("Invalid Username or Password");
         setUsernameMessage("Invalid Username or Password");
       }
-
-      console.log(res.data.user);
-      console.log(body);
-      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getUserById = async (userId: number) => {
+  const getUserById = useCallback(async (userId: number) => {
     try {
       const res = await axiosReq.get(`/user-authentication/${userId}`);
       setUser(res.data);
     } catch (error) {
       console.log(error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     getAccounts();
   }, []);
 
   const memoizedValue = useMemo(() => {
-    return user;
-  }, [user]);
+    return { user, data };
+  }, [user, data]);
 
   return {
     ...memoizedValue,
