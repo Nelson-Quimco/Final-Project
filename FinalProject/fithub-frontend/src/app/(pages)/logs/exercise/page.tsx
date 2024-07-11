@@ -38,17 +38,6 @@ const Exercise = () => {
     if (user) getAllUserWorkouts(user?.userId);
   }, [user?.userId]);
 
-  const handleComplete = (
-    addedId: number,
-    name: string,
-    reps: number,
-    isComplete: boolean
-  ) => {
-    if (user?.userId) {
-      completeWorkout(addedId, name, reps, isComplete, user.userId);
-    }
-  };
-
   return (
     <>
       <div className="h-full">
@@ -63,33 +52,16 @@ const Exercise = () => {
                   <p className="">{x.reps} reps</p>
                 </div>
                 <button
-                  disabled={disabled}
+                  disabled={true}
                   className={`border-none rounded-md bg-blue p-3 font-bold text-[20px] ${
-                    disabled
-                      ? "bg-gray text-[12px] hover:cursor-not-allowed"
-                      : x.isComplete
-                      ? "bg-successGreen"
-                      : "bg-red text-gray"
+                    x.isComplete ? "bg-successGreen" : "bg-red text-gray"
                   }`}
-                  onClick={() =>
-                    handleComplete(
-                      x.addedExerciseId,
-                      x.Name,
-                      x.reps,
-                      x.isComplete ? false : true
-                    )
-                  }
                 >
-                  {disabled
-                    ? `Locked until ${date}`
-                    : x.isComplete
-                    ? "Done"
-                    : "Wala"}
+                  {x.isComplete ? "Done" : "Failed"}
                 </button>
               </div>
             ))}
           </div>
-          <Button name="Finish"></Button>
         </div>
       </div>
     </>

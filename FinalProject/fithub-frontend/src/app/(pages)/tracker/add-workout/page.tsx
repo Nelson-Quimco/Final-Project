@@ -36,7 +36,6 @@ const AddWorkout = () => {
   useEffect(() => {
     filterExercise(type, level);
   }, [type, level]);
-  console.log(groupedByDate);
 
   const viewExercises = (id: number) => {
     router.push(`add-workout/${id}`);
@@ -70,14 +69,12 @@ const AddWorkout = () => {
       console.log(userId);
       postingToast();
       for (const exercise of addedExercises) {
-        console.log("test");
         const res = await axiosReq.post("/fitness-tracking/add-workout", {
           userId: userId,
           fitnessExerciseId: exercise.id,
           reps: exercise.reps || 0, // Ensure reps is provided
           setDate: startDate?.toISOString() || new Date().toISOString(),
         });
-        console.log(res.data);
       }
       trackerToast();
       router.push("/tracker");
@@ -86,10 +83,12 @@ const AddWorkout = () => {
       alert("Failed to add workout");
     }
   };
-
   const excludedDates = Object.keys(groupedByDate).map(
     (date) => new Date(date)
   );
+
+  console.log(excludedDates);
+  console.log(groupedByDate);
 
   const testRender = () => {
     let dataToMap;
@@ -107,26 +106,31 @@ const AddWorkout = () => {
         return (
           <div
             key={x.id}
-            className="flex items-center gap-4 mb-5 border rounded-md"
+            className="flex items-center justify-between gap-4 mb-5 border rounded-md"
           >
-            <Button
-              name={isAdded ? "Added" : "Add"}
-              width="80px"
-              className={`${
-                isAdded ? "bg-brightRed" : "bg-blue"
-              } rounded-tl-sm rounded-bl-sm h-[6rem] text-white text-[1.5rem]`}
-              onClick={() => !isAdded && addExercise(x)}
-              disabled={isAdded}
-            />
-            <div className="p-2">
-              <p className="font-bold text-[18px]">{x.Name}</p>
-              <p className="text-[13px]">Type: {x.Type}</p>
-              <p className="text-[13px]">Level: {x.Level}</p>
+            <div className="flex">
+              <Button
+                name={isAdded ? "Added" : "Add"}
+                width="80px"
+                className={`${
+                  isAdded ? "bg-brightRed" : "bg-blue"
+                } rounded-tl-sm rounded-bl-sm h-[6rem] text-white text-[1.5rem]`}
+                onClick={() => !isAdded && addExercise(x)}
+                disabled={isAdded}
+              />
+              <div className="p-2">
+                <p className="font-bold text-[18px]">{x.Name}</p>
+                <p className="text-[13px]">Type: {x.Type}</p>
+                <p className="text-[13px]">Level: {x.Level}</p>
+              </div>
             </div>
-            <IoEye
-              onClick={() => viewExercises(x.id)}
-              className="self-center w-[60px] cursor-pointer"
-            />
+            <div className="justify-self-start cursor-pointer h-full m-4">
+              <IoEye
+                onClick={() => viewExercises(x.id)}
+                className="self-end"
+                size={30}
+              />
+            </div>
           </div>
         );
       })

@@ -6,25 +6,26 @@ import ResetPassword from "@/components/modals/ResetPassword";
 import Button from "@/components/buttons/Button";
 import useForumRequest from "@/hooks/requests/forum/useForumRequest";
 import PostPreview from "@/components/cards/postPreview";
-import { formatDateNormal } from "@/lib/functions/dateFormatter";
 import ForumSkeleton from "@/components/skeleton/forumSkeleton";
 import EditUserModal from "@/components/modals/EditUserModal";
+import useUserProfile from "@/hooks/requests/user-profile/useUserProfile";
 
 const Profile = () => {
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const user = useUserdata();
-  const { allPost, userPost, getPostbyUser, loading } = useForumRequest();
+  const { userPost, getPostbyUser, loading } = useForumRequest();
+  const { userData, getUserInformation } = useUserProfile();
 
   const userID = user?.userId;
 
   useEffect(() => {
     if (userID) {
       getPostbyUser(userID);
+      getUserInformation(userID);
     }
-  }, [allPost]);
-  console.log(userPost);
+  }, [userData]);
 
   return (
     <div className="h-full bg-offWhite">
@@ -56,14 +57,14 @@ const Profile = () => {
             <div className="flex flex-col justify-start gap-6 w-full font-bold">
               <p>
                 Firstname:
-                <span className=" font-normal text-[18px] ml-[10px]">
-                  {user?.firstName}
+                <span className="font-normal text-[18px] ml-[10px]">
+                  {userData?.user.firstName}
                 </span>
               </p>
               <p>
                 Username:
                 <span className=" font-normal text-[18px] ml-[10px]">
-                  {user?.username}
+                  {userData?.user.username}
                 </span>
               </p>
             </div>
@@ -71,18 +72,18 @@ const Profile = () => {
               <p>
                 Lastname:
                 <span className=" font-normal text-[18px] ml-[10px]">
-                  {user?.lastName}
+                  {userData?.user.lastName}
                 </span>
               </p>
               <p>
                 Email:
                 <span className=" font-normal text-[18px] ml-[10px]">
-                  {user?.email}
+                  {userData?.user.email}
                 </span>
               </p>
             </div>
           </div>
-          <div className="text-center">I love Balls </div>
+          <div className="text-center"></div>
         </div>
       </div>
 

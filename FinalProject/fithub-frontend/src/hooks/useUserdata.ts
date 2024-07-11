@@ -1,12 +1,12 @@
 "use client";
 import { User } from "@/constants/userTypes";
 import { getCookie } from "@/lib/utils/cookies";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 const useUserdata = () => {
   const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
+  useMemo(() => {
     const userCookie = getCookie("user");
     if (userCookie) {
       try {

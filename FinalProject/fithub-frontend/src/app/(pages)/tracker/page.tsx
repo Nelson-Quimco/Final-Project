@@ -42,7 +42,7 @@ const Tracker: React.FC = () => {
         <div className="flex flex-col gap-6 w-[70%]">
           <div className=" h-[20%]">
             Today{`'`}s Workout:
-            <div className=" h-[6rem] bg-white shadow-md border-none rounded-md p-4">
+            <div className=" h-[6rem] bg-white shadow-md border-none rounded-md p-4 flex justify-center">
               {loading ? (
                 <WorkoutSkeleton />
               ) : todaysWorkout.length > 0 ? (
@@ -87,7 +87,7 @@ const Tracker: React.FC = () => {
           </div>
         </div>
         <div className=" w-[30%]">
-          Achievements:
+          Past Workouts:
           <div className="flex flex-col gap-3 h-[48rem] bg-white shadow-md border-none rounded-md p-4 overflow-y-auto">
             {loading ? (
               <>
