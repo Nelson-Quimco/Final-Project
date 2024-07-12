@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { UpdateCommentDto } from './dto/update-comment.dto';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-
 export interface Comment {
   id: number;
   postId: number;
@@ -28,7 +30,11 @@ export class CommentService {
           updatedAt: new Date(),
         },
       });
-      return comment;
+
+      return {
+        ...comment,
+        isLiked: false,
+      };
     } catch (error) {
       console.error('Error creating comment:', error);
       throw error;
@@ -61,19 +67,20 @@ export class CommentService {
     }
   }
 
-  findAll() {
-    return `This action returns all comment`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
-  }
-
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} comment`;
+  async updateComment(commentId: number, updatedContent: string) {
+    try {
+      const updatedComment = await this.prismaService.comment.update({
+        where: {
+          commentId: commentId,
+        },
+        data: {
+          content: updatedContent,
+          updatedAt: new Date(),
+        },
+      });
+      return updatedComment;
+    } catch (error) {
+      throw new Error(`Error updating comment: ${error.message}`);
+    }
   }
 }

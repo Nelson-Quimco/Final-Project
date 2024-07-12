@@ -6,9 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
+  HttpException,
+  HttpStatus,
+  ExecutionContext,
+  createParamDecorator,
+  Req,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { UpdateCommentDto } from './dto/update-comment.dto';
 
 export interface Comment {
   id: number;
@@ -24,14 +29,18 @@ export interface Comment {
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Post(':postId')
+  @Post('create-comment/:postId')
   async createComment(
     @Param('postId') postId: number,
     @Body('userId') userId: number,
-    @Body('content') content: string
+    @Body('content') content: string,
   ) {
     try {
-      const comment = await this.commentService.createComment(postId, userId, content);
+      const comment = await this.commentService.createComment(
+        postId,
+        userId,
+        content,
+      );
       return comment;
     } catch (error) {
       console.error('Error creating comment:', error);
@@ -40,35 +49,32 @@ export class CommentController {
   }
 
   @Get(':postId')
-async getCommentsByPost(@Param('postId') postId: number): Promise<Comment[]> {
-  try {
-    const comments = await this.commentService.getCommentsByPostId(postId);
-    return comments;
-  } catch (error) {
-    console.error('Error fetching comments:', error);
-    throw error;
-  }
-}
-
-
-  @Get()
-  findAll() {
-    return this.commentService.findAll();
+  async getCommentsByPost(@Param('postId') postId: number): Promise<Comment[]> {
+    try {
+      const comments = await this.commentService.getCommentsByPostId(postId);
+      return comments;
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      throw error;
+    }
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentService.findOne(+id);
-  }
-  3;
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(+id, updateCommentDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentService.remove(+id);
+  @Patch('update-comment/:id')
+  async updateComment(
+    @Param('id', ParseIntPipe) commentId: number,
+    @Body('content') updatedContent: string,
+  ) {
+    try {
+      const updatedComment = await this.commentService.updateComment(
+        commentId,
+        updatedContent,
+      );
+      return updatedComment;
+    } catch (error) {
+      throw new HttpException(
+        `Error updating comment: ${error.message}`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }
