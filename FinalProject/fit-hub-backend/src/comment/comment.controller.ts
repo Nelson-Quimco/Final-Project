@@ -6,49 +6,51 @@ import {
   Patch,
   Param,
   Delete,
-  NotFoundException,
-  HttpException,
-  HttpStatus,
-  Req,
-  BadRequestException,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { Comment, User } from '@prisma/client';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { CommentEntity } from './entities/comment.entity';
 
-interface RequestWithUser extends Request {
-  user: {
-    userId: number;
-  };
+export interface Comment {
+  id: number;
+  postId: number;
+  userId: number;
+  content: string;
+  likes: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 @Controller('comments')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  // @Post('comment-post')
-  // async createComment(
-  //   @Req() req: RequestWithUser,
-  //   @Body() createCommentDto: CreateCommentDto,
-  // ): Promise<CommentEntity> {
-  //   if (!req.user || typeof req.user.userId !== 'number') {
-  //     throw new BadRequestException('User information is not available');
-  //   }
+  @Post(':postId')
+  async createComment(
+    @Param('postId') postId: number,
+    @Body('userId') userId: number,
+    @Body('content') content: string
+  ) {
+    try {
+      const comment = await this.commentService.createComment(postId, userId, content);
+      return comment;
+    } catch (error) {
+      console.error('Error creating comment:', error);
+      throw error;
+    }
+  }
 
-  //   try {
-  //     return await this.commentService.createComment(
-  //       req.user.userId,
-  //       createCommentDto,
-  //     );
-  //   } catch (error) {
-  //     console.error('Error creating comment:', error);
-  //     throw new InternalServerErrorException('Failed to create comment');
-  //   }
-  // }
-  
+  @Get(':postId')
+async getCommentsByPost(@Param('postId') postId: number): Promise<Comment[]> {
+  try {
+    const comments = await this.commentService.getCommentsByPostId(postId);
+    return comments;
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    throw error;
+  }
+}
+
+
   @Get()
   findAll() {
     return this.commentService.findAll();
