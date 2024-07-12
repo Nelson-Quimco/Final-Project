@@ -135,29 +135,33 @@ export class PostController {
   @Post()
   async createComment(
     @Req() req: { user?: { userId?: string } },
-    @Body() createCommentDto: CreateCommentDto
+    @Body() createCommentDto: CreateCommentDto,
   ): Promise<CommentEntity> {
     const userId = req.user?.userId ? Number(req.user.userId) : null;
     console.log('userId: ', userId);
-  
+
     if (userId === null) {
-      throw new UnauthorizedException('You must be logged in to create a comment');
+      throw new UnauthorizedException(
+        'You must be logged in to create a comment',
+      );
     }
-  
+
     // Get the post ID from the createCommentDto
     const { postId } = createCommentDto;
-  
+
     // Fetch the post
     const { status, post } = await this.postService.getPostById(postId);
     if (status !== 200 || !post) {
       throw new NotFoundException(`Post with ID ${postId} not found`);
     }
-  
+
     // Check if the user is allowed to comment on the post
     if (post.userId !== userId) {
-      throw new ForbiddenException('You are not authorized to comment on this post');
+      throw new ForbiddenException(
+        'You are not authorized to comment on this post',
+      );
     }
-  
+
     return this.postService.createComment(userId, createCommentDto);
   }
 }

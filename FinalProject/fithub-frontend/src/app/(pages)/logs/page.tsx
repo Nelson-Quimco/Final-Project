@@ -23,7 +23,7 @@ const Logs = () => {
 
   const filteredDates = Object.keys(groupedByDate)
     .filter((date) => new Date(date) < new Date(currentDate))
-    .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    .sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
 
   useEffect(() => {
     console.log(groupedByDate);

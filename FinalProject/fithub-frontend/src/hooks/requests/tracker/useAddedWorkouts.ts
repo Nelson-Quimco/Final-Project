@@ -92,6 +92,7 @@ const useAddedWorkouts = () => {
     reps: number,
     setDate: string
   ) => {
+    setLoading(true);
     try {
       const body = {
         reps,
@@ -101,6 +102,7 @@ const useAddedWorkouts = () => {
         `fitness-tracking/update-addedExercise/${addedExerciseId}`,
         body
       );
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
