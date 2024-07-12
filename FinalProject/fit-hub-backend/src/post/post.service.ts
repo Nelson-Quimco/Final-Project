@@ -3,8 +3,6 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Post as PostEntity } from '././entities/post.entity';
-import { CommentEntity } from 'src/comment/entities/comment.entity';
-import { CreateCommentDto } from 'src/comment/dto/create-comment.dto';
 
 @Injectable()
 export class PostService {
@@ -267,58 +265,66 @@ export class PostService {
     }
   }
 
-  async createComment(
-    userId: number,
-    createCommentDto: CreateCommentDto,
-  ): Promise<CommentEntity> {
-    try {
-      const { postId, content } = createCommentDto;
+  // async createComment(
+  //   userId: number,
+  //   createCommentDto: CreateCommentDto,
+  // ): Promise<CommentEntity> {
+  //   try {
+  //     const { postId, content } = createCommentDto;
 
-      const createdComment = await this.prismaService.comment.create({
-        data: {
-          userId,
-          postId,
-          content,
-          likes: 0,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        include: {
-          user: {
-            select: {
-              userId: true,
-              username: true,
-            },
-          },
-          post: {
-            select: {
-              postId: true,
-              title: true,
-            },
-          },
-        },
-      });
+  //     const post = await this.prismaService.post.findUnique({
+  //       where: { postId },
+  //     });
 
-      return {
-        commentId: createdComment.commentId,
-        postId: createdComment.postId,
-        userId: createdComment.userId,
-        likes: createdComment.likes,
-        content: createdComment.content,
-        createdAt: createdComment.createdAt,
-        updatedAt: createdComment.updatedAt,
-        user: {
-          userId: createdComment.user.userId,
-          username: createdComment.user.username,
-        },
-        post: {
-          postId: createdComment.post.postId,
-          title: createdComment.post.title,
-        },
-      };
-    } catch (error) {
-      console.error('Error creating comment:', error);
-      throw error;
-    }
-  }
+  //     if (!post) {
+  //       throw new Error('Post not found');
+  //     }
+
+  //     const createdComment = await this.prismaService.comment.create({
+  //       data: {
+  //         userId,
+  //         postId,
+  //         content,
+  //         likes: 0,
+  //         createdAt: new Date(),
+  //         updatedAt: new Date(),
+  //       },
+  //       include: {
+  //         user: {
+  //           select: {
+  //             userId: true,
+  //             username: true,
+  //           },
+  //         },
+  //         post: {
+  //           select: {
+  //             postId: true,
+  //             title: true,
+  //           },
+  //         },
+  //       },
+  //     });
+
+  //     return {
+  //       commentId: createdComment.commentId,
+  //       postId: createdComment.postId,
+  //       userId: createdComment.userId,
+  //       content: createdComment.content,
+  //       likes: createdComment.likes,
+  //       createdAt: createdComment.createdAt,
+  //       updatedAt: createdComment.updatedAt,
+  //       post: {
+  //         postId: createdComment.post.postId,
+  //         title: createdComment.post.title,
+  //       },
+  //       user: {
+  //         userId: createdComment.user.userId,
+  //         username: createdComment.user.username,
+  //       },
+  //     };
+  //   } catch (error) {
+  //     console.error('Error creating comment:', error);
+  //     throw error;
+  //   }
+  // }
 }
