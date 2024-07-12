@@ -175,6 +175,7 @@ export class PostService {
         },
         include: {
           user: true,
+          comments: true,
         },
       });
 
@@ -192,6 +193,7 @@ export class PostService {
         content: post.content,
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
+        comment: post.comments,
       };
 
       return { status: 200, post: transformedPost };
