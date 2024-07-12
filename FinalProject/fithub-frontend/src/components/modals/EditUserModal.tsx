@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../input/Input";
 import Button from "../buttons/Button";
 import useUserdata from "@/hooks/useUserdata";
 import { IoIosCloseCircle } from "react-icons/io";
+import useUserProfile from "@/hooks/requests/user-profile/useUserProfile";
 
 interface Props {
   isOpen: boolean;
@@ -13,11 +14,41 @@ const EditUserModal = (props: Props) => {
   const { isOpen, onClose } = props;
 
   const user = useUserdata();
+  const { userData, getUserInformation, changeUserProfile } = useUserProfile();
 
-  const [firstname, setFirstname] = useState(user?.firstName);
-  const [lastname, setLastname] = useState(user?.lastName);
-  const [username, setUsername] = useState(user?.username);
-  const [email, setEmail] = useState(user?.email);
+  const [userID, setUserID] = useState(0);
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      getUserInformation(user?.userId);
+    }
+  }, [userID]);
+
+  useEffect(() => {
+    if (userData?.user) {
+      setFirstname(userData.user.firstName || "");
+      setLastname(userData.user.lastName || "");
+      setUsername(userData.user.username || "");
+      setEmail(userData.user.email || "");
+      setUserID(userData.user.userId || 0);
+    }
+  }, [userData]);
+  const handleEditProfile = async () => {
+    if (user?.userId) {
+      await changeUserProfile(
+        user.userId,
+        firstname,
+        lastname,
+        username,
+        email
+      );
+      if (onClose) onClose();
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -61,7 +92,7 @@ const EditUserModal = (props: Props) => {
               <Input onChange={(e) => setEmail(e.target.value)} value={email} />
             </div>
             <div className=" flex justify-center">
-              <Button name="Edit Profile" onClick={() => ""} />
+              <Button name="Edit Profile" onClick={() => handleEditProfile()} />
             </div>
           </form>
         </div>

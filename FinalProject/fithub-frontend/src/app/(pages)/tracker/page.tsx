@@ -10,7 +10,8 @@ import WorkoutSkeleton from "@/components/skeleton/workoutCardSkeleton";
 import useUserdata from "@/hooks/useUserdata";
 
 const Tracker: React.FC = () => {
-  const { groupedByDate, getAllUserWorkouts, loading } = useAddedWorkouts();
+  const { groupedByDate, getAllUserWorkouts, loading, deleteWorkout } =
+    useAddedWorkouts();
 
   const user = useUserdata();
   const router = useRouter();
@@ -23,12 +24,23 @@ const Tracker: React.FC = () => {
   }, [user?.userId]);
 
   const todaysWorkout = groupedByDate[todaysDate] || [];
-  const upcomingWorkouts = Object.keys(groupedByDate).filter(
-    (date) => new Date(date) > new Date(todaysDate)
-  );
+  const upcomingWorkouts = Object.keys(groupedByDate)
+    .filter((date) => new Date(date) > new Date(todaysDate))
+    .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
   const pastWorkouts = Object.keys(groupedByDate).filter(
     (date) => new Date(date) < new Date(todaysDate)
   );
+
+  const handleDelete = async (date: any) => {
+    const targetWorkouts = groupedByDate[date];
+    console.log(targetWorkouts);
+    targetWorkouts.map((x) => deleteWorkout(x.addedExerciseId));
+
+    if (user?.userId) {
+      await getAllUserWorkouts(user.userId);
+    }
+  };
 
   return (
     <div className="">
@@ -42,7 +54,7 @@ const Tracker: React.FC = () => {
         <div className="flex flex-col gap-6 w-[70%]">
           <div className=" h-[20%]">
             Today{`'`}s Workout:
-            <div className=" h-[6rem] bg-white shadow-md border-none rounded-md p-4">
+            <div className=" h-[6rem] bg-white shadow-md border-none rounded-md p-4 flex justify-center">
               {loading ? (
                 <WorkoutSkeleton />
               ) : todaysWorkout.length > 0 ? (
@@ -78,6 +90,7 @@ const Tracker: React.FC = () => {
                     date={date}
                     exerciseCount={groupedByDate[date].length}
                     href={`tracker/exercise?date=${encodeURIComponent(date)}`}
+                    handleDelete={() => handleDelete(date)}
                   />
                 ))
               ) : (
@@ -87,7 +100,7 @@ const Tracker: React.FC = () => {
           </div>
         </div>
         <div className=" w-[30%]">
-          Achievements:
+          Past Workouts:
           <div className="flex flex-col gap-3 h-[48rem] bg-white shadow-md border-none rounded-md p-4 overflow-y-auto">
             {loading ? (
               <>
@@ -109,6 +122,7 @@ const Tracker: React.FC = () => {
                   date={date}
                   exerciseCount={groupedByDate[date].length}
                   href={`tracker/exercise?date=${encodeURIComponent(date)}`}
+                  noAction={true}
                 />
               ))
             ) : (

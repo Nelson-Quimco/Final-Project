@@ -4,11 +4,14 @@ import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
 import useUserdata from "@/hooks/useUserdata";
 import React, { useEffect } from "react";
 import "../../../styles/logs.css";
+import Button from "@/components/buttons/Button";
+import { useRouter } from "next/navigation";
 
 const Logs = () => {
-  const { groupedByDate, getByDate, getAllUserWorkouts } = useAddedWorkouts();
+  const { groupedByDate, getAllUserWorkouts } = useAddedWorkouts();
 
   const user = useUserdata();
+  const router = useRouter();
 
   useEffect(() => {
     if (user?.userId) {
@@ -16,12 +19,14 @@ const Logs = () => {
     }
   }, [user?.userId]);
 
-  const temp = Object.keys(groupedByDate).map((date) =>
-    console.log(groupedByDate[date])
-  );
+  const currentDate = new Date();
+
+  const filteredDates = Object.keys(groupedByDate)
+    .filter((date) => new Date(date) < new Date(currentDate))
+    .sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
 
   useEffect(() => {
-    console.log(temp);
+    console.log(groupedByDate);
   }, [groupedByDate]);
 
   return (
@@ -34,11 +39,11 @@ const Logs = () => {
               <th>Date</th>
               <th>Score</th>
               <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {" "}
-            {Object.keys(groupedByDate).map((date) => {
+            {filteredDates.map((date) => {
               const exercises = groupedByDate[date];
               const totalExercises = exercises.length;
               const completedExercises = exercises.filter(
@@ -48,7 +53,7 @@ const Logs = () => {
                 completedExercises === totalExercises ? "Completed" : "Failed";
 
               return (
-                <tr key={date}>
+                <tr key={date} className="font-semibold">
                   <td>
                     <p>{new Date(date).toLocaleDateString()}</p>
                   </td>
@@ -58,7 +63,7 @@ const Logs = () => {
                     </p>
                   </td>
 
-                  <td className="">
+                  <td className="flex justify-center border-none items-center p-3">
                     <p
                       className={`${
                         status === "Completed" ? "bg-successGreen" : "bg-red"
@@ -66,6 +71,18 @@ const Logs = () => {
                     >
                       {status}
                     </p>
+                  </td>
+                  <td>
+                    <button
+                      className="text-white border-none rounded-md bg-blue p-2"
+                      onClick={() => {
+                        router.push(
+                          `logs/exercise?date=${encodeURIComponent(date)}`
+                        );
+                      }}
+                    >
+                      View
+                    </button>
                   </td>
                 </tr>
               );

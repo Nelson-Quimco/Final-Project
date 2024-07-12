@@ -45,12 +45,20 @@ const ResetPasswordModal = (props: Props) => {
   };
 
   const notif = () =>
-    toast("Password reset successfully, Please login with the new password");
+    toast.success(
+      "Password reset successfully, Please login with the new password",
+      {
+        position: "top-center",
+      }
+    );
 
   const error = () =>
     toast.error(
-      "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+      { position: "top-center" }
     );
+  const invalid = () =>
+    toast.error("Wrong Password", { position: "top-center" });
 
   const handleReset = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -75,7 +83,7 @@ const ResetPasswordModal = (props: Props) => {
         console.error("An unexpected error occurred.");
       }
     } else {
-      console.log("Invalid Password");
+      invalid();
     }
   };
 
@@ -103,6 +111,7 @@ const ResetPasswordModal = (props: Props) => {
               <div className="mb-[2rem]">
                 <p className="font-bold">Password:</p>
                 <Input
+                  type="password"
                   width="20rem"
                   onChange={(e) => setOldPassword(e.target.value)}
                   value={oldPassword}
@@ -111,6 +120,7 @@ const ResetPasswordModal = (props: Props) => {
               <div>
                 <p className="font-bold">New Password:</p>
                 <Input
+                  type="password"
                   onChange={(e) => setNewPassword(e.target.value)}
                   value={newPassword}
                 />

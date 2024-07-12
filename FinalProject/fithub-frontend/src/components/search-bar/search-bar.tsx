@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Input from "../input/Input";
 import { FaSearch } from "react-icons/fa";
 import useLoginRequest from "@/hooks/requests/user-authentication/useLoginRequest";
-import User from "@/constants/userTypes";
+import { User } from "@/constants/userTypes";
 import Link from "next/link";
 
 interface Props {}
@@ -44,7 +44,7 @@ const SearchBar = (props: Props) => {
         }`}
       >
         {filteredAccounts.length > 0 ? (
-          <ul className="bg-white border rounded-md shadow-md">
+          <ul className="bg-white rounded-md shadow-lg">
             {filteredAccounts.map((account: User) => (
               <Link href={`/forum/user/${account.userId}`} key={account.userId}>
                 <li

@@ -135,13 +135,4 @@ export class PostController {
   ): Promise<{ status: number; post: any }> {
     return this.postService.likeOrDislikePost(postId, isLike);
   }
-
-  // @Post('comment-post')
-  // async createComment(
-  //   @Req() req: RequestWithUser,
-  //   @Body() createCommentDto: CreateCommentDto,
-  // ): Promise<CommentEntity> {
-  //   const userId = req.user.userId;
-  //   return this.postService.createComment(userId, createCommentDto);
-  // }
 }
