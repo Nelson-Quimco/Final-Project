@@ -5,7 +5,7 @@ import Button from "@/components/buttons/Button";
 import Input from "@/components/input/Input";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import User from "@/constants/userTypes";
+import { User } from "@/constants/userTypes";
 import { toast } from "react-toastify";
 
 const axiosReq = axios.create({ baseURL: `${process.env.NEXT_PUBLIC_URL}` });

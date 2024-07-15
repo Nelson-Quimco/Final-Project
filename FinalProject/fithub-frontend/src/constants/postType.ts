@@ -1,4 +1,5 @@
-import User from "./userTypes";
+import { User } from "./userTypes";
+import commentType from "./commentType";
 
 type postType = {
   postId: number;
@@ -9,7 +10,7 @@ type postType = {
   createdAt: string | Date;
   updatedAt: string;
   username: string; // Assuming User is another type defined similarly
-  comments: Comment[]; // Assuming Comment is another type defined similarly
+  comments: commentType[]; // Assuming Comment is another type defined similarly
 };
 
 interface postResponse {

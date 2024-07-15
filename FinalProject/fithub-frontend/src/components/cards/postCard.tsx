@@ -6,6 +6,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { formatDateNormal } from "@/lib/functions/dateFormatter";
 import useUserdata from "@/hooks/useUserdata";
 import useForumRequest from "@/hooks/requests/forum/useForumRequest";
+import CommentCard from "./commentCard";
 
 interface Props {
   username: string;
