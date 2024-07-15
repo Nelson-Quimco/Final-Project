@@ -16,7 +16,6 @@ const useForumRequest = () => {
       const res = await axiosReq.get("post/get-post");
       setAllPost(res.data.posts);
       setLoading(false);
-      console.log(res.data.posts);
     } catch (error) {
       console.log(error);
     }
@@ -66,6 +65,7 @@ const useForumRequest = () => {
     try {
       const res = await axiosReq.get(`/post/get-post/${postId}`);
       setLoading(false);
+      console.log(res.data.data);
       setPost(res.data);
     } catch (error) {
       console.log(error);
