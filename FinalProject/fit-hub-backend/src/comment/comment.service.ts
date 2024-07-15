@@ -7,6 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export interface Comment {
   id: number;
   postId: number;
+  username: string;
   userId: number;
   content: string;
   likes: number;
@@ -47,6 +48,9 @@ export class CommentService {
         where: {
           postId: Number(postId),
         },
+        include: {
+          user: true,
+        },
         orderBy: {
           createdAt: 'desc',
         },
@@ -54,6 +58,7 @@ export class CommentService {
 
       return comments.map((comment) => ({
         id: comment.commentId,
+        username: comment.user.username,
         postId: comment.postId,
         userId: comment.userId,
         content: comment.content,
