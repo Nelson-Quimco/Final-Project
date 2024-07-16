@@ -28,6 +28,32 @@ model User {
   posts            Post[]
   comments         Comment[]
   progresses       Progress[]
+  likedPosts       PostLike[]
+}
+
+model Post {
+  postId    Int        @id @default(autoincrement())
+  userId    Int
+  likes     Int        @default(0)
+  dislikes  Int
+  title     String
+  content   String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  user      User       @relation(fields: [userId], references: [userId])
+  comments  Comment[]
+  likedBy   PostLike[]
+}
+
+model PostLike {
+  postLikeId Int      @id @default(autoincrement())
+  userId     Int
+  postId     Int
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [userId])
+  post       Post     @relation(fields: [postId], references: [postId])
+
+  @@unique([userId, postId])
 }
 
 model UserProfile {
@@ -122,17 +148,4 @@ model Comment {
   updatedAt DateTime @updatedAt
   post      Post     @relation(fields: [postId], references: [postId])
   user      User     @relation(fields: [userId], references: [userId])
-}
-
-model Post {
-  postId    Int       @id @default(autoincrement())
-  userId    Int
-  likes     Int
-  dislikes  Int
-  title     String
-  content   String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  user      User      @relation(fields: [userId], references: [userId])
-  comments  Comment[]
 }
