@@ -130,12 +130,14 @@ export class FitnessTrackingController {
   async addExercise(
     @Body('fitnessExerciseId') fitnessExerciseId: number,
     @Body('reps') reps: number,
+    @Body('userId') userId: number,
     @Body('setDate') setDate: string,
   ): Promise<{ data: AddedExercise; statusCode: number }> {
     const { data, statusCode } = await this.fitnessTrackingService.addExercise(
       fitnessExerciseId,
       reps,
       setDate,
+      userId,
     );
 
     if (statusCode === 201) {

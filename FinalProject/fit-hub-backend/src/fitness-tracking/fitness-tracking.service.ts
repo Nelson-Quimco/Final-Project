@@ -139,6 +139,7 @@ export class FitnessTrackingService {
     fitnessExerciseId: number,
     reps: number,
     setDate: string,
+    userId: number,
   ): Promise<{ data: AddedExercise; statusCode: number }> {
     try {
       const fitnessExercise =
@@ -157,6 +158,7 @@ export class FitnessTrackingService {
 
       const newAddedExercise = await this.prismaService.addedExercise.create({
         data: {
+          userId: userId,
           id: fitnessExercise.id,
           title: fitnessExercise.Name,
           Name: fitnessExercise.Name,
@@ -182,22 +184,9 @@ export class FitnessTrackingService {
     userId: number,
   ): Promise<{ data: AddedExercise[]; statusCode: number }> {
     try {
-      const fitnessExerciseIds = await this.prismaService.fitnessExercise
-        .findMany({
-          where: {
-            userId: userId,
-          },
-          select: {
-            id: true,
-          },
-        })
-        .then((exercises) => exercises.map((exercise) => exercise.id));
-
       const addedExercises = await this.prismaService.addedExercise.findMany({
         where: {
-          id: {
-            in: fitnessExerciseIds,
-          },
+          userId: userId, // Fetch exercises directly based on userId
         },
       });
 
@@ -407,6 +396,7 @@ export class FitnessTrackingService {
       const newAddedExercise = await this.prismaService.addedExercise.create({
         data: {
           id: fitnessExercise.id,
+          userId: userId,
           title: fitnessExercise.Name,
           Name: fitnessExercise.Name,
           reps: reps,

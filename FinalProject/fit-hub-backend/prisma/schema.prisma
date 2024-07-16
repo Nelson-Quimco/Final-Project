@@ -29,6 +29,7 @@ model User {
   comments         Comment[]
   progresses       Progress[]
   likedPosts       PostLike[]
+  AddedExercise    AddedExercise[]
 }
 
 model Post {
@@ -95,11 +96,13 @@ model FitnessExercise {
 model AddedExercise {
   addedExerciseId Int      @id @default(autoincrement())
   id              Int
+  userId          Int
   title           String
   Name            String
   reps            Int
   setDate         DateTime
   isComplete      Boolean  @default(false)
+  user            User     @relation(fields: [userId], references: [userId])
 }
 
 model IsCompleted {
