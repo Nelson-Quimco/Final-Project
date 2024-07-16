@@ -39,6 +39,11 @@ const PostCard = (props: Props) => {
     setPostLikes(likes);
   }, [likes]);
 
+  let userLoggedId = 0;
+
+  if (user) {
+    userLoggedId = user.userId;
+  }
   const handleLikesPost = (postId: number, userId: number) => {
     likePost(postId, userId);
   };
@@ -79,7 +84,7 @@ const PostCard = (props: Props) => {
               <button>
                 <AiOutlineLike
                   size={30}
-                  onClick={() => handleLikesPost(postId, userId)}
+                  onClick={() => handleLikesPost(postId, userLoggedId)}
                 />
               </button>
               Likes: ({postLikes})

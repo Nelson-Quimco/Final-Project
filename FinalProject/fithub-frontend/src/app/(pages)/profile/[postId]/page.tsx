@@ -26,7 +26,7 @@ const PostId = ({ params }: { params: { postId: number } }) => {
 
   useEffect(() => {
     getCommentByPost(params.postId);
-  }, [params.postId]);
+  }, [params.postId, isCommentModalOpen]);
 
   const openEditModal = (post: postType) => {
     setCurrentPost(post);

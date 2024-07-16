@@ -8,6 +8,7 @@ import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
 import WorkoutCard from "@/components/cards/workout-card";
 import WorkoutSkeleton from "@/components/skeleton/workoutCardSkeleton";
 import useUserdata from "@/hooks/useUserdata";
+import Link from "next/link";
 
 const Tracker: React.FC = () => {
   const { groupedByDate, getAllUserWorkouts, loading, deleteWorkout } =
@@ -104,7 +105,10 @@ const Tracker: React.FC = () => {
         </div>
         <div className=" w-[30%]">
           Past Workouts:
-          <div className="flex flex-col gap-3 h-[48rem] bg-offWhite shadow-md border-none rounded-md p-4 overflow-y-auto">
+          <Link
+            href={"/logs"}
+            className="flex flex-col gap-3 h-[48rem] bg-offWhite shadow-md border-none rounded-md p-4 overflow-y-auto"
+          >
             {loading ? (
               <>
                 <WorkoutSkeleton />
@@ -131,7 +135,7 @@ const Tracker: React.FC = () => {
             ) : (
               <p>No past exercises</p>
             )}
-          </div>
+          </Link>
         </div>
       </div>
     </div>
