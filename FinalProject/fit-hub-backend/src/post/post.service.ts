@@ -253,6 +253,4 @@ export class PostService {
       throw new Error('Error toggling like');
     }
   }
-
-
 }
