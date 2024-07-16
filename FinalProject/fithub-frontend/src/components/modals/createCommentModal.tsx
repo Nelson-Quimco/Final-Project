@@ -15,15 +15,20 @@ const CreateCommentModal = (props: Props) => {
   const { isOpen, onClose, postId } = props;
   const [comment, setComment] = useState("");
 
-  const { createComment } = useComment();
+  const { createComment, getCommentByPost } = useComment();
   const user = useUserdata();
 
-  const handleSubmitComment = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (user?.userId) {
       console.log("comment submitted");
-      createComment(postId, user?.userId, comment);
-      onClose();
+      try {
+        await createComment(postId, user?.userId, comment);
+        await getCommentByPost(postId);
+        onClose();
+      } catch (error) {
+        console.error("Error submitting comment:", error);
+      }
     }
   };
 

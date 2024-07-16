@@ -42,6 +42,8 @@ const Tracker: React.FC = () => {
     }
   };
 
+  const currentDate = new Date().toISOString().split("T")[0];
+
   return (
     <div className="">
       <Button
@@ -54,7 +56,7 @@ const Tracker: React.FC = () => {
         <div className="flex flex-col gap-6 w-[70%]">
           <div className=" h-[20%]">
             Today{`'`}s Workout:
-            <div className=" h-[6rem] bg-white shadow-md border-none rounded-md p-4 flex justify-center">
+            <div className=" h-[6rem] bg-offWhite shadow-md border-none rounded-md p-4 flex justify-center">
               {loading ? (
                 <WorkoutSkeleton />
               ) : todaysWorkout.length > 0 ? (
@@ -64,6 +66,7 @@ const Tracker: React.FC = () => {
                   href={`tracker/exercise?date=${encodeURIComponent(
                     todaysDate
                   )}`}
+                  handleDelete={() => handleDelete(currentDate)}
                 />
               ) : (
                 <p>No exercises for today</p>
@@ -72,7 +75,7 @@ const Tracker: React.FC = () => {
           </div>
           <div className=" h-full">
             Upcoming Workouts:
-            <div className="flex flex-col p-5 gap-6 h-[39rem] bg-white shadow-md border-none rounded-md overflow-y-auto">
+            <div className="flex flex-col p-5 gap-6 h-[39rem] bg-offWhite shadow-md border-none rounded-md overflow-y-auto">
               {loading ? (
                 <>
                   <WorkoutSkeleton />
@@ -101,7 +104,7 @@ const Tracker: React.FC = () => {
         </div>
         <div className=" w-[30%]">
           Past Workouts:
-          <div className="flex flex-col gap-3 h-[48rem] bg-white shadow-md border-none rounded-md p-4 overflow-y-auto">
+          <div className="flex flex-col gap-3 h-[48rem] bg-offWhite shadow-md border-none rounded-md p-4 overflow-y-auto">
             {loading ? (
               <>
                 <WorkoutSkeleton />

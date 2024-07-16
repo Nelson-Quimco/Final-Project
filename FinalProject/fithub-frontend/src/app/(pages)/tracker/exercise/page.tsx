@@ -121,7 +121,7 @@ const Exercise = () => {
                     disabled={disabled}
                     className={`border-none rounded-md bg-blue p-3 font-bold text-[20px] w-[6rem] ${
                       disabled
-                        ? "bg-gray text-[10px] hover:cursor-not-allowed"
+                        ? "bg-gray text-[9px] hover:cursor-not-allowed"
                         : x.isComplete
                         ? "bg-successGreen"
                         : "bg-red text-gray"

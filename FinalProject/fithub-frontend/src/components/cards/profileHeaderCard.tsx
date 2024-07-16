@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "../buttons/Button";
+import { FaUserCircle } from "react-icons/fa";
 
 interface Props {
   firstname: string | undefined;
@@ -21,9 +22,9 @@ const ProfileHeaderCard = (props: Props) => {
   } = props;
 
   return (
-    <div className="flex w-full border-none rounded-lg shadow-md bg-white">
+    <div className="flex w-full border-none rounded-lg shadow-md bg-offWhite">
       <div className=" h-full w-[20%] flex flex-col items-center gap-3 p-2">
-        <div className="border p-10 rounded-full"></div>
+        <FaUserCircle size={80} className="text-blue" />
         <Button name="Edit Profile" onClick={openEditModal}></Button>
         <Button
           name="Reset Password"

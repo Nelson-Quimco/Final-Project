@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../buttons/Button";
 import { AiOutlineLike } from "react-icons/ai";
 import { RiEditLine } from "react-icons/ri";
@@ -6,7 +6,6 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { formatDateNormal } from "@/lib/functions/dateFormatter";
 import useUserdata from "@/hooks/useUserdata";
 import useForumRequest from "@/hooks/requests/forum/useForumRequest";
-import CommentCard from "./commentCard";
 
 interface Props {
   username: string;
@@ -34,17 +33,25 @@ const PostCard = (props: Props) => {
   } = props;
 
   const user = useUserdata();
+  const { likePost, postLikes, setPostLikes } = useForumRequest();
 
-  const { likePost } = useForumRequest();
+  useEffect(() => {
+    setPostLikes(likes);
+  }, [likes]);
+
+  const handleLikesPost = (postId: number, userId: number) => {
+    likePost(postId, userId);
+  };
 
   const formattedDate = formatDateNormal(date);
+
   return (
     <>
-      <div className="flex flex-col border-none rounded-md shadow-md p-6 gap-6 bg-white ">
+      <div className="flex flex-col border-none rounded-md shadow-md p-6 gap-6 bg-offWhite ">
         <div className="flex justify-between">
           <div className="flex flex-col gap-1">
             <p className="font-bold text-[20px]">{username}</p>
-            <p className="text-[14px]">{formattedDate}</p>
+            <p className="text-[12px]">{formattedDate}</p>
           </div>
           <div
             className={`flex gap-3 ${user?.userId === userId ? "" : "hidden"}`}
@@ -70,14 +77,16 @@ const PostCard = (props: Props) => {
             </p>
             <div className="flex items-center gap-2">
               <button>
-                <AiOutlineLike size={30} onClick={() => likePost(postId)} />
+                <AiOutlineLike
+                  size={30}
+                  onClick={() => handleLikesPost(postId, userId)}
+                />
               </button>
-              Likes: ({likes})
+              Likes: ({postLikes})
             </div>
           </div>
         </div>
       </div>
-      <hr className="w-full mt-6 " />
     </>
   );
 };

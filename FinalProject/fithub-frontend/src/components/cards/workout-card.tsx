@@ -25,7 +25,7 @@ const WorkoutCard = (props: Props) => {
   } = props;
 
   return (
-    <div className="p-3 border rounded-md w-full flex justify-between">
+    <div className="p-3 border bg-white border-[#30475e49]  rounded-md w-full flex justify-between">
       <div className="w-[90%]">
         {linked ? (
           <Link href={href}>

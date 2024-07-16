@@ -12,7 +12,7 @@ export default function MainLayout({
   return (
     <>
       <LogoutModalProvider>
-        <div className="flex h-full bg-offWhite">
+        <div className="flex h-full ">
           <LogoutModal></LogoutModal>
           <Sidebar></Sidebar>
           <div className="w-full flex flex-col gap-10 ">

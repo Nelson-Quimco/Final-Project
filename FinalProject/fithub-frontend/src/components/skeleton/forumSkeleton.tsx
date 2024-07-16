@@ -4,7 +4,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 const ForumSkeleton = () => {
   return (
-    <div className="border-none rounded-md shadow-md p-4 flex flex-col gap-6 w-full bg-white">
+    <div className="border-none rounded-md shadow-md p-4 flex flex-col gap-6 w-full bg-offWhite">
       <div className="flex justify-between">
         <div className="font-bold">
           <Skeleton width={100} />

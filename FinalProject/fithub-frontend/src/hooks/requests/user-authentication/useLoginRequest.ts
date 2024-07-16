@@ -16,6 +16,7 @@ const useLoginRequest = () => {
   const [usernameMessage, setUsernameMessage] = useState("");
   const [passwordMesage, setPasswordMessage] = useState("");
   const [user, setUser] = useState<UserRes | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const getAccounts = useCallback(async () => {
     try {
@@ -68,9 +69,11 @@ const useLoginRequest = () => {
   };
 
   const getUserById = useCallback(async (userId: number) => {
+    setLoading(true);
     try {
       const res = await axiosReq.get(`/user-authentication/${userId}`);
       setUser(res.data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -87,6 +90,7 @@ const useLoginRequest = () => {
   return {
     ...memoizedValue,
     data,
+    loading,
     loginAccount,
     setUsername,
     setPassword,

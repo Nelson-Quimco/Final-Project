@@ -4,7 +4,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 const SinglePost = () => {
   return (
-    <div className="flex flex-col border-none rounded-md shadow-md p-6 gap-6 bg-white ">
+    <div className="flex flex-col border-nones rounded-md shadow-md p-6 gap-6 bg-offWhite ">
       <div className="flex justify-between">
         <div className="flex flex-col gap-1">
           <p className="font-bold text-[20px]">
@@ -16,7 +16,6 @@ const SinglePost = () => {
         </div>
         <div className={`flex gap-3 `}>
           <Skeleton width={200} />
-          {/* Call onEdit when clicked */}
           <Skeleton width={200} />
         </div>
       </div>
