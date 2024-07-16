@@ -59,6 +59,7 @@ const useForumRequest = () => {
         userId: userId,
       });
       setPostLikes(res.data.post.likes);
+      console.log(res.data);
     } catch (error) {
       console.log(error);
     }

@@ -26,7 +26,7 @@ const PostId = ({ params }: { params: { postId: number } }) => {
 
   useEffect(() => {
     getCommentByPost(params.postId);
-  }, [params.postId]);
+  }, [params.postId, isCommentModalOpen]);
 
   const openEditModal = (post: postType) => {
     setCurrentPost(post);
@@ -83,21 +83,19 @@ const PostId = ({ params }: { params: { postId: number } }) => {
         {loading ? (
           <SinglePost />
         ) : (
-          post?.data.map((posts) => (
-            <>
-              <PostCard
-                key={posts.postId}
-                title={posts.title}
-                content={posts.content}
-                date={new Date(posts.createdAt)}
-                username={posts.username}
-                likes={posts.likes}
-                postId={posts.postId}
-                userId={posts.userId}
-                onEdit={() => openEditModal(posts)}
-                onDelete={() => openDeleteModal(posts)}
-              />
-            </>
+          post?.data.map((posts, index) => (
+            <PostCard
+              key={posts.postId}
+              title={posts.title}
+              content={posts.content}
+              date={new Date(posts.createdAt)}
+              username={posts.username}
+              likes={posts.likes}
+              postId={posts.postId}
+              userId={posts.userId}
+              onEdit={() => openEditModal(posts)}
+              onDelete={() => openDeleteModal(posts)}
+            />
           ))
         )}
       </div>
@@ -117,10 +115,10 @@ const PostId = ({ params }: { params: { postId: number } }) => {
           {loading ? (
             <CommentSkeleton />
           ) : (
-            comments?.map((x) => (
+            comments?.map((x, index) => (
               <CommentCard
                 postId={x.postId}
-                key={x.id}
+                key={index}
                 commentId={x.id}
                 userId={x.userId}
                 username={x.username}
