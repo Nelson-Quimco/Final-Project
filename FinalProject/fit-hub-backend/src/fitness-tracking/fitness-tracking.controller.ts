@@ -17,6 +17,7 @@ import {
 } from '@nestjs/common';
 import { FitnessTrackingService } from './fitness-tracking.service';
 import {
+  CreateFitnessExerciseDto,
   CreateFitnessTrackingDto,
   IsCompletedDto,
 } from './dto/create-fitness-tracking.dto';
@@ -236,5 +237,20 @@ export class FitnessTrackingController {
     @Param('addedExerciseId', ParseIntPipe) addedExerciseId: number,
   ): Promise<{ data: boolean; statusCode: number }> {
     return await this.fitnessTrackingService.deleteExercise(addedExerciseId);
+  }
+
+  //create a fitness exercise to all users
+
+  @Post('create-fitnessExercises')
+  async createFitnessExerciseForAllUsers(
+    @Body() createFitnessExerciseDto: CreateFitnessExerciseDto,
+  ): Promise<FitnessExercise[]> {
+    const { level, type, name, description } = createFitnessExerciseDto;
+    return this.fitnessTrackingService.createFitnessExerciseForAllUsers(
+      level,
+      type,
+      name,
+      description,
+    );
   }
 }

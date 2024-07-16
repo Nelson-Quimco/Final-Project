@@ -20,6 +20,13 @@ export class CreateFitnessTrackingDto {
   Description: string;
 }
 
+export class CreateFitnessExerciseDto {
+  level: Level;
+  type: Types;
+  name: string;
+  description: string;
+}
+
 export class AddedExerciseDto {
   @IsEnum(Types)
   Type: Types;
