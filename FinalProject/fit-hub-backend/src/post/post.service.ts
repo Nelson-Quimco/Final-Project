@@ -201,69 +201,48 @@ export class PostService {
     }
   }
 
-  async likeOrDislikePost(
-    postId: number,
-    isLike: boolean,
-  ): Promise<{ status: number; post: PostEntity | null }> {
+  async toggleLike(postId, userId) {
     try {
-      let post = await this.prismaService.post.findUnique({
+      // Check if the user has already liked the post
+      const existingLike = await this.prismaService.postLike  findUnique({
         where: {
-          postId,
-        },
-        include: {
-          user: true,
+          userId_postId: {
+            userId,
+            postId,
+          },
         },
       });
 
-      if (!post) {
-        throw new Error('Post not found');
-      }
-
-      if (isLike) {
-        post = await this.prismaService.post.update({
+      if (existingLike) {
+        // If the like exists, remove it (unlike)
+        await this.prismaService.postLike.delete({
           where: {
-            postId,
+            postLikeId: existingLike.postLikeId,
           },
-          data: {
-            likes: {
-              increment: 1,
-            },
-          },
-          include: {
-            user: true,
-          },
+        });
+
+        // Decrement the likes count on the post
+        await this.prismaService.post.update({
+          where: { postId },
+          data: { likes: { decrement: 1 } },
         });
       } else {
-        post = await this.prismaService.post.update({
-          where: {
+        // If the like does not exist, create it
+        await this.prismaService.postLike.create({
+          data: {
+            userId,
             postId,
           },
-          data: {
-            dislikes: {
-              increment: 1,
-            },
-          },
-          include: {
-            user: true,
-          },
+        });
+
+        // Increment the likes count on the post
+        await this.prismaService.post.update({
+          where: { postId },
+          data: { likes: { increment: 1 } },
         });
       }
-
-      const transformedPost = {
-        postId: post.postId,
-        userId: post.userId,
-        likes: post.likes,
-        dislikes: post.dislikes,
-        title: post.title,
-        content: post.content,
-        createdAt: post.createdAt,
-        updatedAt: post.updatedAt,
-      };
-
-      return { status: 200, post: transformedPost };
     } catch (error) {
-      console.error('Error liking/disliking post:', error);
-      return { status: 500, post: null };
+      console.error('Error toggling like:', error);
     }
   }
 
