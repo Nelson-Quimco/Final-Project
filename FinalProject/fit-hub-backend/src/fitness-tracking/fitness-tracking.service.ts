@@ -15,9 +15,7 @@ import {
   Types,
   FitnessExercise,
   AddedExercise,
-  Prisma,
   IsCompleted,
-  User,
 } from '@prisma/client';
 
 @Injectable()
@@ -370,5 +368,62 @@ export class FitnessTrackingService {
     });
 
     return Promise.all(promises);
+  }
+
+  async addExercises(
+    fitnessExerciseId: number,
+    reps: number,
+    setDate: string,
+    userId: number,
+  ): Promise<{ data: AddedExercise; statusCode: number }> {
+    try {
+      const fitnessExercise =
+        await this.prismaService.fitnessExercise.findUnique({
+          where: {
+            id: fitnessExerciseId,
+          },
+        });
+
+      if (!fitnessExercise) {
+        return {
+          data: null,
+          statusCode: 404,
+        };
+      }
+
+      const user = await this.prismaService.user.findUnique({
+        where: {
+          userId: userId,
+        },
+      });
+
+      if (!user) {
+        return {
+          data: null,
+          statusCode: 404,
+        };
+      }
+
+      const newAddedExercise = await this.prismaService.addedExercise.create({
+        data: {
+          id: fitnessExercise.id,
+          title: fitnessExercise.Name,
+          Name: fitnessExercise.Name,
+          reps: reps,
+          setDate: new Date(setDate).toISOString(),
+        },
+      });
+
+      return {
+        data: newAddedExercise,
+        statusCode: 201,
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        data: null,
+        statusCode: 500,
+      };
+    }
   }
 }

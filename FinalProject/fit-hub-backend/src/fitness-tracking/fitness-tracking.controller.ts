@@ -14,6 +14,7 @@ import {
   Res,
   NotFoundException,
   BadRequestException,
+  Req,
 } from '@nestjs/common';
 import { FitnessTrackingService } from './fitness-tracking.service';
 import {
@@ -22,14 +23,7 @@ import {
   IsCompletedDto,
 } from './dto/create-fitness-tracking.dto';
 import { UpdateFitnessTrackingDto } from './dto/update-fitness-tracking.dto';
-import {
-  AddedExercise,
-  FitnessExercise,
-  IsCompleted,
-  Level,
-  Types,
-  User,
-} from '@prisma/client';
+import { AddedExercise, FitnessExercise, Level, Types } from '@prisma/client';
 
 interface AddWorkoutDto {
   type: Types;
@@ -37,6 +31,13 @@ interface AddWorkoutDto {
   reps: number;
   setDate: string;
   title: string;
+}
+
+class AddExerciseDto {
+  fitnessExerciseId: number;
+  reps: number;
+  setDate: string;
+  userId: number;
 }
 
 @Controller('fitness-tracking')
@@ -252,5 +253,35 @@ export class FitnessTrackingController {
       name,
       description,
     );
+  }
+
+  @Post('add-usersWorkout/:fitnessExerciseId')
+  async createAddedExercise(
+    @Param('fitnessExerciseId', ParseIntPipe) fitnessExerciseId: number,
+    @Body('reps') reps: number,
+    @Body('setDate') setDate: string,
+    @Body('userId') userId: number,
+    @Res() res,
+  ): Promise<{ data: AddedExercise; statusCode: number }> {
+    const { data, statusCode } = await this.fitnessTrackingService.addExercises(
+      fitnessExerciseId,
+      reps,
+      setDate,
+      userId,
+    );
+
+    if (statusCode === 404) {
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .json({ message: 'Fitness exercise or user not found' });
+    }
+
+    if (statusCode === 500) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ message: 'Error creating added exercise' });
+    }
+
+    return res.status(HttpStatus.CREATED).json(data);
   }
 }
