@@ -201,10 +201,13 @@ export class PostService {
     }
   }
 
-  async toggleLike(postId, userId) {
+  async toggleLike(
+    postId: number,
+    userId: number,
+  ): Promise<{ status: number; post: any }> {
     try {
       // Check if the user has already liked the post
-      const existingLike = await this.prismaService.postLike  findUnique({
+      const existingLike = await this.prismaService.postLike.findUnique({
         where: {
           userId_postId: {
             userId,
@@ -222,10 +225,12 @@ export class PostService {
         });
 
         // Decrement the likes count on the post
-        await this.prismaService.post.update({
+        const updatedPost = await this.prismaService.post.update({
           where: { postId },
           data: { likes: { decrement: 1 } },
         });
+
+        return { status: 200, post: updatedPost };
       } else {
         // If the like does not exist, create it
         await this.prismaService.postLike.create({
@@ -236,13 +241,16 @@ export class PostService {
         });
 
         // Increment the likes count on the post
-        await this.prismaService.post.update({
+        const updatedPost = await this.prismaService.post.update({
           where: { postId },
           data: { likes: { increment: 1 } },
         });
+
+        return { status: 200, post: updatedPost };
       }
     } catch (error) {
       console.error('Error toggling like:', error);
+      throw new Error('Error toggling like');
     }
   }
 
