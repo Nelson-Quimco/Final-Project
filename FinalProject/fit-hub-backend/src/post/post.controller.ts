@@ -131,8 +131,8 @@ export class PostController {
   @Post(':postId/like')
   async likePost(
     @Param('postId', ParseIntPipe) postId: number,
-    @Body('isLike') isLike: boolean,
+    @Body('userId') userId: number,
   ): Promise<{ status: number; post: any }> {
-    return this.postService.likeOrDislikePost(postId, isLike);
+    return this.postService.toggleLike(postId, userId);
   }
 }
