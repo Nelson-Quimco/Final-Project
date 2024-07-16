@@ -346,4 +346,29 @@ export class FitnessTrackingService {
       };
     }
   }
+
+  async createFitnessExerciseForAllUsers(
+    level: Level,
+    type: Types,
+    name: string,
+    description: string,
+  ): Promise<FitnessExercise[]> {
+    const users = await this.prismaService.user.findMany();
+
+    const promises = users.map(async (user) => {
+      return this.prismaService.fitnessExercise.create({
+        data: {
+          Level: level,
+          Type: type,
+          Name: name,
+          Description: description,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          userId: user.userId,
+        },
+      });
+    });
+
+    return Promise.all(promises);
+  }
 }
