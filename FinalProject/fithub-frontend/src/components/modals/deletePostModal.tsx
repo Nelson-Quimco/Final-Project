@@ -8,7 +8,7 @@ interface Props {
   isOpen: boolean;
   onClose?: () => void;
   postId: number;
-  onDelete: () => void;
+  onDelete?: () => void;
 }
 
 const DeletePostModal = (props: Props) => {
@@ -21,6 +21,7 @@ const DeletePostModal = (props: Props) => {
     toast.success("Post Deleted Successfully.", { position: "top-center" });
 
   const handleDelete = (id: number) => {
+    console.log(id);
     router.back();
     deletePost(id);
     deletedToast();

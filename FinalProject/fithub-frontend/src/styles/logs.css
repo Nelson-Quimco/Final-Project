@@ -1,19 +1,22 @@
 table {
-  border: 1px solid black;
+  border-radius: 15px;
   width: 100%;
 }
-
 th {
   color: white;
   background-color: #30475e;
 }
+
 td {
   text-align: center;
+  padding: 5px;
+}
+tr {
+  border-bottom: 1px solid #30475e41;
 }
 
 th,
 tr,
 td {
-  border: 1px solid black;
   padding: 5px;
 }

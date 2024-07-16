@@ -4,7 +4,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 const ProfileCardSkeleton = () => {
   return (
-    <div className="flex w-full border-none rounded-lg shadow-md bg-white">
+    <div className="flex w-full border-none rounded-lg shadow-md bg-offWhite">
       <div className=" h-full w-[20%] flex flex-col items-center gap-3 p-2">
         <div className="border p-10 rounded-full"></div>
         <Skeleton width={150} height={40} />

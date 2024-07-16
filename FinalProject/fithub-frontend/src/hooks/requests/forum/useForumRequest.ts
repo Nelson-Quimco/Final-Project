@@ -8,6 +8,7 @@ const useForumRequest = () => {
   const [userPost, setUserPost] = useState<postType[] | null>(null);
   const [post, setPost] = useState<postResponse | null>(null);
   const [yourPostId, setYourPostId] = useState<postResponse | null>(null);
+  const [postLikes, setPostLikes] = useState(0);
   const [loading, setLoading] = useState<boolean>();
 
   const getAllPost = useCallback(async () => {
@@ -52,9 +53,12 @@ const useForumRequest = () => {
     }
   }, []);
 
-  const likePost = async (postId: number) => {
+  const likePost = async (postId: number, userId: number) => {
     try {
-      await axiosReq.post(`/post/${postId}/like`);
+      const res = await axiosReq.post(`/post/${postId}/like`, {
+        userId: userId,
+      });
+      setPostLikes(res.data.post.likes);
     } catch (error) {
       console.log(error);
     }
@@ -109,6 +113,8 @@ const useForumRequest = () => {
     post,
     allPost,
     userPost,
+    postLikes,
+    setPostLikes,
     createPost,
     getPostbyUser,
     getPostById,

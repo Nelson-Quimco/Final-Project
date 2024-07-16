@@ -20,7 +20,7 @@ const PostPreview = (props: Props) => {
   return (
     <>
       <Link href={href} className="w-full">
-        <div className="border-none rounded-md shadow-md p-4 flex flex-col gap-6 w-full bg-white">
+        <div className="border-none rounded-md shadow-md p-4 flex flex-col gap-6 w-full bg-offWhite">
           <div className="flex justify-between">
             <div className="font-bold">{username}</div>
             <div>{formattedDate}</div>

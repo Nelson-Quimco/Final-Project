@@ -34,7 +34,7 @@ const Profile = () => {
   }, []);
 
   return (
-    <div className="h-full bg-offWhite">
+    <div className="h-full">
       <ResetPassword
         isOpen={isResetModalOpen}
         onClose={() => setIsResetModalOpen(false)}
