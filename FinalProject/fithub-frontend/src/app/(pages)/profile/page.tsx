@@ -38,7 +38,7 @@ const Profile = () => {
       <ResetPassword
         isOpen={isResetModalOpen}
         onClose={() => setIsResetModalOpen(false)}
-      ></ResetPassword>
+      />
 
       <EditUserModal
         isOpen={isEditModalOpen}

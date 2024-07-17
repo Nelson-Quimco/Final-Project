@@ -37,10 +37,13 @@ const Tracker: React.FC = () => {
   const handleDelete = async (date: any) => {
     const targetWorkouts = groupedByDate[date];
     console.log(targetWorkouts);
-    targetWorkouts.map((x) => deleteWorkout(x.addedExerciseId));
+
+    await Promise.all(
+      targetWorkouts.map((x) => deleteWorkout(x.addedExerciseId))
+    );
 
     if (user?.userId) {
-      await getAllUserWorkouts(user.userId);
+      getAllUserWorkouts(user.userId);
     }
   };
 
