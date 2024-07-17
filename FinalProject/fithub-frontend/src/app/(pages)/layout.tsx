@@ -16,9 +16,6 @@ export default function MainLayout({
           <LogoutModal></LogoutModal>
           <Sidebar></Sidebar>
           <div className="w-full flex flex-col gap-10 ">
-            {/* <div className="flex justify-end">
-              <SearchBar></SearchBar>
-            </div> */}
             <div className="h-screen ml-[15rem] py-10 px-20">{children}</div>
           </div>
         </div>

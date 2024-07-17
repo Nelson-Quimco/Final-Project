@@ -11,8 +11,6 @@ import { GiBiceps } from "react-icons/gi";
 import Button from "../buttons/Button";
 import { useLogoutContext } from "@/providers/modalContext";
 
-interface Props {}
-
 const navLinks = [
   {
     name: "Dashboard",
@@ -29,7 +27,7 @@ const navLinks = [
   { name: "Forum", href: "/forum", icons: <MdForum size={40} /> },
 ];
 
-const Sidebar = (props: Props) => {
+const Sidebar = () => {
   const pathname = usePathname();
 
   const { setIsOpen } = useLogoutContext();
