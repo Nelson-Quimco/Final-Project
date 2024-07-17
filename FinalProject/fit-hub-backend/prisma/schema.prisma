@@ -29,6 +29,7 @@ model User {
   comments         Comment[]
   progresses       Progress[]
   likedPosts       PostLike[]
+  likedComments    CommentLike[]
   AddedExercise    AddedExercise[]
 }
 
@@ -142,13 +143,25 @@ enum Types {
 }
 
 model Comment {
-  commentId Int      @id @default(autoincrement())
+  commentId Int           @id @default(autoincrement())
   postId    Int
   userId    Int
-  likes     Int
+  likes     Int           @default(0)
   content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  post      Post     @relation(fields: [postId], references: [postId])
-  user      User     @relation(fields: [userId], references: [userId])
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  post      Post          @relation(fields: [postId], references: [postId])
+  user      User          @relation(fields: [userId], references: [userId])
+  likedBy   CommentLike[]
+}
+
+model CommentLike {
+  commentLikeId Int      @id @default(autoincrement())
+  userId        Int
+  commentId     Int
+  createdAt     DateTime @default(now())
+  user          User     @relation(fields: [userId], references: [userId])
+  comment       Comment  @relation(fields: [commentId], references: [commentId])
+
+  @@unique([userId, commentId])
 }
