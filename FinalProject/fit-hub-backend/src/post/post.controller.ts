@@ -87,7 +87,7 @@ export class PostController {
     }
   }
 
-  @Patch(':postId')
+  @Patch('update/:postId')
   async updatePost(
     @Param('postId', ParseIntPipe) postId: number,
     @Body() updatePostDto: UpdatePostDto,

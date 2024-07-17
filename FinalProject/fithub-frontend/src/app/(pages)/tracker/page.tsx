@@ -2,7 +2,7 @@
 
 import withAuth from "@/components/auth/withAuth";
 import Button from "@/components/buttons/Button";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
 import WorkoutCard from "@/components/cards/workout-card";
@@ -13,6 +13,7 @@ import Link from "next/link";
 const Tracker: React.FC = () => {
   const { groupedByDate, getAllUserWorkouts, loading, deleteWorkout } =
     useAddedWorkouts();
+  const [isDelModalOpen, setIsDelModalOpen] = useState(false);
 
   const user = useUserdata();
   const router = useRouter();

@@ -136,7 +136,7 @@ const Dashboard = () => {
         <div className="flex flex-col gap-3 p-4">
           {allPost?.map((posts, index) => (
             <Link
-              href={"/forum"}
+              href={`/forum/${posts.postId}`}
               className="border-none rounded-md shadow-lg p-3 bg-white flex flex-col gap-2 "
               key={index}
             >
