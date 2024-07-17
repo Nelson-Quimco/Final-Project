@@ -27,8 +27,6 @@ const Dashboard = () => {
     convertedTemp = Math.round(temp);
   }
 
-  console.log(data);
-
   useEffect(() => {
     if (user?.userId) {
       getAllUserWorkouts(user.userId);
@@ -44,8 +42,6 @@ const Dashboard = () => {
   const variableYeah = Object.keys(groupedByDate).filter(
     (date) => new Date(date) > new Date(currentDate)
   );
-
-  console.log(variableYeah);
 
   let failed = 0;
   let completed = 0;

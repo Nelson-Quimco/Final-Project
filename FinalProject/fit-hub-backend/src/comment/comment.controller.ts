@@ -77,4 +77,12 @@ export class CommentController {
       );
     }
   }
+
+  @Post(':commentId/like')
+  async likeComment(
+    @Param('commentId', ParseIntPipe) commentId: number,
+    @Body('userId') userId: number,
+  ): Promise<{ status: number; comment: any }> {
+    return this.commentService.toggleLike(commentId, userId);
+  }
 }

@@ -5,6 +5,7 @@ import React, { useCallback, useMemo, useState } from "react";
 const axiosReq = axios.create({ baseURL: process.env.NEXT_PUBLIC_URL });
 const useComment = () => {
   const [comments, setComments] = useState<commentType[] | null>(null);
+  const [commentLikes, setCommentLikes] = useState<number>(0);
 
   const createComment = async (
     postId: number,
@@ -44,11 +45,31 @@ const useComment = () => {
     }
   };
 
+  const likeComment = async (commentId: number, userId: number) => {
+    try {
+      const res = await axiosReq.post(`comments/${commentId}/like`, {
+        userId: userId,
+      });
+
+      setCommentLikes(res.data.comment.likes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const value = useMemo(() => {
     return { comments };
   }, [comments]);
 
-  return { ...value, createComment, getCommentByPost, editComment };
+  return {
+    ...value,
+    commentLikes,
+    setCommentLikes,
+    createComment,
+    getCommentByPost,
+    editComment,
+    likeComment,
+  };
 };
 
 export default useComment;

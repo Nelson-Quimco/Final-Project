@@ -47,7 +47,6 @@ const useForumRequest = () => {
     try {
       const res = await axiosReq.get(`/post/${id}`);
       setUserPost(res.data.data);
-      // console.log(res.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -79,7 +78,7 @@ const useForumRequest = () => {
 
   const deletePost = async (postId: number) => {
     try {
-      await axiosReq.delete(`post/${postId}`);
+      await axiosReq.patch(`post/${postId}`);
     } catch (error) {
       console.log(error);
     }
@@ -107,7 +106,7 @@ const useForumRequest = () => {
 
   useEffect(() => {
     getAllPost();
-  }, [getAllPost]);
+  }, []);
 
   return {
     ...memoizedValues,

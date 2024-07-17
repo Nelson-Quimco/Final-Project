@@ -38,6 +38,7 @@ export class PostService {
         content: createdPost.content,
         createdAt: createdPost.createdAt,
         updatedAt: createdPost.updatedAt,
+        isDeleted: false,
       };
 
       return { status: 201, post: transformedPost };
@@ -77,6 +78,7 @@ export class PostService {
         content: updatedPost.content,
         createdAt: updatedPost.createdAt,
         updatedAt: updatedPost.updatedAt,
+        isDeleted: false,
       };
 
       return { status: 200, post: transformedPost };
@@ -92,9 +94,12 @@ export class PostService {
 
   async deletePost(postId: number): Promise<{ status: number }> {
     try {
-      await this.prismaService.post.delete({
+      await this.prismaService.post.update({
         where: {
           postId: postId,
+        },
+        data: {
+          isDeleted: true,
         },
       });
       return { status: 204 };
@@ -107,6 +112,7 @@ export class PostService {
   async findAllPosts(): Promise<{ status: number; posts: PostEntity[] }> {
     try {
       const posts = await this.prismaService.post.findMany({
+        where: { isDeleted: false },
         include: {
           user: true,
         },
@@ -122,6 +128,7 @@ export class PostService {
         content: post.content,
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
+        isDeleted: false,
       }));
 
       return { status: 200, posts: transformedPosts };
@@ -138,6 +145,7 @@ export class PostService {
       const posts = await this.prismaService.post.findMany({
         where: {
           userId: userId,
+          isDeleted: false,
         },
         include: {
           user: true,
@@ -154,6 +162,7 @@ export class PostService {
         content: post.content,
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
+        isDeleted: false,
       }));
 
       return { status: 200, posts: transformedPosts };
@@ -170,6 +179,7 @@ export class PostService {
       const post = await this.prismaService.post.findUnique({
         where: {
           postId: postId,
+          isDeleted: false,
         },
         include: {
           user: true,
@@ -192,6 +202,7 @@ export class PostService {
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
         comment: post.comments,
+        isDeleted: false,
       };
 
       return { status: 200, post: transformedPost };

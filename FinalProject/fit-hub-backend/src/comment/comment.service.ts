@@ -88,4 +88,57 @@ export class CommentService {
       throw new Error(`Error updating comment: ${error.message}`);
     }
   }
+
+  async toggleLike(
+    commentId: number,
+    userId: number,
+  ): Promise<{ status: number; comment: any }> {
+    try {
+      // Check if the user has already liked the post
+      const existingLike = await this.prismaService.commentLike.findUnique({
+        where: {
+          userId_commentId: {
+            userId,
+            commentId,
+          },
+        },
+      });
+
+      if (existingLike) {
+        // If the like exists, remove it (unlike)
+        await this.prismaService.commentLike.delete({
+          where: {
+            commentLikeId: existingLike.commentLikeId,
+          },
+        });
+
+        // Decrement the likes count on the post
+        const updatedPost = await this.prismaService.comment.update({
+          where: { commentId },
+          data: { likes: { decrement: 1 } },
+        });
+
+        return { status: 200, comment: updatedPost };
+      } else {
+        // If the like does not exist, create it
+        await this.prismaService.commentLike.create({
+          data: {
+            userId,
+            commentId,
+          },
+        });
+
+        // Increment the likes count on the post
+        const updatedPost = await this.prismaService.comment.update({
+          where: { commentId },
+          data: { likes: { increment: 1 } },
+        });
+
+        return { status: 200, comment: updatedPost };
+      }
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      throw new Error('Error toggling like');
+    }
+  }
 }

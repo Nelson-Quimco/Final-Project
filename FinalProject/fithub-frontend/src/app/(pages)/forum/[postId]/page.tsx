@@ -101,15 +101,13 @@ const PostId = ({ params }: { params: { postId: number } }) => {
       </div>
       <div className="mt-10">
         <div className="my-5">
-          {loading ? (
-            <div></div>
-          ) : (
-            <Button
-              name="Create Comment"
-              className="border-brightRed text-brightRed font-semibold rounded-full p-1 border-2"
-              onClick={() => setIsCommentModalOpen(true)}
-            />
-          )}
+          <Button
+            name="Create Comment"
+            className={`border-brightRed text-brightRed font-semibold rounded-full p-1 border-2 ${
+              loading ? "hidden" : ""
+            }`}
+            onClick={() => setIsCommentModalOpen(true)}
+          />
         </div>
         <div className={`flex flex-col gap-3`}>
           {loading ? (

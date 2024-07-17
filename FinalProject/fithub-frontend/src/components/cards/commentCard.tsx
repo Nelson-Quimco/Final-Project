@@ -22,10 +22,24 @@ const CommentCard = (props: Props) => {
   const [newComment, setNewComment] = useState(content);
 
   const user = useUserdata();
-  const { editComment } = useComment();
+  const { editComment, likeComment, commentLikes, setCommentLikes } =
+    useComment();
+
+  useEffect(() => {
+    setCommentLikes(likes);
+  }, [likes]);
+  let userLoggedId: number;
+
+  if (user) {
+    userLoggedId = user.userId;
+  }
 
   const editCommentHandler = (commentId: number, content: string) => {
     editComment(commentId, content);
+  };
+
+  const likeHandler = (commentId: number, userId: number) => {
+    likeComment(commentId, userId);
   };
 
   return (
@@ -66,8 +80,12 @@ const CommentCard = (props: Props) => {
           <div> {content}</div>
         )}
         <div className="flex items-center gap-1 mt-6">
-          <AiOutlineLike size={20} />
-          {likes}
+          <AiOutlineLike
+            size={20}
+            onClick={() => likeHandler(commentId, userLoggedId)}
+            className="hover:cursor-pointer"
+          />
+          {commentLikes}
         </div>
       </div>
       <hr className="w-[98%] self-center" />
