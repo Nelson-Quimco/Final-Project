@@ -85,6 +85,7 @@ const PostCard = (props: Props) => {
                 <AiOutlineLike
                   size={30}
                   onClick={() => handleLikesPost(postId, userLoggedId)}
+                  className="hover:cursor-pointer"
                 />
               </button>
               Likes: ({postLikes})

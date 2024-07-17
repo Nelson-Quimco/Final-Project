@@ -61,7 +61,7 @@ export class PostController {
     }
   }
 
-  @Delete(':id')
+  @Patch(':id')
   async deletePost(
     @Param('id', ParseIntPipe) postId: number,
   ): Promise<{ status: number }> {
