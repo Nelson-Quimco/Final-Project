@@ -90,7 +90,7 @@ const useForumRequest = () => {
         title: title,
         content: content,
       };
-      const res = await axiosReq.patch(`/post/${postId}`, body);
+      const res = await axiosReq.patch(`/post/update/${postId}`, body);
       setPost(res.data);
     } catch (error) {
       console.log(error);

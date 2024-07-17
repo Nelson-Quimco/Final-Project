@@ -38,7 +38,7 @@ export class PostService {
         content: createdPost.content,
         createdAt: createdPost.createdAt,
         updatedAt: createdPost.updatedAt,
-        isDeleted: false,
+        isDeleted: createdPost.isDeleted,
       };
 
       return { status: 201, post: transformedPost };
@@ -63,6 +63,7 @@ export class PostService {
           title,
           content,
           updatedAt: new Date(),
+          // isDeleted: false,
         },
         include: {
           user: true,
@@ -78,7 +79,7 @@ export class PostService {
         content: updatedPost.content,
         createdAt: updatedPost.createdAt,
         updatedAt: updatedPost.updatedAt,
-        isDeleted: false,
+        isDeleted: updatedPost.isDeleted,
       };
 
       return { status: 200, post: transformedPost };
@@ -128,7 +129,7 @@ export class PostService {
         content: post.content,
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
-        isDeleted: false,
+        isDeleted: post.isDeleted,
       }));
 
       return { status: 200, posts: transformedPosts };
@@ -162,7 +163,7 @@ export class PostService {
         content: post.content,
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
-        isDeleted: false,
+        isDeleted: post.isDeleted,
       }));
 
       return { status: 200, posts: transformedPosts };
@@ -202,7 +203,7 @@ export class PostService {
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
         comment: post.comments,
-        isDeleted: false,
+        isDeleted: post.isDeleted,
       };
 
       return { status: 200, post: transformedPost };

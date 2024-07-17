@@ -55,7 +55,6 @@ const CommentCard = (props: Props) => {
               className="hover:cursor-pointer"
               onClick={() => setEditMode((prev) => !prev)}
             />
-            <FaRegTrashAlt size={20} className="hover:cursor-pointer" />
           </div>
         </div>
         {editMode ? (

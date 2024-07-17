@@ -9,7 +9,6 @@ const useWeather = () => {
       const res = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?q=cebu&appid=${process.env.NEXT_PUBLIC_API_KEY}`
       );
-      console.log(res.data);
       setData(res.data);
     } catch (error) {
       console.log(error);

@@ -146,9 +146,9 @@ const AddWorkout = () => {
   };
 
   return (
-    <div className="w-full h-full bg-white shadow-md border-none rounded-md p-5 flex flex-col">
+    <div className="w-full h-full bg-offWhite shadow-md border-none rounded-md p-5 flex flex-col">
       <div className="font-bold text-[20px] mb-4">ADD NEW WORKOUT</div>
-      <div className="w-full flex-grow flex gap-6">
+      <div className="w-full flex-grow flex gap-6 bg-white">
         <div className="w-[70%] h-full border rounded-md p-4 px-10">
           <form
             className="flex flex-col justify-center h-full gap-10"
@@ -189,7 +189,7 @@ const AddWorkout = () => {
 
             <div>
               <p className="font-bold text-[20px]">Added Exercise:</p>
-              <div className="border w-[40rem] h-[16rem] p-3 overflow-y-auto">
+              <div className="border border-[#30475e41] w-[40rem] h-[16rem] rounded-md  p-3 overflow-y-auto">
                 {addedExercises.map((exercise) => (
                   <div
                     key={exercise.id}
@@ -224,7 +224,7 @@ const AddWorkout = () => {
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
                 showIcon
-                className="border"
+                className="border shadow-md rounded-lg"
                 excludeDates={excludedDates}
               />
             </div>

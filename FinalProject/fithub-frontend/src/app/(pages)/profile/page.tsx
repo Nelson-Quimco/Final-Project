@@ -54,7 +54,7 @@ const Profile = () => {
           username={userData?.user.username}
           email={userData?.user.email}
           openEditModal={() => setIsEditModalOpen(true)}
-          openResetModal={() => setIsEditModalOpen(true)}
+          openResetModal={() => setIsResetModalOpen(true)}
         />
       )}
 
