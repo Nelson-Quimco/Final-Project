@@ -6,13 +6,11 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import { kelvinToCelsius } from "@/lib/functions/tempConverter";
 import { getIcons } from "@/lib/functions/weatherIcon";
-import Image from "next/image";
 import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
-import useUserProfile from "@/hooks/requests/user-profile/useUserProfile";
 import useUserdata from "@/hooks/useUserdata";
 import { FaCheckCircle } from "react-icons/fa";
 import { RiCloseCircleFill } from "react-icons/ri";
-import WorkoutHistory from "@/components/cards/WorkoutHistory";
+import { WorkoutHistory } from "@/components";
 
 const Dashboard = () => {
   const { groupedByDate, filteredResponse, getAllUserWorkouts } =

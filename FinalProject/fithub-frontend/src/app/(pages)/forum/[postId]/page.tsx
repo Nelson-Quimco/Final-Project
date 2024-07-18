@@ -1,16 +1,19 @@
 "use client";
-import PostCard from "@/components/cards/postCard";
-import EditPostModal from "@/components/modals/EditPostModal";
+import {
+  PostCard,
+  EditPostModal,
+  DeletePostModal,
+  SinglePost,
+  Button,
+  CommentCard,
+  CommentSkeleton,
+  CreateCommentModal,
+} from "@/components";
+
 import useForumRequest from "@/hooks/requests/forum/useForumRequest";
-import React, { useEffect, useMemo, useState } from "react";
-import { postType } from "@/constants/postType";
-import DeletePostModal from "@/components/modals/deletePostModal";
-import SinglePost from "@/components/skeleton/singlePost";
-import Button from "@/components/buttons/Button";
-import CreateCommentModal from "@/components/modals/createCommentModal";
 import useComment from "@/hooks/requests/comment/useComment";
-import CommentCard from "@/components/cards/commentCard";
-import CommentSkeleton from "@/components/skeleton/CommentSkeleton";
+import { postType } from "@/constants/postType";
+import React, { useEffect, useMemo, useState } from "react";
 
 const PostId = ({ params }: { params: { postId: number } }) => {
   const { post, getPostById, loading } = useForumRequest();

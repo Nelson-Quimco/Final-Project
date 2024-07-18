@@ -1,16 +1,18 @@
 "use client";
-import useUserdata from "@/hooks/useUserdata";
-import React, { useEffect, useState } from "react";
+
 import withAuth from "@/components/auth/withAuth";
-import ResetPassword from "@/components/modals/ResetPassword";
-import Button from "@/components/buttons/Button";
-import useForumRequest from "@/hooks/requests/forum/useForumRequest";
-import PostPreview from "@/components/cards/postPreview";
-import ForumSkeleton from "@/components/skeleton/forumSkeleton";
-import EditUserModal from "@/components/modals/EditUserModal";
+import React, { useEffect, useState } from "react";
+import useUserdata from "@/hooks/useUserdata";
 import useUserProfile from "@/hooks/requests/user-profile/useUserProfile";
-import ProfileHeaderCard from "@/components/cards/profileHeaderCard";
-import ProfileCardSkeleton from "@/components/skeleton/profileCardSkeleton";
+import useForumRequest from "@/hooks/requests/forum/useForumRequest";
+import {
+  ResetPasswordModal,
+  PostPreview,
+  ForumSkeleton,
+  EditUserModal,
+  ProfileHeaderCard,
+  ProfileCardSkeleton,
+} from "@/components";
 
 const Profile = () => {
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
@@ -35,7 +37,7 @@ const Profile = () => {
 
   return (
     <div className="h-full">
-      <ResetPassword
+      <ResetPasswordModal
         isOpen={isResetModalOpen}
         onClose={() => setIsResetModalOpen(false)}
       />

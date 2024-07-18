@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Button from "@/components/buttons/Button";
-import Input from "@/components/input/Input";
+import { Button, Input } from "@/components";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { User } from "@/constants/userTypes";

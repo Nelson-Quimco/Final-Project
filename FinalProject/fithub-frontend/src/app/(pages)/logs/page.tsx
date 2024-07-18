@@ -4,7 +4,6 @@ import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
 import useUserdata from "@/hooks/useUserdata";
 import React, { useEffect } from "react";
 import "../../../styles/logs.css";
-import Button from "@/components/buttons/Button";
 import { useRouter } from "next/navigation";
 
 const Logs = () => {

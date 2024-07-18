@@ -1,12 +1,14 @@
 "use client";
 import withAuth from "@/components/auth/withAuth";
-import React, { useState } from "react";
-import PostPreview from "@/components/cards/postPreview";
-import Button from "@/components/buttons/Button";
+import {
+  Button,
+  PostPreview,
+  CreatePostModal,
+  SearchBar,
+  ForumSkeleton,
+} from "@/components";
 import useForumRequest from "@/hooks/requests/forum/useForumRequest";
-import CreatePostModal from "@/components/modals/createPostModal";
-import SearchBar from "@/components/search-bar/search-bar";
-import ForumSkeleton from "@/components/skeleton/forumSkeleton";
+import React, { useState } from "react";
 
 const Forums = () => {
   const { allPost, loading } = useForumRequest();

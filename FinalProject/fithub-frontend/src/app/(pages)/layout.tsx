@@ -1,8 +1,6 @@
 import LogoutModal from "@/components/modals/LogoutModal";
-import SearchBar from "@/components/search-bar/search-bar";
 import Sidebar from "@/components/sidebar/Sidebar";
 import { LogoutModalProvider } from "@/providers/modalContext";
-import { usePathname } from "next/navigation";
 
 export default function MainLayout({
   children,

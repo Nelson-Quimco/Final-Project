@@ -1,14 +1,11 @@
 "use client";
-
-import withAuth from "@/components/auth/withAuth";
-import Button from "@/components/buttons/Button";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
-import WorkoutCard from "@/components/cards/workout-card";
-import WorkoutSkeleton from "@/components/skeleton/workoutCardSkeleton";
 import useUserdata from "@/hooks/useUserdata";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import withAuth from "@/components/auth/withAuth";
+import { Button, WorkoutCard, WorkoutSkeleton } from "@/components";
 
 const Tracker: React.FC = () => {
   const { groupedByDate, getAllUserWorkouts, loading, deleteWorkout } =
