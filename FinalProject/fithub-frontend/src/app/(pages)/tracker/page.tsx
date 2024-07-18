@@ -106,10 +106,7 @@ const Tracker: React.FC = () => {
         </div>
         <div className=" w-[30%]">
           Past Workouts:
-          <Link
-            href={"/logs"}
-            className="flex flex-col gap-3 h-[48rem] bg-offWhite shadow-md border-none rounded-md p-4 overflow-y-auto"
-          >
+          <div className="flex flex-col gap-3 h-[48rem] bg-offWhite shadow-md border-none rounded-md p-4 overflow-y-auto">
             {loading ? (
               <>
                 <WorkoutSkeleton />
@@ -125,18 +122,17 @@ const Tracker: React.FC = () => {
             ) : pastWorkouts.length > 0 ? (
               pastWorkouts.map((date, index) => (
                 <WorkoutCard
-                  linked={false}
                   key={index}
                   date={date}
                   exerciseCount={groupedByDate[date].length}
-                  href={`tracker/exercise?date=${encodeURIComponent(date)}`}
+                  href={`logs/exercise?date=${encodeURIComponent(date)}`}
                   noAction={true}
                 />
               ))
             ) : (
               <p>No past exercises</p>
             )}
-          </Link>
+          </div>
         </div>
       </div>
     </div>
