@@ -1,5 +1,5 @@
 "use client";
-import Button from "@/components/buttons/Button";
+import { Button } from "@/components";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 

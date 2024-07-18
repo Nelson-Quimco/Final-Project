@@ -1,11 +1,8 @@
 "use client";
-import Button from "@/components/buttons/Button";
-import Input from "@/components/input/Input";
 import useTrackerRequest from "@/hooks/requests/tracker/useTrackerRequest";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoEye } from "react-icons/io5";
-
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FitnessExercise } from "@/constants/trackerType";
@@ -14,6 +11,9 @@ import axios from "axios";
 import useUserdata from "@/hooks/useUserdata";
 import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
 import { toast } from "react-toastify";
+
+import Button from "@/components/buttons/Button";
+import Input from "@/components/input/Input";
 
 const axiosReq = axios.create({ baseURL: `${process.env.NEXT_PUBLIC_URL}` });
 const AddWorkout = () => {

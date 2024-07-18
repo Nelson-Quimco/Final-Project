@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
-import Button from "@/components/buttons/Button";
 import useUserdata from "@/hooks/useUserdata";
 
 const Exercise = () => {

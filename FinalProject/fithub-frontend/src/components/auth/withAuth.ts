@@ -14,7 +14,7 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
       if (!token || !user) {
         router.replace("/login");
       }
-    }, [router]);
+    }, []);
 
     return React.createElement(WrappedComponent, props);
   };

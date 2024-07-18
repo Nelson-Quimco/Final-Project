@@ -1,5 +1,5 @@
 "use client";
-import PostPreview from "@/components/cards/postPreview";
+import { PostPreview } from "@/components";
 import useForumRequest from "@/hooks/requests/forum/useForumRequest";
 import useLoginRequest from "@/hooks/requests/user-authentication/useLoginRequest";
 import React, { useEffect } from "react";

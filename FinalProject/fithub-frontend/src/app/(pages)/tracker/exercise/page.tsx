@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import useAddedWorkouts from "@/hooks/requests/tracker/useAddedWorkouts";
 import useUserdata from "@/hooks/useUserdata";
 import { formatDateNormal } from "@/lib/functions/dateFormatter";
-import Button from "@/components/buttons/Button";
+import { Button } from "@/components";
 
 const Exercise = () => {
   const {

@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Button from "@/components/buttons/Button";
-import Input from "@/components/input/Input";
+import { Button, Input } from "@/components";
 import useLoginRequest from "@/hooks/requests/user-authentication/useLoginRequest";
 
 const Login = () => {
