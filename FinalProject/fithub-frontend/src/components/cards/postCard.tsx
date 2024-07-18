@@ -66,7 +66,6 @@ const PostCard = (props: Props) => {
               onClick={onEdit}
               className="hover:cursor-pointer"
             />
-            {/* Call onEdit when clicked */}
             <FaRegTrashAlt
               size={20}
               onClick={onDelete}
@@ -75,7 +74,7 @@ const PostCard = (props: Props) => {
           </div>
         </div>
         <div className="flex flex-col gap-3">
-          <div className="font-bold text-[25px]">{title}</div>
+          <div className="font-bold text-[22px]">{title}</div>
           <div className="w-full flex flex-col gap-6">
             <p className="w-full whitespace-pre-line break-words text-justify">
               {content}

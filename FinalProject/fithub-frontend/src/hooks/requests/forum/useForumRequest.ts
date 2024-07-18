@@ -22,6 +22,9 @@ const useForumRequest = () => {
     }
   }, []);
 
+  useEffect(() => {
+    getAllPost();
+  }, []);
   const createPost = async (
     userId: number | undefined,
     title: string,
@@ -64,17 +67,16 @@ const useForumRequest = () => {
     }
   };
 
-  const getPostById = async (postId: number) => {
+  const getPostById = useCallback(async (postId: number) => {
     setLoading(true);
     try {
       const res = await axiosReq.get(`/post/get-post/${postId}`);
       setLoading(false);
-      console.log(res.data.data);
       setPost(res.data);
     } catch (error) {
       console.log(error);
     }
-  };
+  }, []);
 
   const deletePost = async (postId: number) => {
     try {
@@ -101,18 +103,12 @@ const useForumRequest = () => {
     return {
       allPost,
       userPost,
+      post,
     };
-  }, [allPost, userPost]);
-
-  useEffect(() => {
-    getAllPost();
-  }, []);
+  }, [allPost, userPost, post]);
 
   return {
     ...memoizedValues,
-    post,
-    allPost,
-    userPost,
     postLikes,
     setPostLikes,
     createPost,

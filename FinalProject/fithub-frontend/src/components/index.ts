@@ -21,6 +21,7 @@ import ProfileCardSkeleton from "./skeleton/profileCardSkeleton";
 import SinglePost from "./skeleton/singlePost";
 import WorkoutSkeleton from "./skeleton/workoutCardSkeleton";
 import Logo from "./Logo";
+import ExerciseSkeleton from "./skeleton/exerciseSkeleton";
 
 export {
   Logo,
@@ -46,4 +47,5 @@ export {
   ProfileCardSkeleton,
   SinglePost,
   WorkoutSkeleton,
+  ExerciseSkeleton,
 };

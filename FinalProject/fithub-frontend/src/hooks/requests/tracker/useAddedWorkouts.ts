@@ -23,7 +23,6 @@ const useAddedWorkouts = () => {
       setWorkouts(res.data);
     } catch (error) {
       console.log(error);
-      setLoading(false);
     }
   };
 
@@ -109,7 +108,9 @@ const useAddedWorkouts = () => {
   };
 
   useEffect(() => {
+    console.log("this effect is running");
     if (workouts?.data) {
+      console.log("workout data exist");
       groupWorkoutsByDate(workouts.data);
     }
   }, [workouts]);

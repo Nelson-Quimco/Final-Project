@@ -23,11 +23,16 @@ const AddWorkout = () => {
   const [type, setType] = useState("");
   const [level, setLevel] = useState("");
   const [addedExercises, setAddedExercises] = useState<FitnessExercise[]>([]);
-
   const { groupedByDate } = useAddedWorkouts();
   const user = useUserdata();
-
   const router = useRouter();
+
+  const excludedDates = Object.keys(groupedByDate).map(
+    (date) => new Date(date)
+  );
+
+  console.log(excludedDates);
+  console.log(groupedByDate);
 
   useEffect(() => {
     getExercises();
@@ -60,6 +65,12 @@ const AddWorkout = () => {
   };
 
   const trackerToast = () => toast.success("Workout Added Successfully");
+  const noExercise = () =>
+    toast.error("Please add a Workout First", {
+      autoClose: 2000,
+      hideProgressBar: true,
+      position: "top-center",
+    });
   const postingToast = () =>
     toast("Adding Your Workout.....", {
       autoClose: 3000,
@@ -70,29 +81,26 @@ const AddWorkout = () => {
     e.preventDefault();
     try {
       const userId = user?.userId;
-      console.log(userId);
-      postingToast();
-      for (const exercise of addedExercises) {
-        const res = await axiosReq.post("/fitness-tracking/add-workout", {
-          userId: userId,
-          fitnessExerciseId: exercise.id,
-          reps: exercise.reps || 0, // Ensure reps is provided
-          setDate: startDate?.toISOString() || new Date().toISOString(),
-        });
+      if (addedExercises.length === 0) {
+        noExercise();
+      } else {
+        postingToast();
+        for (const exercise of addedExercises) {
+          const res = await axiosReq.post("/fitness-tracking/add-workout", {
+            userId: userId,
+            fitnessExerciseId: exercise.id,
+            reps: exercise.reps || 0, // Ensure reps is provided
+            setDate: startDate?.toISOString() || new Date().toISOString(),
+          });
+        }
+        trackerToast();
+        router.push("/tracker");
       }
-      trackerToast();
-      router.push("/tracker");
     } catch (error) {
       console.error("Error adding workout", error);
       alert("Failed to add workout");
     }
   };
-  const excludedDates = Object.keys(groupedByDate).map(
-    (date) => new Date(date)
-  );
-
-  console.log(excludedDates);
-  console.log(groupedByDate);
 
   const testRender = () => {
     let dataToMap;
