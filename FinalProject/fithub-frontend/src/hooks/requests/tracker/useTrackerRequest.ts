@@ -12,6 +12,7 @@ const useTrackerRequest = () => {
   const [filteredData, setFilteredData] =
     useState<FitnessExerciseResponse | null>(null);
   const [exercise, setExercise] = useState<FitnessExercise | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const getExercises = async () => {
     try {
@@ -40,10 +41,12 @@ const useTrackerRequest = () => {
   }, []);
 
   const getExerciseById = useCallback(async (id: number) => {
+    setLoading(true);
     try {
       const res = await axiosReq.get(`fitness-tracking/get-exercise/${id}`);
       setExercise(res.data);
       console.log(res.data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -55,6 +58,7 @@ const useTrackerRequest = () => {
 
   return {
     ...values,
+    loading,
     data,
     filteredData,
     getExercises,

@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import React from "react";
 import { FaHome, FaRegUserCircle, FaTable } from "react-icons/fa";
 import { MdForum } from "react-icons/md";
@@ -8,7 +7,6 @@ import Logo from "../Logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GiBiceps } from "react-icons/gi";
-import Button from "../buttons/Button";
 import { useLogoutContext } from "@/providers/modalContext";
 
 const navLinks = [

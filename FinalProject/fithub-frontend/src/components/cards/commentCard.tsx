@@ -2,7 +2,7 @@ import userId from "@/app/(pages)/forum/user/[userId]/page";
 import useComment from "@/hooks/requests/comment/useComment";
 import useUserProfile from "@/hooks/requests/user-profile/useUserProfile";
 import useUserdata from "@/hooks/useUserdata";
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { RiEditLine } from "react-icons/ri";
@@ -34,7 +34,12 @@ const CommentCard = (props: Props) => {
     userLoggedId = user.userId;
   }
 
-  const editCommentHandler = (commentId: number, content: string) => {
+  const editCommentHandler = (
+    // e: React.FormEvent<HTMLFormElement>,
+    commentId: number,
+    content: string
+  ) => {
+    // e.preventDefault();
     editComment(commentId, content);
   };
 
@@ -87,7 +92,7 @@ const CommentCard = (props: Props) => {
           {commentLikes}
         </div>
       </div>
-      <hr className="w-[98%] self-center" />
+      <hr className="w-[98%] self-center text-[#30475e41]" />
     </>
   );
 };
