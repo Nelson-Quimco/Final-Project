@@ -6,11 +6,14 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import withAuth from "@/components/auth/withAuth";
 import { Button, WorkoutCard, WorkoutSkeleton } from "@/components";
+import DeleteWorkoutModal from "@/components/modals/deleteWorkoutModal";
+import { toast } from "react-toastify";
 
 const Tracker: React.FC = () => {
   const { groupedByDate, getAllUserWorkouts, loading, deleteWorkout } =
     useAddedWorkouts();
   const [isDelModalOpen, setIsDelModalOpen] = useState(false);
+  const [dateToDel, setDateToDel] = useState("");
 
   const user = useUserdata();
   const router = useRouter();
@@ -23,6 +26,7 @@ const Tracker: React.FC = () => {
   }, [user?.userId]);
 
   const todaysWorkout = groupedByDate[todaysDate] || [];
+
   const upcomingWorkouts = Object.keys(groupedByDate)
     .filter((date) => new Date(date) > new Date(todaysDate))
     .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
@@ -41,13 +45,28 @@ const Tracker: React.FC = () => {
 
     if (user?.userId) {
       getAllUserWorkouts(user.userId);
+      setIsDelModalOpen(false);
     }
+  };
+
+  const successDeletion = () => toast.success("Workout Successfully Deleted");
+
+  const testHandler = (date: string) => {
+    setDateToDel(date);
+    successDeletion();
+    setIsDelModalOpen(true);
   };
 
   const currentDate = new Date().toISOString().split("T")[0];
 
   return (
     <div className="">
+      <DeleteWorkoutModal
+        isOpen={isDelModalOpen}
+        handleDelete={() => handleDelete(dateToDel)}
+        onClose={() => setIsDelModalOpen(false)}
+      />
+
       <Button
         name="Add New Workout"
         width="13rem"
@@ -68,7 +87,7 @@ const Tracker: React.FC = () => {
                   href={`tracker/exercise?date=${encodeURIComponent(
                     todaysDate
                   )}`}
-                  handleDelete={() => handleDelete(currentDate)}
+                  handleDelete={() => testHandler(currentDate)}
                 />
               ) : (
                 <p>No exercises for today</p>
@@ -95,7 +114,7 @@ const Tracker: React.FC = () => {
                     date={date}
                     exerciseCount={groupedByDate[date].length}
                     href={`tracker/exercise?date=${encodeURIComponent(date)}`}
-                    handleDelete={() => handleDelete(date)}
+                    handleDelete={() => testHandler(date)}
                   />
                 ))
               ) : (
