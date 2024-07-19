@@ -3,10 +3,10 @@ import Button from "../buttons/Button";
 import { FaUserCircle } from "react-icons/fa";
 
 interface Props {
-  firstname: string;
-  lastname: string;
-  username: string;
-  email: string;
+  firstname: string | undefined;
+  lastname: string | undefined;
+  username: string | undefined;
+  email: string | undefined;
   openEditModal: () => void;
   openResetModal: () => void;
 }

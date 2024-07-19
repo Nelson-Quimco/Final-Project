@@ -14,6 +14,7 @@ const useAddedWorkouts = () => {
     addedExerciseType[] | null
   >(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [completeLoading, setCompleteLoading] = useState<boolean>(false);
 
   const getAllUserWorkouts = async (id: number) => {
     setLoading(true);
@@ -64,6 +65,7 @@ const useAddedWorkouts = () => {
     isComplete: boolean,
     userId: number
   ) => {
+    setCompleteLoading(true);
     try {
       const body = {
         addedExerciseId: addedId,
@@ -73,6 +75,7 @@ const useAddedWorkouts = () => {
       };
       await axiosReq.post("fitness-tracking/isCompleted", body);
       await getAllUserWorkouts(userId); // Refresh after completing workout
+      setCompleteLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -120,6 +123,7 @@ const useAddedWorkouts = () => {
     filteredResponse,
     groupedByDate,
     loading,
+    completeLoading,
     updateWorkout,
     getByDate,
     setLoading,
